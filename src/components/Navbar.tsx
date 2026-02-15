@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import { useState } from 'react';
 
+import Image from 'next/image';
+
 export default function Navbar() {
   const { t } = useTranslation('common');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,7 +27,15 @@ export default function Navbar() {
       <div className="container mx-auto flex h-20 items-center justify-between px-8">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2 group">
-            <span className="text-2xl font-light tracking-[0.3em] text-slate-800 transition-colors group-hover:text-primary uppercase">LRICBC</span>
+            <div className="relative h-12 w-40">
+              <Image 
+                src="/logo/LRICBC_Logo_v4_NameBottom-scaled.png" 
+                alt="LRICBC Logo" 
+                fill 
+                className="object-contain"
+                priority
+              />
+            </div>
           </Link>
         </div>
 
