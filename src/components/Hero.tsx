@@ -15,8 +15,10 @@ export default function Hero() {
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-300/20 rounded-full blur-[100px] float" style={{ animationDelay: '3s' }} />
 
       <div className="container relative z-10 mx-auto px-4 py-24 text-center">
-        <div className="inline-block px-10 py-3 mb-12 text-sm font-bold tracking-[0.3em] text-sky-600 uppercase bg-white/70 backdrop-blur-md rounded-full border border-sky-100 shadow-sm">
-          {t('about.slogan')}
+        <div className="inline-block px-12 py-4 mb-16 text-lg md:text-xl font-bold tracking-[0.4em] text-sky-700 uppercase bg-white/80 backdrop-blur-xl rounded-full border border-sky-200 shadow-xl hover:shadow-sky-200/50 transition-all cursor-default">
+          <span className="bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+            {t('about.slogan')}
+          </span>
         </div>
         <h1 className="mb-10 text-7xl font-light tracking-tight md:text-[10rem] text-sky-900 leading-[1.05]">
           {t('hero.title').split(' ').map((word, i) => (

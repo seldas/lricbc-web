@@ -14,6 +14,24 @@ export default function Home() {
     <main className="min-h-screen flex flex-col">
       <Navbar />
       <Hero />
+
+      {/* Slogan Section */}
+      <section className="relative py-32 overflow-hidden bg-sky-900 text-white">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto text-center space-y-8">
+            <h2 className="text-5xl md:text-8xl font-bold tracking-[0.2em] leading-tight animate-in fade-in slide-in-from-bottom-10 duration-1000 uppercase">
+              {t('about.slogan')}
+            </h2>
+            <div className="h-1 w-40 bg-sky-400 mx-auto rounded-full" />
+            <p className="text-xl md:text-2xl font-light text-sky-200 tracking-widest uppercase">
+              Little Rock Immanuel Chinese Baptist Church
+            </p>
+          </div>
+        </div>
+      </section>
       
       {/* Pastor's Welcome Message */}
       <section className="py-24 bg-white/40 backdrop-blur-sm">

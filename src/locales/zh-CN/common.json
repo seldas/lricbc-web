@@ -5,7 +5,8 @@
     "updates": "每週更新",
     "gallery": "教會相簿",
     "giving": "奉獻支持",
-    "contact": "聯繫我們"
+    "contact": "聯繫我們",
+    "studio": "管理後台"
   },
   "hero": {
     "title": "歡迎來到小石城以馬內利華語浸信會",
@@ -118,7 +119,17 @@
       "news": "教會公告"
     },
     "readMore": "閱讀全文",
-    "backToList": "返回列表"
+    "backToList": "返回列表",
+    "readingSettings": {
+      "title": "閱讀設置",
+      "fontSize": "字體大小",
+      "theme": "主題顏色",
+      "themes": {
+        "light": "明亮",
+        "sepia": "護眼",
+        "dark": "深色"
+      }
+    }
   },
   "gallery": {
     "title": "教會相簿",

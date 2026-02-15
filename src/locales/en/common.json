@@ -5,7 +5,8 @@
     "updates": "Weekly Updates",
     "gallery": "Gallery",
     "giving": "Giving",
-    "contact": "Contact"
+    "contact": "Contact",
+    "studio": "Studio"
   },
   "hero": {
     "title": "Welcome to Little Rock Immanuel Chinese Baptist Church",
@@ -118,7 +119,17 @@
       "news": "Announcements"
     },
     "readMore": "Read More",
-    "backToList": "Back to Updates"
+    "backToList": "Back to Updates",
+    "readingSettings": {
+      "title": "Reading Settings",
+      "fontSize": "Font Size",
+      "theme": "Theme",
+      "themes": {
+        "light": "Light",
+        "sepia": "Sepia",
+        "dark": "Dark"
+      }
+    }
   },
   "gallery": {
     "title": "Media Gallery",

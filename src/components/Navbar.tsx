@@ -18,6 +18,7 @@ export default function Navbar() {
     { href: '/gallery', label: t('nav.gallery') },
     { href: '/giving', label: t('nav.giving') },
     { href: '/contact', label: t('nav.contact') },
+    { href: '/studio', label: t('nav.studio'), target: '_blank' },
   ];
 
   return (
@@ -35,6 +36,8 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              target={link.target}
+              rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
               className="text-xl font-bold tracking-[0.15em] uppercase transition-colors hover:text-primary text-slate-500"
             >
               {link.label}
@@ -66,6 +69,8 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                target={link.target}
+                rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
                 className="text-sm font-medium transition-colors hover:text-primary"
                 onClick={() => setIsMenuOpen(false)}
               >
