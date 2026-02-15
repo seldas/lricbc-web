@@ -18,7 +18,6 @@ export default function Navbar() {
     { href: '/gallery', label: t('nav.gallery') },
     { href: '/giving', label: t('nav.giving') },
     { href: '/contact', label: t('nav.contact') },
-    { href: '/studio', label: t('nav.studio'), target: '_blank' },
   ];
 
   return (

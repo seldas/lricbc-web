@@ -11,14 +11,6 @@ export default function Footer() {
         <p>© {new Date().getFullYear()} LRICBC - 小石城以馬內利華語浸信會</p>
         <div className="mt-4 flex justify-center space-x-6 text-sm">
           <p>Little Rock Immanuel Chinese Baptist Church</p>
-          <a 
-            href="/studio" 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary transition-colors border-l pl-6 border-slate-300"
-          >
-            {t('nav.studio')}
-          </a>
         </div>
       </div>
     </footer>

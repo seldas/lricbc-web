@@ -29,11 +29,17 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
     ? initialPosts 
     : initialPosts.filter(u => u.category === filter);
 
-  // The very first post in the sorted list is the Featured one
-  const featuredPost = filteredUpdates[0];
-  const remainingPosts = filteredUpdates.slice(1);
+  // Find the latest for each key category
+  const latestPastor = initialPosts.find(p => p.category === 'pastor');
+  const latestSermon = initialPosts.find(p => p.category === 'sermon');
 
-  // Pagination logic for remaining posts
+  // Filter out the featured ones from the main list only on Page 1 of "All"
+  const featuredIds = new Set([latestPastor?.id, latestSermon?.id].filter(Boolean));
+  const remainingPosts = (currentPage === 1 && filter === 'all') 
+    ? filteredUpdates.filter(p => !featuredIds.has(p.id))
+    : filteredUpdates;
+
+  // Pagination logic
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = remainingPosts.slice(indexOfFirstPost, indexOfLastPost);
@@ -67,6 +73,75 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
       </section>
 
       <section className="container mx-auto px-4 py-16 flex-grow">
+        {/* Latest Highlights Section */}
+        {currentPage === 1 && (filter === 'all') && (
+          <div className="mb-32">
+            <div className="flex items-center justify-center gap-4 mb-12">
+              <div className="h-px w-12 bg-sky-200" />
+              <h2 className="text-sky-900/40 text-sm font-black uppercase tracking-[0.5em] italic">Latest Highlights</h2>
+              <div className="h-px w-12 bg-sky-200" />
+            </div>
+            
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Latest Pastor's Message */}
+              {latestPastor && (
+                <Card className="flex flex-col bg-amber-50/40 backdrop-blur-md rounded-[4rem] border-2 border-amber-100 shadow-2xl overflow-hidden group transition-all hover:scale-[1.02] border-none shadow-amber-200/20">
+                  <div className="relative h-80 bg-gradient-to-br from-amber-500 to-orange-900 flex items-center justify-center overflow-hidden">
+                    <div className="absolute inset-0 bg-white/10 group-hover:scale-110 transition-transform duration-700" />
+                    <div className="relative z-10 text-center p-8">
+                      <div className="inline-block px-8 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-black uppercase tracking-widest mb-6 border border-white/30">
+                        {t('updates.categories.pastor')}
+                      </div>
+                      <h3 className="text-5xl font-light text-white leading-tight tracking-tight">
+                        {latestPastor[`title_${langSuffix}` as keyof Post]}
+                      </h3>
+                    </div>
+                  </div>
+                  <CardContent className="p-12 flex flex-col space-y-8 bg-amber-50/50">
+                    <div className="flex items-center space-x-3 text-amber-600 font-black text-base uppercase tracking-widest">
+                      <Calendar className="h-6 w-6" />
+                      <span>{new Date(latestPastor.publishedAt).toLocaleDateString()}</span>
+                    </div>
+                    <Button asChild className="w-full rounded-full py-10 text-2xl font-bold bg-amber-600 hover:bg-amber-700 shadow-2xl transition-all hover:scale-105">
+                      <Link href={`/updates/${latestPastor.id}`}>
+                        {t('updates.readMore')} →
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Latest Worship Program */}
+              {latestSermon && (
+                <Card className="flex flex-col bg-sky-50/40 backdrop-blur-md rounded-[4rem] border-2 border-sky-100 shadow-2xl overflow-hidden group transition-all hover:scale-[1.02] border-none shadow-sky-200/20">
+                  <div className="relative h-80 bg-gradient-to-br from-sky-500 to-indigo-900 flex items-center justify-center overflow-hidden">
+                    <div className="absolute inset-0 bg-white/10 group-hover:scale-110 transition-transform duration-700" />
+                    <div className="relative z-10 text-center p-8">
+                      <div className="inline-block px-8 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-black uppercase tracking-widest mb-6 border border-white/30">
+                        {t('updates.categories.sermon')}
+                      </div>
+                      <h3 className="text-5xl font-light text-white leading-tight tracking-tight">
+                        {latestSermon[`title_${langSuffix}` as keyof Post]}
+                      </h3>
+                    </div>
+                  </div>
+                  <CardContent className="p-12 flex flex-col space-y-8 bg-sky-50/50">
+                    <div className="flex items-center space-x-3 text-sky-600 font-black text-base uppercase tracking-widest">
+                      <Calendar className="h-6 w-6" />
+                      <span>{new Date(latestSermon.publishedAt).toLocaleDateString()}</span>
+                    </div>
+                    <Button asChild className="w-full rounded-full py-10 text-2xl font-bold bg-sky-600 hover:bg-sky-700 shadow-2xl transition-all hover:scale-105">
+                      <Link href={`/updates/${latestSermon.id}`}>
+                        {t('updates.readMore')} →
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-4 mb-24">
           {categories.map((cat) => (
@@ -87,55 +162,6 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
             </Button>
           ))}
         </div>
-
-        {/* Featured Post (Most Recent) */}
-        {featuredPost && currentPage === 1 && (
-          <div className="mb-24">
-            <h2 className="text-sky-900/40 text-sm font-black uppercase tracking-[0.5em] mb-8 text-center italic">Featured Latest Message</h2>
-            <Card className={`flex flex-col lg:flex-row backdrop-blur-md rounded-[4rem] shadow-2xl overflow-hidden group border-2 transition-all hover:scale-[1.01] ${
-              featuredPost.category === 'pastor' ? 'border-amber-200 shadow-amber-200/20' : 
-              featuredPost.category === 'sermon' ? 'border-sky-200 shadow-sky-200/20' : 'border-emerald-200 shadow-emerald-200/20'
-            }`}>
-              <div className={`lg:w-5/12 relative flex items-center justify-center min-h-[400px] ${
-                featuredPost.category === 'pastor' ? 'bg-amber-900' : 
-                featuredPost.category === 'sermon' ? 'bg-sky-900' : 'bg-emerald-900'
-              }`}>
-                <div className={`absolute inset-0 opacity-90 bg-gradient-to-br ${
-                  featuredPost.category === 'pastor' ? 'from-amber-500 to-orange-950' : 
-                  featuredPost.category === 'sermon' ? 'from-sky-500 to-indigo-950' : 'from-emerald-500 to-teal-950'
-                }`} />
-                <div className="relative z-10 p-16 text-center">
-                  <div className="inline-block px-8 py-2 bg-white/20 backdrop-blur-xl rounded-full text-white text-xs font-black uppercase tracking-widest mb-8 border border-white/40">
-                    {t(`updates.categories.${featuredPost.category}`)}
-                  </div>
-                  <h3 className="text-5xl md:text-7xl font-light text-white leading-[1.1] tracking-tight">
-                    {featuredPost[`title_${langSuffix}` as keyof Post]}
-                  </h3>
-                </div>
-              </div>
-              <CardContent className={`lg:w-7/12 p-16 flex flex-col justify-center space-y-10 ${
-                featuredPost.category === 'pastor' ? 'bg-amber-50/50' : 
-                featuredPost.category === 'sermon' ? 'bg-sky-50/50' : 'bg-emerald-50/50'
-              }`}>
-                <div className="flex items-center space-x-4 text-sky-600 font-black text-base uppercase tracking-widest">
-                  <Calendar className="h-6 w-6" />
-                  <span>{new Date(featuredPost.publishedAt).toLocaleDateString()}</span>
-                </div>
-                <p className="text-3xl text-sky-900/80 font-light leading-relaxed italic border-l-4 border-sky-200 pl-8">
-                  {featuredPost[`excerpt_${langSuffix}` as keyof Post]}
-                </p>
-                <Button asChild className={`w-fit rounded-full px-12 py-10 text-2xl font-bold transition-all hover:scale-110 shadow-2xl hover:shadow-sky-300/50 ${
-                  featuredPost.category === 'pastor' ? 'bg-amber-600 hover:bg-amber-700' : 
-                  featuredPost.category === 'sermon' ? 'bg-sky-600 hover:bg-sky-700' : 'bg-emerald-600 hover:bg-emerald-700'
-                }`}>
-                  <Link href={`/updates/${featuredPost.id}`}>
-                    {t('updates.readMore')} →
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )}
 
         {/* Remaining Posts Grid */}
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3 mb-24">
