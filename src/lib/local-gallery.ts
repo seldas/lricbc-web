@@ -11,6 +11,7 @@ export interface GalleryEvent {
   category: string;
   thumbnail: string; // path to one random image
   images: string[];  // paths to all images in folder
+  googlePhotosUrl?: string; // Link to external album
 }
 
 export function getGalleryEvents(): GalleryEvent[] {
@@ -37,7 +38,8 @@ export function getGalleryEvents(): GalleryEvent[] {
       title_en: folderName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
       title_zh: folderName,
       date: "",
-      category: "other"
+      category: "other",
+      googlePhotosUrl: ""
     };
 
     const metadataPath = path.join(folderPath, 'metadata.json');
