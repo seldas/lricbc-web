@@ -57,7 +57,8 @@ async function saveCredentialsCorrected(client: any) {
 }
 
 async function authorize() {
-  let client = await loadSavedCredentialsIfExist();
+  let client: any = null;
+  client = await loadSavedCredentialsIfExist();
   if (client) {
     return client;
   }
