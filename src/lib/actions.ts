@@ -6,6 +6,8 @@ import path from 'path';
 const CONTENT_DIR = path.join(process.cwd(), 'content/updates');
 const ADMIN_KEY = process.env.ADMIN_POST_KEY || "lricbc2026"; // Default fallback
 
+import { getSortedPostsData, PostData } from './local-content';
+
 export async function createAnnouncement(formData: FormData) {
   const key = formData.get('adminKey') as string;
   
@@ -48,3 +50,10 @@ ${content_zh}
     return { error: "Failed to save post" };
   }
 }
+
+export async function getLatestAnnouncement(): Promise<PostData | null> {
+  const posts = getSortedPostsData();
+  const news = posts.filter(p => p.category === 'news');
+  return news.length > 0 ? news[0] : (posts.length > 0 ? posts[0] : null);
+}
+

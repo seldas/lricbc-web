@@ -45,7 +45,7 @@
       "sundayTime2": "10:30 – 11:30 am Sunday School (Adult & Children)",
       "offlineAddress": "Location: 9701 W Markham St, Little Rock, AR 72205",
       "onlineTitle": "Online Service:",
-      "zoomInfo": "Zoom ID: 501 501 7777, Password: 777",
+      "zoomInfo": "Zoom ID: 501 501 7777 (Pwd: 777)",
       "table": {
         "name": "Meeting",
         "time": "Time",
@@ -160,6 +160,7 @@
   "contact": {
     "title": "Contact Us",
     "subtitle": "We'd love to hear from you. Feel free to reach out with any questions.",
+    "description": "Located at 9701 W Markham St, LRICBC has been a spiritual home for the Chinese community since 1990. Our journey began as a home Bible study, leading to our current location established in 2022.",
     "info": {
       "address": "9701 W Markham St, Little Rock, AR 72205",
       "phone": "(405) 637-5635",

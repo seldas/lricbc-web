@@ -45,7 +45,7 @@
       "sundayTime2": "10:30 – 11:30 am 成人及兒童主日學",
       "offlineAddress": "線下聚會地址：9701 W Markham St, Little Rock, AR 72205",
       "onlineTitle": "線上主日崇拜：",
-      "zoomInfo": "Zoom ID: 501 501 7777, 密碼：777",
+      "zoomInfo": "Zoom ID: 501 501 7777 (密碼：777)",
       "table": {
         "name": "聚會名稱",
         "time": "時間",
@@ -160,6 +160,7 @@
   "contact": {
     "title": "聯繫我們",
     "subtitle": "我們很高興收到您的來信。如有任何問題，請隨時聯繫我們。",
+    "description": "小石城以馬內利華語浸信會位於 9701 W Markham St，自 1990 年以來一直是華人社區的屬靈家園。我們從最初的家庭查經班開始，直到 2022 年遷至現址，始終見證主恩。",
     "info": {
       "address": "9701 W Markham St, Little Rock, AR 72205",
       "phone": "(405) 637-5635",

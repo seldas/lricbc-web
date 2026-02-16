@@ -3,6 +3,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
+import LatestAnnouncement from "@/components/LatestAnnouncement";
 import { useTranslation } from "react-i18next";
 import { Quote } from "lucide-react";
 import Image from "next/image";
@@ -87,6 +88,7 @@ export default function Home() {
         </div>
       </section>
 
+      <LatestAnnouncement />
       <Footer />
     </main>
   );

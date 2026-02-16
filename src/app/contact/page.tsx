@@ -40,6 +40,12 @@ export default function ContactPage() {
       </section>
 
       <section className="container mx-auto px-4 py-12 flex-grow">
+        <div className="max-w-4xl mx-auto mb-16 text-center">
+          <p className="text-xl md:text-2xl font-light text-sky-900/70 leading-relaxed italic bg-white/30 backdrop-blur-md p-8 rounded-[2.5rem] border border-sky-100/50 shadow-sm">
+            {t('contact.description')}
+          </p>
+        </div>
+
         <div className="grid gap-12 lg:grid-cols-2 max-w-6xl mx-auto">
           
           {/* Contact Information & Map */}

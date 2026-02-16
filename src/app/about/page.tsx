@@ -2,11 +2,12 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AboutPageNav from "@/components/AboutPageNav";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CheckCircle2, History, Target, Heart, BookOpen, Download } from "lucide-react";
+import { CheckCircle2, History, Target, Heart, BookOpen, Download, Youtube, Video, Users } from "lucide-react";
 
 export default function AboutPage() {
   const { t, i18n } = useTranslation('common');
@@ -23,7 +24,7 @@ export default function AboutPage() {
       <Navbar />
       
       {/* Compact Integrated Hero */}
-      <section className="bg-gradient-to-b from-sky-200/80 via-sky-100/40 to-white py-16 md:py-24">
+      <section id="sunday-service" className="bg-gradient-to-b from-sky-200/80 via-sky-100/40 to-white py-16 md:py-24">
         <div className="container mx-auto px-4 text-center space-y-10">
           <div className="space-y-4">
             <h1 className="text-xl md:text-2xl font-black tracking-[0.4em] text-sky-600 uppercase animate-in fade-in duration-700">
@@ -58,7 +59,27 @@ export default function AboutPage() {
                 <p className="font-bold text-sky-400">{t('about.schedule.offlineAddress')}</p>
                 <div className="h-px bg-white/10 my-4" />
                 <p className="text-lg opacity-80 uppercase tracking-tighter">{t('about.schedule.onlineTitle')}</p>
-                <p className="font-medium">YouTube / {t('about.schedule.zoomInfo')}</p>
+                <div className="space-y-4">
+                  <Link href="/online-worship" className="flex items-center gap-4 group/yt hover:text-sky-400 transition-colors">
+                    <div className="bg-white/10 p-3 rounded-2xl group-hover/yt:bg-red-500/20 transition-colors">
+                      <Youtube className="h-7 w-7 text-red-400" />
+                    </div>
+                    <span className="font-medium underline underline-offset-8 decoration-white/20 group-hover/yt:decoration-sky-400 transition-all">YouTube Live</span>
+                  </Link>
+                  <a 
+                    href="https://zoom.us/j/5015017777" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 group/zoom hover:text-sky-400 transition-colors"
+                  >
+                    <div className="bg-white/10 p-3 rounded-2xl group-hover/zoom:bg-blue-500/20 transition-colors">
+                      <Video className="h-7 w-7 text-sky-400" />
+                    </div>
+                    <span className="font-medium underline underline-offset-8 decoration-white/20 group-hover/zoom:decoration-sky-400 transition-all">
+                      {t('about.schedule.zoomInfo')}
+                    </span>
+                  </a>
+                </div>
               </div>
             </Card>
           </div>
@@ -93,7 +114,7 @@ export default function AboutPage() {
       </section>
 
       {/* Vision & Mission - High Impact */}
-      <section className="container mx-auto px-4 py-32 border-t border-sky-50">
+      <section id="vision-mission" className="container mx-auto px-4 py-32 border-t border-sky-50">
         <div className="text-center mb-20">
           <p className="text-3xl md:text-5xl font-light text-sky-800/80 italic max-w-4xl mx-auto leading-tight tracking-tight">
             "{t('about.slogan')}"
@@ -137,7 +158,7 @@ export default function AboutPage() {
       </section>
 
       {/* Core Values - Full Color Immersion */}
-      <section className="bg-sky-900 text-white py-32 relative overflow-hidden">
+      <section id="core-values" className="bg-sky-900 text-white py-32 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-sky-800 via-sky-950 to-sky-950 opacity-50" />
         <div className="container mx-auto px-4 relative z-10 text-center">
           <div className="mb-20 space-y-6">
@@ -155,7 +176,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Faith - Structured Clarity */}
-      <section className="py-32 bg-sky-50/30">
+      <section id="our-faith" className="py-32 bg-sky-50/30">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto text-center mb-24 space-y-8">
             <BookOpen className="h-16 w-16 mx-auto text-sky-600" />
@@ -191,7 +212,7 @@ export default function AboutPage() {
       </section>
 
       {/* History Timeline - Premium Visuals */}
-      <section className="container mx-auto px-4 py-32">
+      <section id="church-history" className="container mx-auto px-4 py-32">
         <div className="text-center mb-24 space-y-6">
           <History className="h-16 w-16 mx-auto text-sky-600" />
           <h2 className="text-5xl font-black tracking-[0.3em] uppercase text-sky-950">{t('about.history.title')}</h2>
@@ -213,6 +234,26 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Key Personnel - Placeholder */}
+      <section id="leadership" className="py-32 bg-sky-950 text-white overflow-hidden relative">
+        <div className="absolute inset-0 bg-[url('/logo/LRICBC_Logo_v4_NameBottom-scaled.png')] opacity-5 bg-center bg-no-repeat bg-contain" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-24 space-y-6">
+            <Users className="h-16 w-16 mx-auto text-sky-400" />
+            <h2 className="text-5xl font-black tracking-[0.3em] uppercase text-sky-200">
+              {i18n.language === 'en' ? 'Our Leadership' : '教會領袖'}
+            </h2>
+          </div>
+          <div className="max-w-4xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 rounded-[4rem] p-20 text-center space-y-8">
+            <p className="text-4xl font-light italic text-sky-200/60">TBD</p>
+            <p className="text-xl font-light tracking-[0.2em] uppercase text-sky-100/40">
+              {i18n.language === 'en' ? 'Personnel profiles will be updated soon' : '教職人員資料即將更新'}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <AboutPageNav />
       <Footer />
     </main>
   );
