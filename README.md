@@ -2,6 +2,9 @@
 
 This is the official web application for the **Little Rock Immanuel Chinese Baptist Church (LRICBC)**. The platform serves as a central hub for the congregation, providing access to bilingual worship programs, pastor's messages, and church updates.
 
+Currently hosted at [lricbc-web-1005010236942.us-central1.run.app](https://lricbc-web-1005010236942.us-central1.run.app/)  
+Will move to [lricbc.org](https://lricbc.org) when officially online
+
 ## Key Features
 
 - **Automated Content Integration:** Synchronizes directly with church records (Gmail) to fetch and process weekly worship materials.
