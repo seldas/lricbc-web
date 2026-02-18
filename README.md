@@ -11,6 +11,7 @@ Will move to [lricbc.org](https://lricbc.org) when officially online
 - **Bilingual Support:** Fully supports English and Chinese (Traditional) content for all worship programs and pastor's messages.
 - **Responsive Design:** Optimized for both desktop and mobile viewing to ensure the congregation can access materials anywhere.
 - **Media Sharing:** Integration with Google Photos to share church event photos and videos with the congregation.
+- **Statement of Faith:** Integrated bilingual [Baptist Faith and Message 2000](/faith) page for the congregation.
 - **Archive Management:** Automatically generates a searchable history of past sermons and messages.
 
 ## Weekly Content Updates
