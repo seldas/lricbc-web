@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LRICBC Web Application
 
-## Getting Started
+This is the official web application for the ****Little Rock Immanuel Chinese Baptist Church (LRICBC)**. The platform serves as a central hub for the congregation, providing access to bilingual worship programs, pastor's messages, and church updates.
 
-First, run the development server:
+## Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Automated Content Integration:** Synchronizes directly with church records (Gmail) to fetch and process weekly worship materials.
+- **Bilingual Support:** Fully supports English and Chinese (Traditional) content for all worship programs and pastor's messages.
+- **Responsive Design:** Optimized for both desktop and mobile viewing to ensure the congregation can access materials anywhere.
+- **Media Sharing:** Integration with Google Photos to share church event photos and videos with the congregation.
+- **Archive Management:** Automatically generates a searchable history of past sermons and messages.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Weekly Content Updates
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The app includes specialized scripts to automate the flow from church communications to web content.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Smart Fetching:** The system defaults to a **30-day lookback** for new emails to ensure updates are fast and efficient.
+- **Automated Processing:** Raw email data is automatically parsed, cleaned, and converted into Markdown format for the website.
 
-## Learn More
+### How to Update
+For detailed, step-by-step instructions on running the weekly update and deploying to production, please refer to the **[Update Guide (update.md)](./update.md)**.
 
-To learn more about Next.js, take a look at the following resources:
+## Technical Overview
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework:** Next.js (React)
+- **Styling:** Vanilla CSS / Tailwind CSS
+- **Deployment:** Containerized (Docker) on Google Cloud Platform (GCP)
+- **Data Source:** Gmail API (for weekly updates), Google Photos API (for media), and local Markdown content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*For development setup and deployment scripts, please see `package.json` and `deploy.ps1`.*
