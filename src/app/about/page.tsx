@@ -7,11 +7,10 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CheckCircle2, History, Target, Heart, BookOpen, Download, Youtube, Video, Users } from "lucide-react";
+import { CheckCircle2, History, Target, Heart, BookOpen, Youtube, Video, Users } from "lucide-react";
 
 export default function AboutPage() {
   const { t, i18n } = useTranslation('common');
-  const langSuffix = i18n.language === 'en' ? 'en' : 'zh';
 
   const missionPoints = t('about.mission.points', { returnObjects: true }) as string[];
   const coreValues = t('about.values.list', { returnObjects: true }) as string[];
@@ -119,7 +118,7 @@ export default function AboutPage() {
       <section id="vision-mission" className="container mx-auto px-4 py-16 sm:py-32 border-t border-sky-50">
         <div className="text-center mb-12 sm:mb-20">
           <p className="text-2xl sm:text-5xl font-light text-sky-800/80 italic max-w-4xl mx-auto leading-tight tracking-tight">
-            "{t('about.slogan')}"
+            &quot;{t('about.slogan')}&quot;
           </p>
         </div>
         <div className="grid gap-12 sm:gap-20 lg:grid-cols-2 items-start">
@@ -186,14 +185,10 @@ export default function AboutPage() {
             <p className="text-xl sm:text-3xl text-sky-800/70 font-light italic max-w-3xl mx-auto leading-relaxed">{t('about.faith.subtitle')}</p>
             <div className="pt-6 sm:pt-10">
               <Button asChild className="rounded-full px-8 py-6 sm:px-12 sm:py-10 text-lg sm:text-2xl font-bold bg-sky-600 hover:bg-sky-700 shadow-2xl hover:scale-105 transition-all gap-3 sm:gap-4">
-                <a 
-                  href="https://lricbc.org/wp-content/uploads/2022/07/Baptist-Faith-Message.pdf" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <Download className="h-6 w-6 sm:h-8 sm:w-8" />
+                <Link href="/faith">
+                  <BookOpen className="h-6 w-6 sm:h-8 sm:w-8" />
                   {t('about.faith.downloadLink')}
-                </a>
+                </Link>
               </Button>
             </div>
           </div>

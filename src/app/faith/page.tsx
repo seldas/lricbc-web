@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 const FaithPage = () => {
   const sections = [
@@ -61,8 +63,19 @@ const FaithPage = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <header className="mb-10 text-center border-b pb-6">
+    <div className="max-w-4xl mx-auto p-6 py-12">
+      <div className="mb-8">
+        <Link 
+          href="/about" 
+          className="inline-flex items-center text-sky-600 hover:text-sky-700 transition-colors font-medium gap-2"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          Back to About Us / 返回關於我們
+        </Link>
+      </div>
+      
+      <div className="bg-white shadow-2xl border border-sky-50 rounded-3xl p-8 sm:p-12">
+        <header className="mb-10 text-center border-b border-sky-100 pb-10">
         <h1 className="text-3xl font-bold text-blue-900 mb-2">Baptist Faith and Message 2000</h1>
         <h2 className="text-2xl font-semibold text-gray-700">2000浸信会信仰与信息</h2>
         <p className="mt-4 text-sm text-gray-500 italic">
@@ -93,6 +106,7 @@ const FaithPage = () => {
             <a href="https://www.nwcbchouston.org/copy-of-2000%E6%B5%B8%E4%BF%A1%E4%BC%9A%E4%BF%A1%E4%BB%B0%E4%B8%8E%E4%BF%A1%E6%81%AF" className="text-blue-600 hover:underline mx-2">NWBC Chinese</a>
         </p>
       </footer>
+      </div>
     </div>
   );
 };
