@@ -3,9 +3,10 @@ import path from 'path';
 import { getGooglePhotosUrls } from './google-photos';
 
 const galleryDirectory = path.join(process.cwd(), 'public/gallery');
+const metadataPath = path.join(galleryDirectory, 'metadata.json');
 
 export interface GalleryEvent {
-  id: string; // folder name
+  id: string; // folder name or unique id
   title_en: string;
   title_zh: string;
   date: string;
@@ -15,63 +16,60 @@ export interface GalleryEvent {
   googlePhotosUrl?: string; // Link to external album
 }
 
+interface MetadataItem {
+  id: string;
+  title_en: string;
+  title_zh: string;
+  date: string;
+  category: string;
+  googlePhotosUrl?: string;
+}
+
+function getLocalImages(folderName: string): string[] {
+  const folderPath = path.join(galleryDirectory, folderName);
+  if (!fs.existsSync(folderPath)) return [];
+  
+  const files = fs.readdirSync(folderPath);
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+  return files
+    .filter(file => imageExtensions.includes(path.extname(file).toLowerCase()))
+    .map(img => `/gallery/${folderName}/${img}`);
+}
+
 export async function getGalleryEvents(): Promise<GalleryEvent[]> {
-  if (!fs.existsSync(galleryDirectory)) {
+  if (!fs.existsSync(metadataPath)) {
     return [];
   }
 
-  const folders = fs.readdirSync(galleryDirectory, { withFileTypes: true })
-    .filter(dirent => dirent.isDirectory())
-    .map(dirent => dirent.name);
+  let metadata: MetadataItem[] = [];
+  try {
+    const fileContent = fs.readFileSync(metadataPath, 'utf8');
+    metadata = JSON.parse(fileContent);
+  } catch (e) {
+    console.error("Error parsing gallery metadata", e);
+    return [];
+  }
 
-  const eventPromises = folders.map(async folderName => {
-    const folderPath = path.join(galleryDirectory, folderName);
-    const files = fs.readdirSync(folderPath);
-    
+  const eventPromises = metadata.map(async item => {
     // Find local images
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-    const localImages = files.filter(file => 
-      imageExtensions.includes(path.extname(file).toLowerCase())
-    ).map(img => `/gallery/${folderName}/${img}`);
-
-    // Metadata fallback logic
-    let metadata = {
-      title_en: folderName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      title_zh: folderName,
-      date: "",
-      category: "other",
-      googlePhotosUrl: ""
-    };
-
-    const metadataPath = path.join(folderPath, 'metadata.json');
-    if (fs.existsSync(metadataPath)) {
-      try {
-        const fileContent = fs.readFileSync(metadataPath, 'utf8');
-        const customMetadata = JSON.parse(fileContent);
-        metadata = { ...metadata, ...customMetadata };
-      } catch (e) {
-        console.error(`Error parsing metadata for ${folderName}`, e);
-      }
-    }
+    const localImages = getLocalImages(item.id);
 
     // Combine local and Google Photos images
     let allImages = [...localImages];
-    if (metadata.googlePhotosUrl) {
-      const googleImages = await getGooglePhotosUrls(metadata.googlePhotosUrl);
+    if (item.googlePhotosUrl) {
+      const googleImages = await getGooglePhotosUrls(item.googlePhotosUrl);
       allImages = [...allImages, ...googleImages];
     }
 
     // Pick a thumbnail
     let thumbnail = "/logo/cropped-LRICBC_Logo.png";
     if (allImages.length > 0) {
-      // Pick a random image from all available images
       const randomIndex = Math.floor(Math.random() * allImages.length);
       thumbnail = allImages[randomIndex];
     }
 
     return {
-      id: folderName,
-      ...metadata,
+      ...item,
       thumbnail,
       images: allImages
     };
@@ -84,37 +82,25 @@ export async function getGalleryEvents(): Promise<GalleryEvent[]> {
 }
 
 export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> {
-  const folderPath = path.join(galleryDirectory, id);
-  if (!fs.existsSync(folderPath) || !fs.lstatSync(folderPath).isDirectory()) {
+  if (!fs.existsSync(metadataPath)) return null;
+
+  let metadata: MetadataItem[] = [];
+  try {
+    const fileContent = fs.readFileSync(metadataPath, 'utf8');
+    metadata = JSON.parse(fileContent);
+  } catch (e) {
     return null;
   }
 
-  const files = fs.readdirSync(folderPath);
-  const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-  const localImages = files.filter(file => 
-    imageExtensions.includes(path.extname(file).toLowerCase())
-  ).map(img => `/gallery/${id}/${img}`);
+  const item = metadata.find(m => m.id === id);
+  if (!item) return null;
 
-  let metadata = {
-    title_en: id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    title_zh: id,
-    date: "",
-    category: "other",
-    googlePhotosUrl: ""
-  };
-
-  const metadataPath = path.join(folderPath, 'metadata.json');
-  if (fs.existsSync(metadataPath)) {
-    try {
-      const fileContent = fs.readFileSync(metadataPath, 'utf8');
-      metadata = { ...metadata, ...JSON.parse(fileContent) };
-    } catch (e) {}
-  }
+  const localImages = getLocalImages(item.id);
 
   // Combine local and Google Photos images
   let allImages = [...localImages];
-  if (metadata.googlePhotosUrl) {
-    const googleImages = await getGooglePhotosUrls(metadata.googlePhotosUrl);
+  if (item.googlePhotosUrl) {
+    const googleImages = await getGooglePhotosUrls(item.googlePhotosUrl);
     allImages = [...allImages, ...googleImages];
   }
 
@@ -126,8 +112,7 @@ export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> 
   }
 
   return {
-    id,
-    ...metadata,
+    ...item,
     thumbnail,
     images: allImages
   };

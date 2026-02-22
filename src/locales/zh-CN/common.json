@@ -1,6 +1,8 @@
 {
   "nav": {
+    "oldWebsite": "舊版網站",
     "home": "首頁",
+    "specialEvent": "特別活動",
     "about": "關於我們",
     "onlineWorship": "網上崇拜",
     "updates": "每週更新",
@@ -161,6 +163,26 @@
         }
       ]
     }
+  },
+  "specialEvent": {
+    "title": "特別活動",
+    "subtitle": "「常青團契」聚會",
+    "theme": "聚會主題：盼望",
+    "dateLabel": "日期",
+    "timeLabel": "時間",
+    "locationLabel": "地點",
+    "contactLabel": "聯絡人",
+    "speakersLabel": "講員",
+    "date": "3月9日",
+    "time": "上午 11:30 – 下午 2:00",
+    "location": "9701 W Markham St, Little Rock, AR 72205",
+    "contact": "薛飛",
+    "speakers": "Charles and Lana Flynn",
+    "description": "我們誠摯地邀請長輩朋友們參加「常青團契」聚會。本次聚會的主題是「盼望」，這將是一個彼此分享、互勉同行、在主愛中共同成長的美好時刻。",
+    "prayerTitle": "誠心代禱",
+    "prayerPoints": "請為聚會聯絡人薛飛、講員 Charles and Lana Flynn 以及所有參加者代禱，求主帶領我們的聚會，充滿祂的平安與恩典。",
+    "quote": "「但那等候耶和華的必重新得力。他們必如鷹展翅上騰；他們奔跑卻不困倦，行走卻不疲乏。」",
+    "quoteVerse": "以賽亞書 40:31"
   },
   "contact": {
     "title": "聯繫我們",

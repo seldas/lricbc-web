@@ -1,6 +1,8 @@
 {
   "nav": {
+    "oldWebsite": "Old Website",
     "home": "Home",
+    "specialEvent": "Special Event",
     "about": "About Us",
     "onlineWorship": "Online Worship",
     "updates": "Weekly Updates",
@@ -161,6 +163,26 @@
         }
       ]
     }
+  },
+  "specialEvent": {
+    "title": "Special Event",
+    "subtitle": "Evergreen Fellowship Gathering",
+    "theme": "Theme: Hope",
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "locationLabel": "Location",
+    "contactLabel": "Contact",
+    "speakersLabel": "Speakers",
+    "date": "March 9",
+    "time": "11:30 AM – 2:00 PM",
+    "location": "9701 W Markham St, Little Rock, AR 72205",
+    "contact": "Xue Fei",
+    "speakers": "Charles and Lana Flynn",
+    "description": "We cordially invite elderly friends to join our Evergreen Fellowship. Our theme for this gathering is 'Hope'. It will be a wonderful time of sharing, encouragement, and spiritual growth.",
+    "prayerTitle": "Prayer Requests",
+    "prayerPoints": "Please pray for our contact person Xue Fei, our speakers Charles and Lana Flynn, and all the participants as we gather in His name.",
+    "quote": "\"But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.\"",
+    "quoteVerse": "Isaiah 40:31"
   },
   "contact": {
     "title": "Contact Us",
