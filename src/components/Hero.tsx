@@ -13,7 +13,7 @@ export default function Hero() {
       {/* Cinematic Static Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/home_background_2026.jpg"
+          src="/home_background_2026.JPG"
           alt="Church Background"
           fill
           className="object-cover scale-105 animate-subtle-zoom"
