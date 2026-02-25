@@ -26,15 +26,23 @@ export async function createAnnouncement(formData: FormData) {
 
   const type = (formData.get('type') as 'text' | 'image') || 'text';
   const title_zh = formData.get('title_zh') as string;
-  const title_en = formData.get('title_en') as string;
+  let title_en = formData.get('title_en') as string;
   
   const date = new Date().toISOString().split('T')[0];
   const timestamp = Date.now().toString();
   const id = `${date}-announcement-${timestamp.slice(-4)}`;
   
   let imageUrl = '';
-  let content_zh = formData.get('content_zh') as string || '';
+  const content_zh = formData.get('content_zh') as string || '';
   let content_en = formData.get('content_en') as string || '';
+
+  // Fallback to Chinese if English is blank
+  if (!title_en || title_en.trim() === '') {
+    title_en = title_zh;
+  }
+  if (!content_en || content_en.trim() === '') {
+    content_en = content_zh;
+  }
 
   if (type === 'image') {
     const imageFile = formData.get('image') as File;
@@ -91,6 +99,61 @@ ${content_zh}
   } catch (e) {
     console.error(e);
     return { error: "Failed to save post" };
+  }
+}
+
+export async function getPosts() {
+  try {
+    const posts = getSortedPostsData();
+    return { success: true, posts };
+  } catch (e) {
+    console.error(e);
+    return { error: "Failed to fetch posts" };
+  }
+}
+
+export async function deletePosts(postIds: string[], adminKey: string) {
+  if (adminKey !== ADMIN_KEY) {
+    return { error: "Invalid Admin Key" };
+  }
+
+  try {
+    const contentDir = getContentDir();
+    const uploadDir = getUploadDir();
+
+    for (const id of postIds) {
+      const mdPath = path.join(contentDir, `${id}.md`);
+      
+      // Try to read the post to find the image URL
+      try {
+        const postData = await fs.readFile(mdPath, 'utf8');
+        const imageUrlMatch = postData.match(/imageUrl: "(.*?)"/);
+        if (imageUrlMatch && imageUrlMatch[1]) {
+          const imageUrl = imageUrlMatch[1];
+          if (imageUrl.startsWith('/announcements/')) {
+            const fileName = imageUrl.replace('/announcements/', '');
+            const imagePath = path.join(uploadDir, fileName);
+            if (await fs.access(imagePath).then(() => true).catch(() => false)) {
+              await fs.unlink(imagePath);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn(`Could not read post ${id} for image deletion:`, e);
+      }
+
+      // Delete the markdown file
+      if (await fs.access(mdPath).then(() => true).catch(() => false)) {
+        await fs.unlink(mdPath);
+      }
+    }
+
+    revalidatePath('/');
+    revalidatePath('/updates');
+    return { success: true };
+  } catch (e) {
+    console.error(e);
+    return { error: "Failed to delete posts" };
   }
 }
 
