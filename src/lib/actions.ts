@@ -3,6 +3,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { getStoragePath } from './storage-paths';
+import { revalidatePath } from 'next/cache';
 
 const CONTENT_DIR = getStoragePath('content/updates');
 const UPLOAD_DIR = getStoragePath('public/announcements');
@@ -73,6 +74,11 @@ ${content_zh}
   try {
     await fs.mkdir(CONTENT_DIR, { recursive: true });
     await fs.writeFile(path.join(CONTENT_DIR, `${id}.md`), frontmatter);
+    
+    // Force revalidation of the homepage and updates list
+    revalidatePath('/');
+    revalidatePath('/updates');
+
     return { success: true, id };
   } catch (e) {
     console.error(e);

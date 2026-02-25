@@ -1,6 +1,8 @@
 import { getNewUpdatesCount } from "@/lib/local-content";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const count = getNewUpdatesCount();

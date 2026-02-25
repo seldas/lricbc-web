@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import { getGooglePhotosUrls } from './google-photos';
+import { getStoragePath } from './storage-paths';
 
-const galleryDirectory = path.join(process.cwd(), 'public/gallery');
+const galleryDirectory = getStoragePath('public/gallery');
 const metadataPath = path.join(galleryDirectory, 'metadata.json');
 
 export interface GalleryEvent {
@@ -33,7 +34,7 @@ function getLocalImages(folderName: string): string[] {
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
   return files
     .filter(file => imageExtensions.includes(path.extname(file).toLowerCase()))
-    .map(img => `/gallery/${folderName}/${img}`);
+    .map(img => `/api/gallery-content/${folderName}/${img}`);
 }
 
 export async function getGalleryEvents(): Promise<GalleryEvent[]> {
@@ -51,21 +52,24 @@ export async function getGalleryEvents(): Promise<GalleryEvent[]> {
   }
 
   const eventPromises = metadata.map(async item => {
-    // Find local images
-    const localImages = getLocalImages(item.id);
-
     // Combine local and Google Photos images
-    let allImages = [...localImages];
+    const localImages = getLocalImages(item.id);
+    let googleImages: string[] = [];
+    
     if (item.googlePhotosUrl) {
-      const googleImages = await getGooglePhotosUrls(item.googlePhotosUrl);
-      allImages = [...allImages, ...googleImages];
+      googleImages = await getGooglePhotosUrls(item.googlePhotosUrl);
     }
 
-    // Pick a thumbnail
+    const allImages = [...localImages, ...googleImages];
+
+    // Pick a thumbnail - Prioritize Google Photos for a dynamic feel
     let thumbnail = "/logo/cropped-LRICBC_Logo.png";
-    if (allImages.length > 0) {
-      const randomIndex = Math.floor(Math.random() * allImages.length);
-      thumbnail = allImages[randomIndex];
+    if (googleImages.length > 0) {
+      const randomIndex = Math.floor(Math.random() * googleImages.length);
+      thumbnail = googleImages[randomIndex];
+    } else if (localImages.length > 0) {
+      const randomIndex = Math.floor(Math.random() * localImages.length);
+      thumbnail = localImages[randomIndex];
     }
 
     return {
@@ -96,19 +100,21 @@ export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> 
   if (!item) return null;
 
   const localImages = getLocalImages(item.id);
-
-  // Combine local and Google Photos images
-  let allImages = [...localImages];
+  let googleImages: string[] = [];
   if (item.googlePhotosUrl) {
-    const googleImages = await getGooglePhotosUrls(item.googlePhotosUrl);
-    allImages = [...allImages, ...googleImages];
+    googleImages = await getGooglePhotosUrls(item.googlePhotosUrl);
   }
+
+  const allImages = [...localImages, ...googleImages];
 
   // Pick a thumbnail
   let thumbnail = "/logo/cropped-LRICBC_Logo.png";
-  if (allImages.length > 0) {
-    const randomIndex = Math.floor(Math.random() * allImages.length);
-    thumbnail = allImages[randomIndex];
+  if (googleImages.length > 0) {
+    const randomIndex = Math.floor(Math.random() * googleImages.length);
+    thumbnail = googleImages[randomIndex];
+  } else if (localImages.length > 0) {
+    const randomIndex = Math.floor(Math.random() * localImages.length);
+    thumbnail = localImages[randomIndex];
   }
 
   return {

@@ -5,6 +5,8 @@ import UpdateDetailContent from "@/components/UpdateDetailContent";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function UpdateDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const post = await getPostData(id);
