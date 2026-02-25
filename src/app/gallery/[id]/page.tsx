@@ -4,7 +4,9 @@ import { getGalleryEvent } from "@/lib/local-gallery";
 import GalleryDetailView from "@/components/GalleryDetailView";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { redirect } from "next/navigation";
+
+export const dynamic = 'force-dynamic';
 
 export default async function GalleryEventPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -23,6 +25,11 @@ export default async function GalleryEventPage({ params }: { params: Promise<{ i
         <Footer />
       </main>
     );
+  }
+
+  // Redirect to Google Photos if link is available
+  if (event.googlePhotosUrl) {
+    redirect(event.googlePhotosUrl);
   }
 
   return (
