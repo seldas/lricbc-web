@@ -5,8 +5,14 @@ import path from 'path';
 import { getStoragePath } from './storage-paths';
 import { revalidatePath } from 'next/cache';
 
-const CONTENT_DIR = getStoragePath('content/updates');
-const UPLOAD_DIR = getStoragePath('public/announcements');
+function getContentDir() {
+  return getStoragePath('content/updates');
+}
+
+function getUploadDir() {
+  return getStoragePath('public/announcements');
+}
+
 const ADMIN_KEY = process.env.ADMIN_POST_KEY || "lricbc2026"; // Default fallback
 
 import { getSortedPostsData, PostData } from './local-content';
@@ -35,10 +41,11 @@ export async function createAnnouncement(formData: FormData) {
     if (imageFile && imageFile.size > 0) {
       const ext = path.extname(imageFile.name);
       const fileName = `${id}${ext}`;
-      const filePath = path.join(UPLOAD_DIR, fileName);
+      const uploadDir = getUploadDir();
+      const filePath = path.join(uploadDir, fileName);
       
       try {
-        await fs.mkdir(UPLOAD_DIR, { recursive: true });
+        await fs.mkdir(uploadDir, { recursive: true });
         const buffer = Buffer.from(await imageFile.arrayBuffer());
         await fs.writeFile(filePath, buffer);
         imageUrl = `/announcements/${fileName}`;
@@ -72,8 +79,9 @@ ${content_zh}
 `;
 
   try {
-    await fs.mkdir(CONTENT_DIR, { recursive: true });
-    await fs.writeFile(path.join(CONTENT_DIR, `${id}.md`), frontmatter);
+    const contentDir = getContentDir();
+    await fs.mkdir(contentDir, { recursive: true });
+    await fs.writeFile(path.join(contentDir, `${id}.md`), frontmatter);
     
     // Force revalidation of the homepage and updates list
     revalidatePath('/');

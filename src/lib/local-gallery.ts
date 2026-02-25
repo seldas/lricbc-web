@@ -3,8 +3,13 @@ import path from 'path';
 import { getGooglePhotosUrls } from './google-photos';
 import { getStoragePath } from './storage-paths';
 
-const galleryDirectory = getStoragePath('public/gallery');
-const metadataPath = path.join(galleryDirectory, 'metadata.json');
+function getGalleryDirectory() {
+  return getStoragePath('public/gallery');
+}
+
+function getMetadataPath() {
+  return path.join(getGalleryDirectory(), 'metadata.json');
+}
 
 export interface GalleryEvent {
   id: string; // folder name or unique id
@@ -27,7 +32,8 @@ interface MetadataItem {
 }
 
 function getLocalImages(folderName: string): string[] {
-  const folderPath = path.join(galleryDirectory, folderName);
+  const galleryDir = getGalleryDirectory();
+  const folderPath = path.join(galleryDir, folderName);
   if (!fs.existsSync(folderPath)) return [];
   
   const files = fs.readdirSync(folderPath);
@@ -38,6 +44,7 @@ function getLocalImages(folderName: string): string[] {
 }
 
 export async function getGalleryEvents(): Promise<GalleryEvent[]> {
+  const metadataPath = getMetadataPath();
   if (!fs.existsSync(metadataPath)) {
     return [];
   }
@@ -86,6 +93,7 @@ export async function getGalleryEvents(): Promise<GalleryEvent[]> {
 }
 
 export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> {
+  const metadataPath = getMetadataPath();
   if (!fs.existsSync(metadataPath)) return null;
 
   let metadata: MetadataItem[] = [];
@@ -125,7 +133,8 @@ export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> 
 }
 
 export async function getRandomGalleryImages(count: number): Promise<string[]> {
-  if (!fs.existsSync(galleryDirectory)) return [];
+  const galleryDir = getGalleryDirectory();
+  if (!fs.existsSync(galleryDir)) return [];
 
   const events = await getGalleryEvents();
   let allImages: string[] = [];

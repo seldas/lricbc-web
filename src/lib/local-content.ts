@@ -5,7 +5,9 @@ import { remark } from 'remark';
 import html from 'remark-html';
 import { getStoragePath } from './storage-paths';
 
-const postsDirectory = getStoragePath('content/updates');
+function getPostsDirectory() {
+  return getStoragePath('content/updates');
+}
 
 export interface PostData {
   id: string;
@@ -26,18 +28,19 @@ export interface PostData {
 }
 
 export function getSortedPostsData() {
+  const postsDir = getPostsDirectory();
   // Create directory if it doesn't exist
-  if (!fs.existsSync(postsDirectory)) {
+  if (!fs.existsSync(postsDir)) {
     return [];
   }
 
-  const fileNames = fs.readdirSync(postsDirectory);
+  const fileNames = fs.readdirSync(postsDir);
   const allPostsData = fileNames.map((fileName) => {
     // Remove ".md" from file name to get id
     const id = fileName.replace(/\.md$/, '');
 
     // Read markdown file as string
-    const fullPath = path.join(postsDirectory, fileName);
+    const fullPath = path.join(postsDir, fileName);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
 
     // Use gray-matter to parse the post metadata section
@@ -72,7 +75,7 @@ export function getSortedPostsData() {
 }
 
 export async function getPostData(id: string): Promise<PostData | null> {
-  const fullPath = path.join(postsDirectory, `${id}.md`);
+  const fullPath = path.join(getPostsDirectory(), `${id}.md`);
   
   if (!fs.existsSync(fullPath)) {
     return null;

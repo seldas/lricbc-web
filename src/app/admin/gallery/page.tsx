@@ -177,32 +177,29 @@ export default function AdminGalleryPage() {
                   <p className="text-center py-12 text-slate-400 italic font-light">No galleries found in metadata.</p>
                 ) : (
                   galleries.map((gallery) => (
-                    <Card key={gallery.id} className="rounded-3xl border-sky-50 shadow-sm hover:shadow-md transition-all overflow-hidden group">
-                      <div className="flex gap-4 p-4">
-                        <div className="h-20 w-20 relative rounded-xl overflow-hidden shrink-0 bg-slate-100">
-                          <img src={gallery.thumbnail} alt="" className="object-cover w-full h-full" />
-                        </div>
-                        <div className="flex-grow min-w-0 space-y-1">
+                    <div key={gallery.id} className="group flex items-center justify-between p-4 rounded-2xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-sky-50">
+                      <div className="flex-grow min-w-0">
+                        <div className="flex items-center gap-3 mb-1">
                           <h4 className="font-bold text-sky-900 truncate group-hover:text-sky-600 transition-colors">{gallery.title_en}</h4>
-                          <p className="text-xs text-sky-500 font-medium">{gallery.title_zh}</p>
-                          <div className="flex items-center gap-3 pt-1">
-                            <div className="flex items-center gap-1 text-[10px] text-slate-400 font-black uppercase tracking-tighter">
-                              <Calendar className="h-3 w-3" />
-                              <span>{gallery.date}</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-[10px] text-slate-400 font-black uppercase tracking-tighter">
-                              <Tag className="h-3 w-3" />
-                              <span>{gallery.category}</span>
-                            </div>
+                          <span className="text-[10px] text-sky-400 font-black uppercase tracking-widest">{gallery.title_zh}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-black uppercase tracking-tighter">
+                            <Calendar className="h-3 w-3" />
+                            <span>{gallery.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-black uppercase tracking-tighter">
+                            <Tag className="h-3 w-3" />
+                            <span>{gallery.category}</span>
                           </div>
                         </div>
-                        <Button variant="ghost" size="icon" asChild className="shrink-0 rounded-full text-sky-400 hover:text-sky-600 hover:bg-sky-50">
-                          <Link href={`/gallery/${gallery.id}`} target="_blank">
-                            <ExternalLink className="h-5 w-5" />
-                          </Link>
-                        </Button>
                       </div>
-                    </Card>
+                      <Button variant="ghost" size="icon" asChild className="shrink-0 rounded-full text-sky-400 hover:text-sky-600 hover:bg-sky-50 ml-4">
+                        <Link href={`/gallery/${gallery.id}`} target="_blank">
+                          <ExternalLink className="h-5 w-5" />
+                        </Link>
+                      </Button>
+                    </div>
                   ))
                 )}
               </div>
