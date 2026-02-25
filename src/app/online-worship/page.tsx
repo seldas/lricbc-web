@@ -1,11 +1,17 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getLatestVideos } from "@/lib/youtube";
+import { getLatestVideos, getLiveStreamId } from "@/lib/youtube";
 import OnlineWorshipClient from "@/components/OnlineWorshipClient";
 
 export default async function OnlineWorshipPage() {
   const channelId = "UCefUbMKSUD_2YGB3tWLwsAw";
-  const videos = await getLatestVideos(channelId, 10);
+  
+  // Check for live stream and latest videos in parallel
+  const [liveVideoId, videos] = await Promise.all([
+    getLiveStreamId(channelId),
+    getLatestVideos(channelId, 10)
+  ]);
+  
   const latestVideoId = videos.length > 0 ? videos[0].id : null;
 
   return (
@@ -13,6 +19,7 @@ export default async function OnlineWorshipPage() {
       <Navbar />
       <OnlineWorshipClient 
         channelId={channelId} 
+        liveVideoId={liveVideoId}
         latestVideoId={latestVideoId} 
         initialVideos={videos}
       />

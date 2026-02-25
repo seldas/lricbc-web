@@ -2,9 +2,10 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { getStoragePath } from './storage-paths';
 
-const CONTENT_DIR = path.join(process.cwd(), 'content/updates');
-const UPLOAD_DIR = path.join(process.cwd(), 'public/announcements');
+const CONTENT_DIR = getStoragePath('content/updates');
+const UPLOAD_DIR = getStoragePath('public/announcements');
 const ADMIN_KEY = process.env.ADMIN_POST_KEY || "lricbc2026"; // Default fallback
 
 import { getSortedPostsData, PostData } from './local-content';

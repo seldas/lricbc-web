@@ -10,18 +10,19 @@ import { cn } from "@/lib/utils";
 
 interface OnlineWorshipClientProps {
   channelId: string;
+  liveVideoId: string | null;
   latestVideoId: string | null;
   initialVideos?: YouTubeVideo[];
 }
 
-export default function OnlineWorshipClient({ channelId, latestVideoId, initialVideos = [] }: OnlineWorshipClientProps) {
+export default function OnlineWorshipClient({ channelId, liveVideoId, latestVideoId, initialVideos = [] }: OnlineWorshipClientProps) {
   const { t } = useTranslation('common');
-  const [useLive, setUseLive] = useState(true);
+  const [useLive, setUseLive] = useState(!!liveVideoId);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(latestVideoId);
   
-  // If we're not using the "live" redirect, we use the specific selected video ID
+  // If we have a specific live video ID, use it. Otherwise use the generic live redirect.
   const embedUrl = useLive 
-    ? `https://www.youtube.com/embed/live?channel=${channelId}&autoplay=0`
+    ? (liveVideoId ? `https://www.youtube.com/embed/${liveVideoId}?autoplay=0` : `https://www.youtube.com/embed/live?channel=${channelId}&autoplay=0`)
     : `https://www.youtube.com/embed/${selectedVideoId}?autoplay=0`;
 
   const handleVideoSelect = (videoId: string) => {
@@ -38,12 +39,14 @@ export default function OnlineWorshipClient({ channelId, latestVideoId, initialV
       {/* Compact Responsive Banner */}
       <section className="bg-gradient-to-b from-sky-100/60 to-white py-8 md:py-10 border-b border-sky-50">
         <div className="container mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1 bg-white/40 backdrop-blur-md rounded-full border border-sky-200 mb-4 animate-pulse">
-            <div className="h-2 w-2 bg-red-500 rounded-full" />
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-sky-900">
-              {t('onlineWorshipPage.liveStatus')}
-            </span>
-          </div>
+          {liveVideoId && (
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-white/40 backdrop-blur-md rounded-full border border-sky-200 mb-4 animate-pulse">
+              <div className="h-2 w-2 bg-red-500 rounded-full" />
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-sky-900">
+                {t('onlineWorshipPage.liveStatus')}
+              </span>
+            </div>
+          )}
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-light tracking-tight text-sky-900 leading-tight">
             {t('onlineWorshipPage.title')}
           </h1>
@@ -56,22 +59,27 @@ export default function OnlineWorshipClient({ channelId, latestVideoId, initialV
       <section className="container mx-auto px-4 py-6 md:py-12 flex-grow">
         <div className="max-w-6xl mx-auto">
           
-          {/* Video Selection Tabs (Only show if we have a latest video) */}
+          {/* Video Selection Tabs */}
           <div className="flex justify-center mb-8 gap-4">
-            <Button 
-              variant={useLive ? "default" : "outline"}
-              onClick={() => setUseLive(true)}
-              className="rounded-full px-8 py-4 font-bold uppercase tracking-widest text-xs"
-            >
-              {t('onlineWorshipPage.tryLive')}
-            </Button>
+            {liveVideoId && (
+              <Button 
+                variant={useLive ? "default" : "outline"}
+                onClick={() => setUseLive(true)}
+                className="rounded-full px-8 py-4 font-bold uppercase tracking-widest text-xs"
+              >
+                {t('onlineWorshipPage.tryLive')}
+              </Button>
+            )}
             {latestVideoId && (
               <Button 
                 variant={!useLive ? "default" : "outline"}
-                onClick={() => setUseLive(false)}
+                onClick={() => {
+                  setUseLive(false);
+                  if (!selectedVideoId) setSelectedVideoId(latestVideoId);
+                }}
                 className="rounded-full px-8 py-4 font-bold uppercase tracking-widest text-xs"
               >
-                {t('onlineWorshipPage.watchRecording')}
+                {liveVideoId ? t('onlineWorshipPage.watchRecording') : t('onlineWorshipPage.archiveTitle')}
               </Button>
             )}
           </div>

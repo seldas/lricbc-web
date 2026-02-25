@@ -5,6 +5,41 @@ export interface YouTubeVideo {
   thumbnail: string;
 }
 
+/**
+ * Checks if a channel is currently live and returns the video ID if it is.
+ * Uses a fetch to the live URL and parses the response for live indicators.
+ */
+export async function getLiveStreamId(channelId: string): Promise<string | null> {
+  try {
+    const response = await fetch(`https://www.youtube.com/channel/${channelId}/live`, {
+      // Disable cache to get real-time status
+      cache: 'no-store',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      }
+    });
+    
+    if (!response.ok) return null;
+    
+    const html = await response.text();
+    
+    // Check for live indicators in the HTML
+    // YouTube embeds "isLive":true in the ytInitialPlayerResponse or ytInitialData
+    if (html.includes('"isLive":true') || html.includes('\"isLive\":true')) {
+      // Extract video ID from the canonical URL or ytInitialData
+      const videoIdMatch = html.match(/\"videoId\":\"([^\"]+)\"/);
+      if (videoIdMatch) {
+        return videoIdMatch[1];
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error checking live status:", error);
+    return null;
+  }
+}
+
 export async function getLatestVideoId(channelId: string): Promise<string | null> {
   const videos = await getLatestVideos(channelId, 1);
   return videos.length > 0 ? videos[0].id : null;

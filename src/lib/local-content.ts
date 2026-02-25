@@ -3,8 +3,9 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
+import { getStoragePath } from './storage-paths';
 
-const postsDirectory = path.join(process.cwd(), 'content/updates');
+const postsDirectory = getStoragePath('content/updates');
 
 export interface PostData {
   id: string;

@@ -4,7 +4,9 @@ import { JSDOM } from 'jsdom';
 
 const PENDING_DIR = path.join(process.cwd(), 'fetch_raw', 'pending');
 const PROCESSED_DIR = path.join(process.cwd(), 'fetch_raw', 'processed');
-const CONTENT_DIR = path.join(process.cwd(), 'content/updates');
+const CONTENT_DIR = process.env.DATA_STORAGE_PATH 
+  ? path.join(process.env.DATA_STORAGE_PATH, 'content/updates') 
+  : path.join(process.cwd(), 'content/updates');
 
 function decodeBase64(data: string) {
   return Buffer.from(data, 'base64').toString('utf8');
