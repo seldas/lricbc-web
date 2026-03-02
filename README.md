@@ -2,8 +2,7 @@
 
 This is the official web application for the **Little Rock Immanuel Chinese Baptist Church (LRICBC)**. The platform serves as a central hub for the congregation, providing access to bilingual worship programs, pastor's messages, and church updates.
 
-Currently hosted at [lricbc-web-1005010236942.us-central1.run.app](https://lricbc-web-1005010236942.us-central1.run.app/)  
-Will move to [lricbc.org](https://lricbc.org) when officially online
+Currently hosted at [lricbc.org](https://lricbc.org) 
 
 ## Key Features
 
@@ -11,12 +10,12 @@ Will move to [lricbc.org](https://lricbc.org) when officially online
 - **Bilingual Support:** Fully supports English and Chinese (Traditional) content for all worship programs and pastor's messages.
 - **Responsive Design:** Optimized for both desktop and mobile viewing to ensure the congregation can access materials anywhere.
 - **Media Sharing:** Integration with Google Photos to share church event photos and videos with the congregation.
-- **Statement of Faith:** Integrated bilingual [Baptist Faith and Message 2000](/faith) page for the congregation.
 - **Archive Management:** Automatically generates a searchable history of past sermons and messages.
 
 ## Weekly Content Updates
 
-The app includes specialized scripts to automate the flow from church communications to web content.
+The app includes specialized scripts to automate the flow from church communications to web content.  
+Currently, a personal gmail is screened every week for this purpose, the content depends on the weekly "主日崇拜" email sent out by church staff.  
 
 - **Smart Fetching:** The system defaults to a **30-day lookback** for new emails to ensure updates are fast and efficient.
 - **Automated Processing:** Raw email data is automatically parsed, cleaned, and converted into Markdown format for the website.
@@ -60,7 +59,23 @@ Since `deploy.ps1` is ignored by source control, this section provides instructi
     -   `token.json`: Automatically generated after your first successful `npm run fetch-updates`.
 
 ### 3. Deploy to Cloud Run
-Run the following commands from the `lricbc-web` directory.
+Deployment scripts are provided for both Windows (PowerShell) and Linux/macOS (Bash). These scripts automatically load the `ADMIN_POST_KEY` from your local `.env` file.
+
+**For Linux / macOS:**
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+**For Windows (PowerShell):**
+```powershell
+./deploy.ps1
+```
+
+*Note: These scripts also synchronize your local content, fetch data, and public assets to the Cloud Storage bucket after a successful deployment.*
+
+### 4. Manual Deployment (Optional)
+If you prefer to run commands manually, follow these steps from the `lricbc-web` directory.
 
 **For Linux / macOS (Bash/Zsh):**
 ```bash
@@ -68,6 +83,7 @@ Run the following commands from the `lricbc-web` directory.
 gcloud storage buckets create gs://lricbc-web-storage --project lricbc-web --location us-central1
 
 # 2. Deploy the service
+# Replace 'your_secure_key' with the value from your .env file
 gcloud run deploy lricbc-web \
     --source . \
     --project lricbc-web \
@@ -84,6 +100,7 @@ gcloud run deploy lricbc-web \
 gcloud storage buckets create gs://lricbc-web-storage --project lricbc-web --location us-central1
 
 # 2. Deploy the service
+# Replace 'your_secure_key' with the value from your .env file
 gcloud run deploy lricbc-web `
     --source . `
     --project lricbc-web `
@@ -92,23 +109,6 @@ gcloud run deploy lricbc-web `
     --set-env-vars "ADMIN_POST_KEY=your_secure_key,DATA_STORAGE_PATH=/app/storage" `
     --add-volume "name=storage,type=cloud-storage,bucket=lricbc-web-storage" `
     --add-volume-mount "volume=storage,mount-path=/app/storage"
-```
-
-### 4. Data Sync
-To populate the storage bucket with initial local content:
-
-**Linux / macOS:**
-```bash
-gcloud storage cp -r content/updates gs://lricbc-web-storage/content/
-gcloud storage cp -r public/announcements gs://lricbc-web-storage/public/
-gcloud storage cp -r public/gallery gs://lricbc-web-storage/public/
-```
-
-**Windows (PowerShell):**
-```powershell
-gcloud storage cp -r content/updates gs://lricbc-web-storage/content/
-gcloud storage cp -r public/announcements gs://lricbc-web-storage/public/
-gcloud storage cp -r public/gallery gs://lricbc-web-storage/public/
 ```
 
 ---

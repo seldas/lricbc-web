@@ -44,4 +44,3 @@ credentials.json
 pending/
 fetch_raw/
 token.json
-deploy.ps1
