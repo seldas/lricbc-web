@@ -34,23 +34,6 @@ async function saveCredentials(client: any) {
   const payload = JSON.stringify({
     type: 'authorized_user',
     client_id: key.client_id,
-    client_secret: key.client_id_secret, // Fix for local-auth payload
-    refresh_token: client.credentials.refresh_token,
-  });
-  await fs.writeFile(TOKEN_PATH, payload);
-}
-
-/**
- * Actually saveCredentials needs some small fix because the payload structure 
- * might differ slightly. Correcting it here based on standard Google OAuth2 structure.
- */
-async function saveCredentialsCorrected(client: any) {
-  const content = await fs.readFile(CREDENTIALS_PATH, 'utf8');
-  const keys = JSON.parse(content);
-  const key = keys.installed || keys.web;
-  const payload = JSON.stringify({
-    type: 'authorized_user',
-    client_id: key.client_id,
     client_secret: key.client_secret,
     refresh_token: client.credentials.refresh_token,
   });
@@ -58,17 +41,37 @@ async function saveCredentialsCorrected(client: any) {
 }
 
 async function authorize() {
-  let client: any = null;
-  client = await loadSavedCredentialsIfExist();
+  let client: any = await loadSavedCredentialsIfExist();
   if (client) {
-    return client;
+    try {
+      // Force a token refresh to check if the credentials are still valid
+      await client.getAccessToken();
+      return client;
+    } catch (err: any) {
+      // If we get an invalid_grant error, the refresh token is no longer valid
+      if (err.message?.includes('invalid_grant') || err.response?.data?.error === 'invalid_grant') {
+        console.warn('Saved token is invalid or expired. Starting new authentication flow...');
+        try {
+          await fs.unlink(TOKEN_PATH);
+        } catch (unlinkErr) {
+          // Ignore error if file doesn't exist
+        }
+        client = null;
+      } else {
+        throw err;
+      }
+    }
   }
-  client = await authenticate({
-    scopes: SCOPES,
-    keyfilePath: CREDENTIALS_PATH,
-  });
-  if (client.credentials) {
-    await saveCredentialsCorrected(client);
+
+  // If no valid client from saved credentials, start authentication flow
+  if (!client) {
+    client = await authenticate({
+      scopes: SCOPES,
+      keyfilePath: CREDENTIALS_PATH,
+    });
+    if (client.credentials) {
+      await saveCredentials(client);
+    }
   }
   return client;
 }
