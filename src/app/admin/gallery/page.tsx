@@ -7,12 +7,11 @@ import { addGalleryEvent, getGalleriesAction } from "@/lib/gallery-actions";
 import { GalleryEvent } from "@/lib/local-gallery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Lock, Plus, CheckCircle2, AlertCircle, Image as ImageIcon, ExternalLink, Calendar, Tag, Layers } from "lucide-react";
+import { Lock, Plus, CheckCircle2, AlertCircle, ExternalLink, Calendar, Tag, Layers } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 export default function AdminGalleryPage() {
   const [status, setStatus] = useState<{ type: 'idle' | 'loading' | 'success' | 'error', message?: string }>({ type: 'idle' });
@@ -55,7 +54,7 @@ export default function AdminGalleryPage() {
           
           <div className="text-center space-y-4">
             <h1 className="text-5xl md:text-7xl font-light text-sky-950 tracking-tight">Gallery Management</h1>
-            <p className="text-2xl text-sky-600/60 font-light italic">Create and manage your church's digital memories.</p>
+            <p className="text-2xl text-sky-600/60 font-light italic">Create and manage your church&rsquo;s digital memories.</p>
           </div>
 
           <div className="grid lg:grid-cols-5 gap-12 items-start">

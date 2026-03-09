@@ -8,10 +8,7 @@ import {
   BookOpen, 
   History, 
   Users, 
-  Sun,
-  ChevronRight,
-  Menu,
-  X
+  Sun
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -29,14 +26,12 @@ const navItems = [
 export default function AboutPageNav() {
   const { i18n } = useTranslation();
   const [activeId, setActiveId] = useState('');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const observers = new Map();
     const options = { threshold: 0.2, rootMargin: '-10% 0px -70% 0px' };
 
-    const callback = (entries: any[]) => {
-      entries.forEach(entry => {
+    const callback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setActiveId(entry.target.id);
         }
@@ -44,7 +39,7 @@ export default function AboutPageNav() {
     };
 
     const observer = new IntersectionObserver(callback, options);
-    navItems.forEach(item => {
+    navItems.forEach((item) => {
       const el = document.getElementById(item.id);
       if (el) observer.observe(el);
     });
@@ -66,7 +61,6 @@ export default function AboutPageNav() {
         behavior: 'smooth'
       });
     }
-    setIsMobileMenuOpen(false);
   };
 
   return (

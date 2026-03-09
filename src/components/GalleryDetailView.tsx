@@ -1,12 +1,12 @@
 'use client';
 
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
+import Image from "next/image";
 import { GalleryEvent } from "@/lib/local-gallery";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Maximize2, X, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export default function GalleryDetailView({ event }: { event: GalleryEvent }) {
   const { t, i18n } = useTranslation('common');
@@ -21,19 +21,19 @@ export default function GalleryDetailView({ event }: { event: GalleryEvent }) {
 
   const title = event[`title_${langSuffix}` as keyof GalleryEvent] as string;
 
-  const handleNext = (e?: React.MouseEvent) => {
+  const handleNext = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (selectedIndex !== null) {
       setSelectedIndex((selectedIndex + 1) % images.length);
     }
-  };
+  }, [selectedIndex, images.length]);
 
-  const handlePrev = (e?: React.MouseEvent) => {
+  const handlePrev = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (selectedIndex !== null) {
       setSelectedIndex((selectedIndex - 1 + images.length) % images.length);
     }
-  };
+  }, [selectedIndex, images.length]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function GalleryDetailView({ event }: { event: GalleryEvent }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex]);
+  }, [selectedIndex, handleNext, handlePrev]);
 
   return (
     <section className="flex-grow py-20 px-4">
@@ -73,7 +73,14 @@ export default function GalleryDetailView({ event }: { event: GalleryEvent }) {
                 </p>
               )}
               <div className="flex items-center gap-2 text-sky-400/60 text-xs font-medium uppercase tracking-wider pt-2">
-                <img src="https://www.gstatic.com/images/branding/product/1x/photos_96dp.png" alt="Google Photos" className="h-4 w-4 opacity-50" />
+                <Image
+                  src="https://www.gstatic.com/images/branding/product/1x/photos_96dp.png"
+                  alt="Google Photos"
+                  width={20}
+                  height={20}
+                  className="opacity-50"
+                  unoptimized
+                />
                 <span>{t('gallery.googlePhotosNotice')}</span>
               </div>
             </div>
@@ -88,10 +95,13 @@ export default function GalleryDetailView({ event }: { event: GalleryEvent }) {
               className="relative aspect-square group cursor-zoom-in overflow-hidden rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-500 bg-sky-50"
               onClick={() => setSelectedIndex(index)}
             >
-              <img 
-                src={src} 
+              <Image
+                src={src}
                 alt={`${title} - ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                sizes="(max-width: 1024px) 50vw, 25vw"
+                unoptimized
               />
               <div className="absolute inset-0 bg-sky-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Maximize2 className="text-white h-10 w-10 drop-shadow-lg" />
@@ -162,11 +172,16 @@ export default function GalleryDetailView({ event }: { event: GalleryEvent }) {
             </Button>
 
             <div className="relative max-w-full max-h-full flex flex-col items-center">
-              <img 
-                src={images[selectedIndex]} 
-                alt={`Photo ${selectedIndex + 1}`} 
-                className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300"
-              />
+              <div className="relative w-full max-h-[80vh]">
+                <Image
+                  src={images[selectedIndex]}
+                  alt={`Photo ${selectedIndex + 1}`}
+                  fill
+                  className="object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300"
+                  sizes="(max-width: 768px) 90vw, 80vw"
+                  unoptimized
+                />
+              </div>
               <div className="mt-8 text-center space-y-2">
                 <p className="text-white text-xl font-light tracking-widest uppercase">
                   {title}

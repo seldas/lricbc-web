@@ -1,12 +1,10 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
 
 export default function Footer() {
-  const { t } = useTranslation('common');
 
   return (
     <footer className="border-t bg-slate-50 py-12">

@@ -100,7 +100,7 @@ export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> 
   try {
     const fileContent = fs.readFileSync(metadataPath, 'utf8');
     metadata = JSON.parse(fileContent);
-  } catch (e) {
+  } catch {
     return null;
   }
 

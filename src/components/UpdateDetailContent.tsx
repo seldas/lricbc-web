@@ -1,14 +1,29 @@
 'use client';
 
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Calendar, ChevronLeft, Tag, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReadingSettings from "@/components/ReadingSettings";
+import { PostData } from "@/lib/local-content";
+
+const DEFAULT_FONT_SIZE = 'prose-lg';
+const DEFAULT_THEME = 'light';
+
+function getStoredFontSize(): string {
+  if (typeof window === 'undefined') return DEFAULT_FONT_SIZE;
+  return localStorage.getItem('reading-font-size') ?? DEFAULT_FONT_SIZE;
+}
+
+function getStoredTheme(): string {
+  if (typeof window === 'undefined') return DEFAULT_THEME;
+  return localStorage.getItem('reading-theme') ?? DEFAULT_THEME;
+}
 
 interface UpdateDetailContentProps {
-  post: any;
+  post: PostData;
   adjacent?: {
     prev: { id: string; title_en: string; title_zh: string } | null;
     next: { id: string; title_en: string; title_zh: string } | null;
@@ -17,17 +32,10 @@ interface UpdateDetailContentProps {
 
 export default function UpdateDetailContent({ post, adjacent }: UpdateDetailContentProps) {
   const { t, i18n } = useTranslation('common');
-  const [fontSize, setFontSize] = useState('prose-lg');
-  const [theme, setTheme] = useState('light');
+  const [fontSize, setFontSize] = useState(getStoredFontSize);
+  const [theme, setTheme] = useState(getStoredTheme);
   
   const langSuffix = i18n.language === 'en' ? 'en' : 'zh';
-
-  useEffect(() => {
-    const savedFontSize = localStorage.getItem('reading-font-size');
-    const savedTheme = localStorage.getItem('reading-theme');
-    if (savedFontSize) setFontSize(savedFontSize);
-    if (savedTheme) setTheme(savedTheme);
-  }, []);
 
   const handleFontSizeChange = (size: string) => {
     setFontSize(size);
@@ -79,11 +87,14 @@ export default function UpdateDetailContent({ post, adjacent }: UpdateDetailCont
             </div>
 
             {post.type === 'image' && post.imageUrl && (
-              <div className="mb-12 rounded-[2rem] overflow-hidden shadow-xl bg-slate-100">
-                <img 
-                  src={post.imageUrl} 
-                  alt={post[`title_${langSuffix}`]} 
-                  className="w-full h-auto object-contain max-h-[80vh] mx-auto"
+              <div className="mb-12 rounded-[2rem] overflow-hidden shadow-xl bg-slate-100 relative" style={{ minHeight: '60vh' }}>
+                <Image
+                  src={post.imageUrl}
+                  alt={post[`title_${langSuffix}`]}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 90vw, 640px"
+                  unoptimized
                 />
               </div>
             )}

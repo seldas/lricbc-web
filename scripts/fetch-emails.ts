@@ -14,12 +14,12 @@ const PROCESSED_DIR = path.join(process.cwd(), 'fetch_raw', 'processed');
 /**
  * Reads previously authorized credentials from the save file.
  */
-async function loadSavedCredentialsIfExist() {
+async function loadSavedCredentialsIfExist(): Promise<google.auth.OAuth2Client | null> {
   try {
     const content = await fs.readFile(TOKEN_PATH, 'utf8');
     const credentials = JSON.parse(content);
     return google.auth.fromJSON(credentials);
-  } catch (err) {
+  } catch {
     return null;
   }
 }
@@ -27,7 +27,7 @@ async function loadSavedCredentialsIfExist() {
 /**
  * Serializes credentials to a file compatible with GoogleAuth.fromJSON.
  */
-async function saveCredentials(client: any) {
+async function saveCredentials(client: google.auth.OAuth2Client) {
   const content = await fs.readFile(CREDENTIALS_PATH, 'utf8');
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
@@ -40,25 +40,26 @@ async function saveCredentials(client: any) {
   await fs.writeFile(TOKEN_PATH, payload);
 }
 
-async function authorize() {
-  let client: any = await loadSavedCredentialsIfExist();
+async function authorize(): Promise<google.auth.OAuth2Client> {
+  let client = await loadSavedCredentialsIfExist();
   if (client) {
     try {
       // Force a token refresh to check if the credentials are still valid
       await client.getAccessToken();
       return client;
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as { message?: string; response?: { data?: { error?: string } } };
       // If we get an invalid_grant error, the refresh token is no longer valid
       if (err.message?.includes('invalid_grant') || err.response?.data?.error === 'invalid_grant') {
         console.warn('Saved token is invalid or expired. Starting new authentication flow...');
         try {
           await fs.unlink(TOKEN_PATH);
-        } catch (unlinkErr) {
+        } catch {
           // Ignore error if file doesn't exist
         }
         client = null;
       } else {
-        throw err;
+        throw error;
       }
     }
   }
@@ -81,16 +82,17 @@ async function listMessages(gmail: gmail_v1.Gmail, query: string) {
   let pageToken: string | undefined;
 
   do {
-    const res: any = await gmail.users.messages.list({
+    const res = await gmail.users.messages.list({
       userId: 'me',
       q: query,
-      pageToken: pageToken,
+      pageToken,
       maxResults: 100,
     });
-    if (res.data.messages) {
-      allMessages = allMessages.concat(res.data.messages);
+    const data = res.data;
+    if (data.messages) {
+      allMessages = allMessages.concat(data.messages);
     }
-    pageToken = res.data.nextPageToken;
+    pageToken = data.nextPageToken || undefined;
   } while (pageToken);
 
   return allMessages;
@@ -108,7 +110,7 @@ async function getMessage(gmail: gmail_v1.Gmail, id: string) {
 async function run() {
   try {
     const auth = await authorize();
-    const gmail = google.gmail({ version: 'v1', auth: auth as any });
+    const gmail = google.gmail({ version: 'v1', auth });
 
     // Parse command line arguments
     const args = process.argv.slice(2);

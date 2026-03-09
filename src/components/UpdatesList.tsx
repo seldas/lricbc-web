@@ -268,7 +268,7 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
           <div className="text-center py-32 space-y-6">
             <Search className="h-20 w-20 text-sky-100 mx-auto" />
             <p className="text-3xl font-light text-sky-900/40 italic">
-              No results found for "{searchQuery}"
+              No results found for “{searchQuery}”
             </p>
             <Button 
               variant="link" 

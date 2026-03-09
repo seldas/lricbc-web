@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Calendar, MapPin, Clock, Info, User, Mic2, HeartHandshake } from "lucide-react";
+import { Calendar, MapPin, Clock, User, Mic2, HeartHandshake } from "lucide-react";
 
 export default function SpecialEventPage() {
   const { t } = useTranslation('common');

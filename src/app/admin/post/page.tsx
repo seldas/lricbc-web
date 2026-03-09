@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Image from "next/image";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createAnnouncement, getPosts, deletePosts } from "@/lib/actions";
 import { PostData } from "@/lib/local-content";
@@ -48,7 +49,10 @@ export default function AdminPostPage() {
   }, []);
 
   useEffect(() => {
-    fetchPosts();
+    const load = async () => {
+      await fetchPosts();
+    };
+    load();
   }, [fetchPosts]);
 
   const handleActionWithPasscode = async () => {
@@ -284,7 +288,14 @@ export default function AdminPostPage() {
                     >
                       {imagePreview ? (
                         <div className="relative aspect-[4/3] max-w-md mx-auto rounded-2xl overflow-hidden shadow-xl">
-                          <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                          <Image
+                            src={imagePreview!}
+                            alt="Preview"
+                            fill
+                            sizes="(max-width: 768px) 90vw, 640px"
+                            className="object-cover"
+                            unoptimized
+                          />
                         </div>
                       ) : (
                         <div className="space-y-4">

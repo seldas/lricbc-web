@@ -8,11 +8,36 @@ const CONTENT_DIR = process.env.DATA_STORAGE_PATH
   ? path.join(process.env.DATA_STORAGE_PATH, 'content/updates') 
   : path.join(process.cwd(), 'content/updates');
 
+interface MessagePart {
+  mimeType?: string;
+  body?: { data?: string };
+  parts?: MessagePart[];
+}
+
+interface SavedMessage {
+  payload: {
+    headers?: { name?: string; value?: string }[];
+    parts?: MessagePart[];
+    body?: { data?: string };
+  };
+}
+
+interface PostMetadata {
+  publishedAt: string;
+  category: string;
+  title_en: string;
+  title_zh: string;
+  subtitle_en?: string;
+  subtitle_zh?: string;
+  excerpt_en: string;
+  excerpt_zh: string;
+}
+
 function decodeBase64(data: string) {
   return Buffer.from(data, 'base64').toString('utf8');
 }
 
-function getPart(parts: any[], mimeType: string): any {
+function getPart(parts: MessagePart[] = [], mimeType: string): MessagePart | null {
   for (const part of parts) {
     if (part.mimeType === mimeType) {
       return part;
@@ -47,10 +72,10 @@ function cleanText(html: string): string {
  * Ensures sentences are grouped and signatures are identified.
  */
 function formatNarrativeText(text: string): string {
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  const lines = text.split('\n').map((l) => l.trim()).filter((l) => l);
   let formatted = "";
   
-  for (let line of lines) {
+  for (const line of lines) {
     // Identify potential headers (short lines with specific symbols)
     if (line.length < 40 && (line.startsWith('•') || line.includes('：') || line.includes(':'))) {
       formatted += `\n### ${line}\n\n`;
@@ -116,14 +141,14 @@ function splitBilingual(text: string): { zh: string, en: string } {
  * Identifies points (I., A., 1.) and Scripture references.
  */
 function formatSermonSummary(text: string): string {
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  const lines = text.split('\n').map((l) => l.trim()).filter((l) => l);
   let formatted = "";
   
   const mainPointRegex = /^(I|II|III|IV|V|VI|VII|VIII|IX|X)\.?\s+(.*)/i;
   const subPointRegex = /^([A-G]|\d+)\.?\s+(.*)/i;
   const scriptureRegex = /([12]?\s*[\u4e00-\u9fa5]{1,10}|[12]?\s*[a-z]+)\s+\d+:\s*\d+(-\d+)?/i;
 
-  for (let line of lines) {
+  for (const line of lines) {
     const mainMatch = line.match(mainPointRegex);
     if (mainMatch) {
       formatted += `\n## ${mainMatch[1]}. ${mainMatch[2]}\n`;
@@ -156,14 +181,15 @@ function formatSermonSummary(text: string): string {
 async function processFile(fileName: string) {
   const filePath = path.join(PENDING_DIR, fileName);
   const content = await fs.readFile(filePath, 'utf8');
-  const msg = JSON.parse(content);
+  const msg: SavedMessage = JSON.parse(content);
 
-  const subject = msg.payload.headers.find((h: any) => h.name === 'Subject')?.value || '';
+  const subject = msg.payload.headers?.find((h) => h.name === 'Subject')?.value || '';
   
-  const htmlPart = getPart([msg.payload], 'text/html');
-  if (!htmlPart || !htmlPart.body.data) return;
+  const htmlPart = getPart(msg.payload.parts ?? [], 'text/html');
+  const htmlData = htmlPart?.body?.data || msg.payload.body?.data;
+  if (!htmlData) return;
 
-  const htmlRaw = decodeBase64(htmlPart.body.data);
+  const htmlRaw = decodeBase64(htmlData);
   if (!htmlRaw.includes("主日崇拜程序 Program")) {
     return;
   }
@@ -177,7 +203,8 @@ async function processFile(fileName: string) {
   try {
     displayDate = dateMatch ? dateMatch[0].replace(/,/g, '') : new Date().toISOString().split('T')[0];
     dateFormatted = new Date(displayDate).toISOString().split('T')[0];
-  } catch (e) {
+  } catch (error) {
+    console.warn('Failed to parse display date, defaulting to today.', error);
     dateFormatted = new Date().toISOString().split('T')[0];
     displayDate = dateFormatted;
   }
@@ -309,7 +336,7 @@ async function processFile(fileName: string) {
   }
 }
 
-async function savePost(id: string, metadata: any, content: string) {
+async function savePost(id: string, metadata: PostMetadata, content: string) {
   const frontmatter = `---
 publishedAt: "${metadata.publishedAt}"
 category: "${metadata.category}"
@@ -346,8 +373,9 @@ async function run() {
         }
       }
     }
-  } catch (err: any) {
-    if (err.code === 'ENOENT') {
+  } catch (err: unknown) {
+    const typedErr = err as NodeJS.ErrnoException;
+    if (typedErr?.code === 'ENOENT') {
       console.log('No pending directory found or it is empty.');
     } else {
       console.error('Error processing emails:', err);

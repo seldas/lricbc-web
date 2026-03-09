@@ -24,7 +24,7 @@ export interface PostData {
   content: string;
   contentHtml_en: string;
   contentHtml_zh: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function getSortedPostsData() {
@@ -107,8 +107,8 @@ export async function getPostData(id: string): Promise<PostData | null> {
   const content = matterResult.content;
   const splitContent = content.split('---zh---');
 
-  let contentEn = splitContent[0];
-  let contentZh = splitContent.length > 1 ? splitContent[1] : splitContent[0]; // Fallback to same content if no split
+  const contentEn = splitContent[0];
+  const contentZh = splitContent.length > 1 ? splitContent[1] : splitContent[0]; // Fallback to same content if no split
 
   const processedContentEn = await remark()
     .use(html)

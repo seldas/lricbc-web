@@ -3,31 +3,25 @@
 import { Youtube, ExternalLink, Calendar, Users, Info, Play, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { YouTubeVideo } from "@/lib/youtube";
 import { cn } from "@/lib/utils";
 
 interface OnlineWorshipClientProps {
   channelId: string;
-  liveVideoId: string | null;
   latestVideoId: string | null;
   initialVideos?: YouTubeVideo[];
 }
 
-export default function OnlineWorshipClient({ channelId, liveVideoId, latestVideoId, initialVideos = [] }: OnlineWorshipClientProps) {
+export default function OnlineWorshipClient({ channelId, latestVideoId, initialVideos = [] }: OnlineWorshipClientProps) {
   const { t } = useTranslation('common');
-  const [useLive, setUseLive] = useState(!!liveVideoId);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(latestVideoId);
   
-  // If we have a specific live video ID, use it. Otherwise use the generic live redirect.
-  const embedUrl = useLive 
-    ? (liveVideoId ? `https://www.youtube.com/embed/${liveVideoId}?autoplay=0` : `https://www.youtube.com/embed/live?channel=${channelId}&autoplay=0`)
-    : `https://www.youtube.com/embed/${selectedVideoId}?autoplay=0`;
+  const embedUrl = `https://www.youtube.com/embed/${selectedVideoId}?autoplay=0`;
 
   const handleVideoSelect = (videoId: string) => {
     setSelectedVideoId(videoId);
-    setUseLive(false);
     // Scroll to player
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -39,14 +33,6 @@ export default function OnlineWorshipClient({ channelId, liveVideoId, latestVide
       {/* Compact Responsive Banner */}
       <section className="bg-gradient-to-b from-sky-100/60 to-white py-8 md:py-10 border-b border-sky-50">
         <div className="container mx-auto px-4 text-center">
-          {liveVideoId && (
-            <div className="inline-flex items-center gap-2 px-4 py-1 bg-white/40 backdrop-blur-md rounded-full border border-sky-200 mb-4 animate-pulse">
-              <div className="h-2 w-2 bg-red-500 rounded-full" />
-              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-sky-900">
-                {t('onlineWorshipPage.liveStatus')}
-              </span>
-            </div>
-          )}
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-light tracking-tight text-sky-900 leading-tight">
             {t('onlineWorshipPage.title')}
           </h1>
@@ -59,31 +45,6 @@ export default function OnlineWorshipClient({ channelId, liveVideoId, latestVide
       <section className="container mx-auto px-4 py-6 md:py-12 flex-grow">
         <div className="max-w-6xl mx-auto">
           
-          {/* Video Selection Tabs */}
-          <div className="flex justify-center mb-8 gap-4">
-            {liveVideoId && (
-              <Button 
-                variant={useLive ? "default" : "outline"}
-                onClick={() => setUseLive(true)}
-                className="rounded-full px-8 py-4 font-bold uppercase tracking-widest text-xs"
-              >
-                {t('onlineWorshipPage.tryLive')}
-              </Button>
-            )}
-            {latestVideoId && (
-              <Button 
-                variant={!useLive ? "default" : "outline"}
-                onClick={() => {
-                  setUseLive(false);
-                  if (!selectedVideoId) setSelectedVideoId(latestVideoId);
-                }}
-                className="rounded-full px-8 py-4 font-bold uppercase tracking-widest text-xs"
-              >
-                {liveVideoId ? t('onlineWorshipPage.watchRecording') : t('onlineWorshipPage.archiveTitle')}
-              </Button>
-            )}
-          </div>
-
           {/* Video Player Container */}
           <div className="bg-black rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl overflow-hidden aspect-video relative group border-4 md:border-8 border-white">
             <iframe
@@ -95,16 +56,14 @@ export default function OnlineWorshipClient({ channelId, liveVideoId, latestVide
             />
           </div>
 
-          {!useLive && (
-            <div className="mt-6 flex items-center justify-center gap-2 text-sky-600 bg-sky-50 py-3 px-6 rounded-full w-fit mx-auto border border-sky-100 animate-in fade-in zoom-in-95">
-              <Info className="h-5 w-5" />
-              <span className="text-sm font-medium">
-                {selectedVideoId === latestVideoId 
-                  ? t('onlineWorshipPage.communityContent').split(',')[0] // Fallback or logic
-                  : t('onlineWorshipPage.archiveSubtitle')}
-              </span>
-            </div>
-          )}
+          <div className="mt-6 flex items-center justify-center gap-2 text-sky-600 bg-sky-50 py-3 px-6 rounded-full w-fit mx-auto border border-sky-100 animate-in fade-in zoom-in-95">
+            <Info className="h-5 w-5" />
+            <span className="text-sm font-medium">
+              {selectedVideoId === latestVideoId 
+                ? t('onlineWorshipPage.communityContent').split(',')[0] // Fallback or logic
+                : t('onlineWorshipPage.archiveSubtitle')}
+            </span>
+          </div>
 
           {/* Recent Videos Panel */}
           {initialVideos.length > 0 && (
@@ -135,14 +94,14 @@ export default function OnlineWorshipClient({ channelId, liveVideoId, latestVide
                     onClick={() => handleVideoSelect(video.id)}
                     className={cn(
                       "group flex items-center gap-4 p-4 text-left transition-all duration-300 rounded-2xl border-2",
-                      selectedVideoId === video.id && !useLive
+                      selectedVideoId === video.id
                         ? "border-sky-500 bg-sky-50 shadow-md scale-[1.01]"
                         : "border-sky-50 bg-white hover:border-sky-200 hover:shadow-lg"
                     )}
                   >
                     <div className={cn(
                       "flex-shrink-0 p-3 rounded-xl transition-colors",
-                      selectedVideoId === video.id && !useLive 
+                      selectedVideoId === video.id
                         ? "bg-sky-600 text-white" 
                         : "bg-sky-100/50 text-sky-600 group-hover:bg-sky-100"
                     )}>
@@ -157,7 +116,7 @@ export default function OnlineWorshipClient({ channelId, liveVideoId, latestVide
                         <span>{new Date(video.published).toLocaleDateString()}</span>
                       </div>
                     </div>
-                    {selectedVideoId === video.id && !useLive && (
+                    {selectedVideoId === video.id && (
                        <div className="flex-shrink-0 flex items-center gap-2 px-3 py-1 bg-sky-100 rounded-full">
                          <div className="h-1.5 w-1.5 bg-sky-600 rounded-full animate-pulse" />
                          <span className="text-[10px] font-black uppercase tracking-widest text-sky-600">{t('onlineWorshipPage.playing')}</span>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -78,7 +79,14 @@ export default function GalleryList({ initialEvents }: { initialEvents: GalleryE
           </div>
 
           <div className="mt-6 sm:mt-8 flex items-center justify-center gap-2 text-sky-400/60 text-xs sm:text-sm font-medium">
-            <img src="https://www.gstatic.com/images/branding/product/1x/photos_96dp.png" alt="Google Photos" className="h-4 w-4 sm:h-5 sm:w-5 opacity-60" />
+            <Image
+              src="https://www.gstatic.com/images/branding/product/1x/photos_96dp.png"
+              alt="Google Photos"
+              width={20}
+              height={20}
+              className="opacity-60"
+              unoptimized
+            />
             <span>{t('gallery.googlePhotosNotice')}</span>
           </div>
         </div>
@@ -145,10 +153,13 @@ export default function GalleryList({ initialEvents }: { initialEvents: GalleryE
               const cardContent = (
                 <Card className="h-full overflow-hidden group cursor-pointer border-none shadow-sm hover:shadow-2xl hover:shadow-sky-200 transition-all rounded-[2.5rem] bg-white">
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
+                    <Image
                       src={event.thumbnail}
                       alt={event[`title_${langSuffix}` as keyof GalleryEvent] as string}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 1024px) 50vw, 25vw"
+                      unoptimized
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
                     

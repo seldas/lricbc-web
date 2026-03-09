@@ -5,11 +5,15 @@ import '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
 
 export default function LanguageProvider({ children }: { children: ReactNode }) {
-  const { i18n } = useTranslation();
+  useTranslation();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const handle = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   // Avoid hydration mismatch by waiting for the client to mount

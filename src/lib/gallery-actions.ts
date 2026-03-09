@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { getStoragePath } from './storage-paths';
 import { revalidatePath } from 'next/cache';
-import { getGalleryEvents, GalleryEvent } from './local-gallery';
+import { getGalleryEvents } from './local-gallery';
 
 function getGalleryDir() {
   return getStoragePath('public/gallery');
@@ -59,7 +59,7 @@ export async function addGalleryEvent(formData: FormData) {
     try {
       const fileContent = await fs.readFile(metadataPath, 'utf8');
       metadata = JSON.parse(fileContent);
-    } catch (e) {
+    } catch {
       // If file doesn't exist or is invalid, start with empty array
       metadata = [];
     }
@@ -93,8 +93,8 @@ export async function addGalleryEvent(formData: FormData) {
     revalidatePath(`/gallery/${id}`);
 
     return { success: true };
-  } catch (e: any) {
-    console.error("Error adding gallery event:", e);
-    return { error: e.message || "Failed to add gallery event" };
+  } catch (error: unknown) {
+    console.error("Error adding gallery event:", error);
+    return { error: error instanceof Error ? error.message : "Failed to add gallery event" };
   }
 }

@@ -5,6 +5,7 @@ import { getLatestAnnouncement } from '@/lib/actions';
 import { PostData } from '@/lib/local-content';
 import { useTranslation } from 'react-i18next';
 import { Megaphone, X, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -85,11 +86,14 @@ export default function LatestAnnouncement() {
                 
                 {/* Scrollable Content Area */}
                 <div className="p-3 overflow-y-auto custom-scrollbar">
-                  <div className="relative rounded-2xl overflow-hidden shadow-inner bg-slate-50">
-                    <img 
-                      src={post.imageUrl} 
-                      alt={post[`title_${langSuffix}`]} 
-                      className="w-full h-auto object-contain max-h-[50vh] md:max-h-[60vh] mx-auto hover:scale-105 transition-transform duration-700"
+                  <div className="relative rounded-2xl overflow-hidden shadow-inner bg-slate-50" style={{ minHeight: '60vh' }}>
+                    <Image
+                      src={post.imageUrl!}
+                      alt={post[`title_${langSuffix}`]}
+                      fill
+                      sizes="(max-width: 768px) 90vw, 560px"
+                      className="object-contain transition-transform duration-700"
+                      unoptimized
                     />
                   </div>
                 </div>

@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const count = getNewUpdatesCount();
     return NextResponse.json({ count });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ count: 0 });
   }
 }

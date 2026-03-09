@@ -18,7 +18,8 @@ fi
 # Load environment variables from .env
 if [ -f "$ENV_FILE" ]; then
     echo -e "\033[0;90mLoading environment variables from $ENV_FILE...\033[0m"
-    export $(grep -v '^#' $ENV_FILE | xargs)
+    # Export variables from .env, ignoring comments and empty lines
+    export $(grep -v '^#' "$ENV_FILE" | xargs)
 else
     echo -e "\033[0;31merror: $ENV_FILE file not found. Please create one with ADMIN_POST_KEY.\033[0m"
     exit 1
@@ -31,18 +32,22 @@ fi
 
 # Build and deploy using Cloud Build
 echo -e "\033[0;33mBuilding and deploying to Cloud Run...\033[0m"
-gcloud run deploy $SERVICE_NAME 
-    --source . 
-    --project $PROJECT_ID 
-    --region $REGION 
-    --allow-unauthenticated 
-    --platform managed 
-    --set-env-vars "ADMIN_POST_KEY=$ADMIN_POST_KEY,DATA_STORAGE_PATH=/app/storage" 
-    --add-volume "name=storage,type=cloud-storage,bucket=lricbc-web-storage" 
+# NOTE: Ensure the Google Cloud Storage bucket 'lricbc-web-storage' exists.
+# You can create it with: gcloud storage buckets create gs://lricbc-web-storage --project $PROJECT_ID
+gcloud run deploy $SERVICE_NAME \
+    --source . \
+    --project $PROJECT_ID \
+    --region $REGION \
+    --allow-unauthenticated \
+    --platform managed \
+    --set-env-vars "ADMIN_POST_KEY=$ADMIN_POST_KEY,DATA_STORAGE_PATH=/app/storage" \
+    --add-volume "name=storage,type=cloud-storage,bucket=lricbc-web-storage" \
     --add-volume-mount "volume=storage,mount-path=/app/storage"
 
 if [ $? -eq 0 ]; then
     echo -e "\033[0;33mSyncing content, fetch data, and public assets to Cloud Storage bucket...\033[0m"
+    # rsync will append and skip existing ones by default in many contexts, 
+    # but here it ensures the destination matches the source.
     gcloud storage rsync ./content gs://lricbc-web-storage/content --recursive --project $PROJECT_ID
     gcloud storage rsync ./fetch_raw gs://lricbc-web-storage/fetch_raw --recursive --project $PROJECT_ID
     gcloud storage rsync ./public gs://lricbc-web-storage/public --recursive --project $PROJECT_ID
