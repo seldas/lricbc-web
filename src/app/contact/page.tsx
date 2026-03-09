@@ -9,21 +9,54 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, Send } from "lucide-react";
+import { useState } from "react";
+
+type SubmissionStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
+  const [status, setStatus] = useState<SubmissionStatus>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const successMessage = i18n.language === 'en'
+    ? 'Message received! Pastor will follow up soon.'
+    : '訊息已送出，牧師會儘快回覆。';
+  const genericError = i18n.language === 'en'
+    ? 'Something went wrong. Please try again in a moment.'
+    : '系統出了一點問題，請稍後再試。';
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setStatus('loading');
+    setStatusMessage('');
+
     const formData = new FormData(e.currentTarget);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const message = formData.get('message');
-    
-    const subject = encodeURIComponent(`Message from ${name} via LRICBC Website`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-    
-    window.location.href = `mailto:chinesechurch@lricbc.org?subject=${subject}&body=${body}`;
+    const payload = {
+      name: (formData.get('name') as string | null)?.trim() ?? '',
+      email: (formData.get('email') as string | null)?.trim() ?? '',
+      message: (formData.get('message') as string | null)?.trim() ?? '',
+    };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const body = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(body?.error || genericError);
+      }
+
+      setStatus('success');
+      setStatusMessage(successMessage);
+      e.currentTarget.reset();
+    } catch (error: unknown) {
+      setStatus('error');
+      setStatusMessage(error instanceof Error ? error.message : genericError);
+    }
   };
 
   return (
@@ -121,7 +154,7 @@ export default function ContactPage() {
               <CardTitle className="text-2xl sm:text-3xl font-light tracking-[0.2em] uppercase text-sky-500">{t('contact.form.submit')}</CardTitle>
             </CardHeader>
             <CardContent className="px-6 sm:px-10 pb-8 sm:pb-10">
-              <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+              <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8" aria-live="polite">
                 <div className="space-y-3">
                   <Label htmlFor="name" className="text-[10px] font-bold uppercase tracking-widest text-sky-400 pl-2">{t('contact.form.name')}</Label>
                   <Input name="name" id="name" required placeholder={t('contact.form.name')} className="rounded-xl sm:rounded-2xl border-sky-50 bg-sky-50/30 py-5 sm:py-6 px-5 sm:px-6 focus-visible:ring-sky-200" />
@@ -140,10 +173,21 @@ export default function ContactPage() {
                     className="min-h-[150px] sm:min-h-[200px] rounded-2xl sm:rounded-[2rem] border-sky-50 bg-sky-50/30 p-5 sm:p-6 focus-visible:ring-sky-200"
                   />
                 </div>
-                <Button type="submit" className="w-full py-6 sm:py-8 text-base sm:text-lg rounded-full bg-sky-500 hover:bg-sky-600 text-white font-bold uppercase tracking-[0.2em] transition-all heavenly-glow hover:translate-y-[-2px] shadow-lg shadow-sky-100">
-                  {t('contact.form.submit')}
+                <Button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="w-full py-6 sm:py-8 text-base sm:text-lg rounded-full bg-sky-500 hover:bg-sky-600 text-white font-bold uppercase tracking-[0.2em] transition-all heavenly-glow hover:translate-y-[-2px] shadow-lg shadow-sky-100"
+                >
+                  {status === 'loading' ? (i18n.language === 'en' ? 'Sending...' : '傳送中...') : t('contact.form.submit')}
                   <Send className="ml-3 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
+                {statusMessage && (
+                  <div
+                    className={`text-sm font-bold text-center ${status === 'success' ? 'text-emerald-700' : 'text-rose-600'}`}
+                  >
+                    {statusMessage}
+                  </div>
+                )}
               </form>
             </CardContent>
           </Card>
