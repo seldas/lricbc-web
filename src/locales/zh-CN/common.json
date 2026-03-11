@@ -1,6 +1,5 @@
 {
   "nav": {
-    "oldWebsite": "舊版網站",
     "home": "首頁",
     "specialEvent": "特別活動",
     "about": "關於我們",
@@ -108,19 +107,52 @@
     },
     "values": {
       "title": "核心價值",
-      "list": ["家庭", "下一代", "祈禱", "愛心關懷", "服侍", "敬虔", "聖潔", "真理"]
+      "list": [
+        "家庭",
+        "下一代",
+        "祈禱",
+        "愛心關懷",
+        "服侍",
+        "敬虔",
+        "聖潔",
+        "真理"
+      ]
     },
     "history": {
       "title": "教會歷史",
       "items": [
-        {"year": "1990", "text": "從家庭學生查經班開始"},
-        {"year": "1993", "text": "在以馬內利浸信會聚會"},
-        {"year": "1998", "text": "成為以馬內利浸信會福音堂"},
-        {"year": "2003", "text": "5位弟兄姐妹重新開始主日學"},
-        {"year": "2004", "text": "恢復主日崇拜"},
-        {"year": "2018", "text": "聘請李春海牧師"},
-        {"year": "2021", "text": "成為獨立教會 (11月14日)"},
-        {"year": "2022", "text": "遷至 Markham Street 現址 (7月3日)"}
+        {
+          "year": "1990",
+          "text": "從家庭學生查經班開始"
+        },
+        {
+          "year": "1993",
+          "text": "在以馬內利浸信會聚會"
+        },
+        {
+          "year": "1998",
+          "text": "成為以馬內利浸信會福音堂"
+        },
+        {
+          "year": "2003",
+          "text": "5位弟兄姐妹重新開始主日學"
+        },
+        {
+          "year": "2004",
+          "text": "恢復主日崇拜"
+        },
+        {
+          "year": "2018",
+          "text": "聘請李春海牧師"
+        },
+        {
+          "year": "2021",
+          "text": "成為獨立教會 (11月14日)"
+        },
+        {
+          "year": "2022",
+          "text": "遷至 Markham Street 現址 (7月3日)"
+        }
       ]
     },
     "faith": {
@@ -166,8 +198,8 @@
   },
   "specialEvent": {
     "title": "特別活動",
-    "subtitle": "「常青團契」聚會",
-    "theme": "聚會主題：盼望",
+    "subtitle": "特别活动",
+    "theme": "近期活动预览与往期精彩回顾",
     "dateLabel": "日期",
     "timeLabel": "時間",
     "locationLabel": "地點",
@@ -178,11 +210,30 @@
     "location": "9701 W Markham St, Little Rock, AR 72205",
     "contact": "薛飛",
     "speakers": "Charles and Lana Flynn",
-    "description": "我們誠摯地邀請長輩朋友們參加「常青團契」聚會。本次聚會的主題是「盼望」，這將是一個彼此分享、互勉同行、在主愛中共同成長的美好時刻。",
+    "description": "我们将即将到来的特别活动与过往聚会的精华集结在此，见证主在以马内利教会中不断动工的足迹。",
     "prayerTitle": "誠心代禱",
     "prayerPoints": "請為聚會聯絡人薛飛、講員 Charles and Lana Flynn 以及所有參加者代禱，求主帶領我們的聚會，充滿祂的平安與恩典。",
     "quote": "「但那等候耶和華的必重新得力。他們必如鷹展翅上騰；他們奔跑卻不困倦，行走卻不疲乏。」",
-    "quoteVerse": "以賽亞書 40:31"
+    "quoteVerse": "以賽亞書 40:31",
+    "testimonyCTA": "查看见证",
+    "testimonySub": "记录上帝在教会中的作为",
+    "testimonyTitle": "见证如云",
+    "testimonyIntro": "每一则见证都述说着多年信实，邀请你也来加入故事里。",
+    "renewalTitle": "同心合意地恒切祷告",
+    "renewalTheme": "“同心合意地恒切祷告”：2026年3月9日—3月23日晨祷/晚祷",
+    "renewalIntro": "美国晨祷（中国晚祷）和 Zoom 分组由田萍芳协调，愿我们如使徒们般一心祷告。",
+    "usPrayer": "美国晨祷",
+    "usTiming": "周一至周五 早5:00–6:00，周六 早6:00–7:00（下周进入夏令时，时钟提前一小时）。",
+    "cnPrayer": "中国晚祷",
+    "cnTiming": "周一至周五 晚6:00–7:00，周六 晚7:00–8:00",
+    "scheduleLabel": "主日/晨祷同工表",
+    "zoomNote": "Zoom 分组由田萍芳负责，如需调整请提前告知。",
+    "zoomDetail": "Zoom ID：501-501-7777 · 密码：777 · “同心合意地祷告”是教会复兴的唯一出路。",
+    "renewalFooter": "感恩我们正在依靠圣灵的大能，使徒的遗产仍在继续。",
+    "archivedTitle": "归档特别活动",
+    "archivedLead": "以缩略图形式检视以往聚会，点击展开观赏详情。",
+    "archivedMore": "查看详情",
+    "archivedCTA": "查看归档资料"
   },
   "contact": {
     "title": "聯繫我們",

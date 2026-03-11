@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import { getLatestVideos } from "@/lib/youtube";
 import OnlineWorshipClient from "@/components/OnlineWorshipClient";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function OnlineWorshipPage() {
   const channelId = "UCefUbMKSUD_2YGB3tWLwsAw";
   

@@ -48,8 +48,17 @@ export async function getLatestVideoId(channelId: string): Promise<string | null
 export async function getLatestVideos(channelId: string, limit: number = 20): Promise<YouTubeVideo[]> {
   try {
     const response = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, {
-      next: { revalidate: 3600 } // Cache for 1 hour
+      cache: 'no-store', // Disable cache for now to troubleshoot prod issues
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      }
     });
+    
+    if (!response.ok) {
+      console.error(`YouTube RSS fetch failed with status: ${response.status}`);
+      return [];
+    }
+
     const text = await response.text();
     
     // Improved parsing for multiple videos
