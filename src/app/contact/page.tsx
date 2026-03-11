@@ -27,10 +27,11 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
     setStatus('loading');
     setStatusMessage('');
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(form);
     const payload = {
       name: (formData.get('name') as string | null)?.trim() ?? '',
       email: (formData.get('email') as string | null)?.trim() ?? '',
@@ -52,7 +53,7 @@ export default function ContactPage() {
 
       setStatus('success');
       setStatusMessage(successMessage);
-      e.currentTarget.reset();
+      form.reset();
     } catch (error: unknown) {
       setStatus('error');
       setStatusMessage(error instanceof Error ? error.message : genericError);

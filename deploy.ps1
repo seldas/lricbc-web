@@ -53,7 +53,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "Syncing content, fetch data, and public assets to Cloud Storage bucket..." -ForegroundColor Yellow
     & $GCLOUD_PATH storage rsync ./content gs://lricbc-web-storage/content --recursive --project $PROJECT_ID
     & $GCLOUD_PATH storage rsync ./fetch_raw gs://lricbc-web-storage/fetch_raw --recursive --project $PROJECT_ID
-    & $GCLOUD_PATH storage rsync ./public gs://lricbc-web-storage/public --recursive --project $PROJECT_ID
+    & $GCLOUD_PATH storage rsync ./public gs://lricbc-web-storage/public --recursive --project $PROJECT_ID --exclude "public/gallery/metadata.sample.json"
     Write-Host "Deployment and sync successful!" -ForegroundColor Green
 } else {
     Write-Host "Deployment failed with exit code $LASTEXITCODE" -ForegroundColor Red

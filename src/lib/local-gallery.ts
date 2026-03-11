@@ -1,15 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { getGooglePhotosUrls } from './google-photos';
-import { getStoragePath } from './storage-paths';
-
-function getGalleryDirectory() {
-  return getStoragePath('public/gallery');
-}
-
-function getMetadataPath() {
-  return path.join(getGalleryDirectory(), 'metadata.json');
-}
+import {
+  ensureGalleryMetadataStorage,
+  getGalleryMetadataReadPath,
+  getGalleryStorageDir
+} from './gallery-storage';
 
 export interface GalleryEvent {
   id: string; // folder name or unique id
@@ -32,10 +28,10 @@ interface MetadataItem {
 }
 
 function getLocalImages(folderName: string): string[] {
-  const galleryDir = getGalleryDirectory();
+  const galleryDir = getGalleryStorageDir();
   const folderPath = path.join(galleryDir, folderName);
   if (!fs.existsSync(folderPath)) return [];
-  
+
   const files = fs.readdirSync(folderPath);
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
   return files
@@ -44,7 +40,8 @@ function getLocalImages(folderName: string): string[] {
 }
 
 export async function getGalleryEvents(): Promise<GalleryEvent[]> {
-  const metadataPath = getMetadataPath();
+  await ensureGalleryMetadataStorage();
+  const metadataPath = getGalleryMetadataReadPath();
   if (!fs.existsSync(metadataPath)) {
     return [];
   }
@@ -93,7 +90,8 @@ export async function getGalleryEvents(): Promise<GalleryEvent[]> {
 }
 
 export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> {
-  const metadataPath = getMetadataPath();
+  await ensureGalleryMetadataStorage();
+  const metadataPath = getGalleryMetadataReadPath();
   if (!fs.existsSync(metadataPath)) return null;
 
   let metadata: MetadataItem[] = [];
@@ -133,7 +131,7 @@ export async function getGalleryEvent(id: string): Promise<GalleryEvent | null> 
 }
 
 export async function getRandomGalleryImages(count: number): Promise<string[]> {
-  const galleryDir = getGalleryDirectory();
+  const galleryDir = getGalleryStorageDir();
   if (!fs.existsSync(galleryDir)) return [];
 
   const events = await getGalleryEvents();
@@ -148,5 +146,3 @@ export async function getRandomGalleryImages(count: number): Promise<string[]> {
     .sort(() => Math.random() - 0.5)
     .slice(0, count);
 }
-
-

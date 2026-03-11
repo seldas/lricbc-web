@@ -74,6 +74,14 @@ chmod +x deploy.sh
 
 *Note: These scripts also synchronize your local content, fetch data, and public assets to the Cloud Storage bucket after a successful deployment.*
 
+
+### Gallery metadata storage
+Gallery metadata is now treated as runtime data. The live `metadata.json` lives inside the mounted `/app/storage/public/gallery` volume (synchronized with `gs://lricbc-web-storage/public/gallery`), and we keep the example in `metadata.sample.json` so you always have something to seed. Before the first deployment, upload the sample file once:
+```bash
+gcloud storage cp public/gallery/metadata.sample.json gs://lricbc-web-storage/public/gallery/metadata.json --project lricbc-web
+```
+The Bash/PowerShell deploy scripts already exclude the sample file from the bucket sync so future deployments won't overwrite your live metadata.
+
 ### 4. Manual Deployment (Optional)
 If you prefer to run commands manually, follow these steps from the `lricbc-web` directory.
 

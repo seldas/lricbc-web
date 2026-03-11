@@ -1,6 +1,5 @@
 {
   "nav": {
-    "oldWebsite": "Old Website",
     "home": "Home",
     "specialEvent": "Special Event",
     "about": "About Us",
@@ -108,19 +107,52 @@
     },
     "values": {
       "title": "Core Values",
-      "list": ["Family", "Next Generation", "Prayer", "Love & Caring", "Service", "Godliness", "Holiness", "Truth"]
+      "list": [
+        "Family",
+        "Next Generation",
+        "Prayer",
+        "Love & Caring",
+        "Service",
+        "Godliness",
+        "Holiness",
+        "Truth"
+      ]
     },
     "history": {
       "title": "Our History",
       "items": [
-        {"year": "1990", "text": "Begun Student Bible Study at homes"},
-        {"year": "1993", "text": "Met at Immanuel Baptist Church as Bible Study Class"},
-        {"year": "1998", "text": "Became a Mission Church of IBC officially"},
-        {"year": "2003", "text": "Resumed Sunday School with 5 members"},
-        {"year": "2004", "text": "Resumed Sunday worship with guest speakers"},
-        {"year": "2018", "text": "Called Rev. Chunhai Li as Pastor"},
-        {"year": "2021", "text": "Became an autonomous church (Nov 14)"},
-        {"year": "2022", "text": "Moved to Markham Street site (July 3)"}
+        {
+          "year": "1990",
+          "text": "Begun Student Bible Study at homes"
+        },
+        {
+          "year": "1993",
+          "text": "Met at Immanuel Baptist Church as Bible Study Class"
+        },
+        {
+          "year": "1998",
+          "text": "Became a Mission Church of IBC officially"
+        },
+        {
+          "year": "2003",
+          "text": "Resumed Sunday School with 5 members"
+        },
+        {
+          "year": "2004",
+          "text": "Resumed Sunday worship with guest speakers"
+        },
+        {
+          "year": "2018",
+          "text": "Called Rev. Chunhai Li as Pastor"
+        },
+        {
+          "year": "2021",
+          "text": "Became an autonomous church (Nov 14)"
+        },
+        {
+          "year": "2022",
+          "text": "Moved to Markham Street site (July 3)"
+        }
       ]
     },
     "faith": {
@@ -166,8 +198,8 @@
   },
   "specialEvent": {
     "title": "Special Event",
-    "subtitle": "Evergreen Fellowship Gathering",
-    "theme": "Theme: Hope",
+    "subtitle": "Special Events",
+    "theme": "Recent previews and highlights of our gatherings",
     "dateLabel": "Date",
     "timeLabel": "Time",
     "locationLabel": "Location",
@@ -178,11 +210,30 @@
     "location": "9701 W Markham St, Little Rock, AR 72205",
     "contact": "Xue Fei",
     "speakers": "Charles and Lana Flynn",
-    "description": "We cordially invite elderly friends to join our Evergreen Fellowship. Our theme for this gathering is 'Hope'. It will be a wonderful time of sharing, encouragement, and spiritual growth.",
+    "description": "We gather highlights of our upcoming and past special events, so you can see how God keeps working in LRICBC community beyond seasonal gatherings.",
     "prayerTitle": "Prayer Requests",
     "prayerPoints": "Please pray for our contact person Xue Fei, our speakers Charles and Lana Flynn, and all the participants as we gather in His name.",
     "quote": "\"But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.\"",
-    "quoteVerse": "Isaiah 40:31"
+    "quoteVerse": "Isaiah 40:31",
+    "testimonyCTA": "View Testimonies",
+    "testimonySub": "Recording God's work in our community",
+    "testimonyTitle": "Great Cloud of Witnesses",
+    "testimonyIntro": "Every testimony here reflects years of faithfulness and invites you to add your own.",
+    "renewalTitle": "United in Prayer",
+    "renewalTheme": "“同心合意地恒切祷告”",
+    "renewalIntro": "March 9–23, 2026 morning & evening prayers call the church back to the Acts model.",
+    "usPrayer": "US Morning Prayer",
+    "usTiming": "Mon-Fri 5:00–6:00 AM, Sat 6:00–7:00 AM (Daylight Saving starts next week, clocks move forward).",
+    "cnPrayer": "China Evening Prayer",
+    "cnTiming": "Mon-Fri 6:00–7:00 PM, Sat 7:00–8:00 PM",
+    "scheduleLabel": "Leader Roster",
+    "zoomNote": "Zoom groups coordinated by Tian Pingfang—please notify in advance if changes needed.",
+    "zoomDetail": "Zoom ID: 501-501-7777 · Passcode: 777 · Revival is the only way (Acts 1:14/2:1).",
+    "renewalFooter": "Blessings, 永远依靠圣灵的大能搬运使徒们的遗产。",
+    "archivedTitle": "Archived Special Events",
+    "archivedLead": "Browse thumbnails of previous gatherings. Click to open more details.",
+    "archivedMore": "View details",
+    "archivedCTA": "See archived event resources"
   },
   "contact": {
     "title": "Contact Us",

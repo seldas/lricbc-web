@@ -2,17 +2,13 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { getStoragePath } from './storage-paths';
 import { revalidatePath } from 'next/cache';
 import { getGalleryEvents } from './local-gallery';
-
-function getGalleryDir() {
-  return getStoragePath('public/gallery');
-}
-
-function getMetadataPath() {
-  return path.join(getGalleryDir(), 'metadata.json');
-}
+import {
+  ensureGalleryMetadataStorage,
+  getGalleryMetadataStoragePath,
+  getGalleryStorageDir
+} from './gallery-storage';
 
 const ADMIN_KEY = process.env.ADMIN_POST_KEY || "lricbc2026";
 
@@ -48,9 +44,11 @@ export async function addGalleryEvent(formData: FormData) {
   }
 
   try {
+    await ensureGalleryMetadataStorage();
+
     // Ensure gallery directory exists
-    const galleryDir = getGalleryDir();
-    const metadataPath = getMetadataPath();
+    const galleryDir = getGalleryStorageDir();
+    const metadataPath = getGalleryMetadataStoragePath();
     await fs.mkdir(galleryDir, { recursive: true });
 
     let metadata: MetadataItem[] = [];
