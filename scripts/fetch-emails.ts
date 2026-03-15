@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import process from 'process';
 import { authenticate } from '@google-cloud/local-auth';
-import { google, gmail_v1 } from 'googleapis';
+import { google, gmail_v1, Auth } from 'googleapis';
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
@@ -14,11 +14,11 @@ const PROCESSED_DIR = path.join(process.cwd(), 'fetch_raw', 'processed');
 /**
  * Reads previously authorized credentials from the save file.
  */
-async function loadSavedCredentialsIfExist(): Promise<google.auth.OAuth2Client | null> {
+async function loadSavedCredentialsIfExist(): Promise<Auth.OAuth2Client | null> {
   try {
     const content = await fs.readFile(TOKEN_PATH, 'utf8');
     const credentials = JSON.parse(content);
-    return google.auth.fromJSON(credentials);
+    return google.auth.fromJSON(credentials) as Auth.OAuth2Client;
   } catch {
     return null;
   }
@@ -27,7 +27,7 @@ async function loadSavedCredentialsIfExist(): Promise<google.auth.OAuth2Client |
 /**
  * Serializes credentials to a file compatible with GoogleAuth.fromJSON.
  */
-async function saveCredentials(client: google.auth.OAuth2Client) {
+async function saveCredentials(client: Auth.OAuth2Client) {
   const content = await fs.readFile(CREDENTIALS_PATH, 'utf8');
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
@@ -40,7 +40,7 @@ async function saveCredentials(client: google.auth.OAuth2Client) {
   await fs.writeFile(TOKEN_PATH, payload);
 }
 
-async function authorize(): Promise<google.auth.OAuth2Client> {
+async function authorize(): Promise<Auth.OAuth2Client> {
   let client = await loadSavedCredentialsIfExist();
   if (client) {
     try {
@@ -69,7 +69,7 @@ async function authorize(): Promise<google.auth.OAuth2Client> {
     client = await authenticate({
       scopes: SCOPES,
       keyfilePath: CREDENTIALS_PATH,
-    });
+    }) as Auth.OAuth2Client;
     if (client.credentials) {
       await saveCredentials(client);
     }
