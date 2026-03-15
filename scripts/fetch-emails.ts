@@ -66,10 +66,10 @@ async function authorize(): Promise<Auth.OAuth2Client> {
 
   // If no valid client from saved credentials, start authentication flow
   if (!client) {
-    client = await authenticate({
+    client = (await authenticate({
       scopes: SCOPES,
       keyfilePath: CREDENTIALS_PATH,
-    }) as Auth.OAuth2Client;
+    })) as unknown as Auth.OAuth2Client;
     if (client.credentials) {
       await saveCredentials(client);
     }
