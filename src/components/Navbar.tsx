@@ -14,7 +14,8 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const navLinks = [
+  type NavLink = { href: string; label: string; external?: boolean }
+  const navLinks: NavLink[] = [
     { href: '/', label: t('nav.home') },
     { href: '/special-event', label: t('nav.specialEvent') },
     { href: '/about', label: t('nav.about') },
@@ -50,7 +51,7 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex lg:items-center lg:space-x-4">
-          {navLinks.map((link: any) => {
+          {navLinks.map((link) => {
             if (link.external) {
               return (
                 <a
@@ -104,7 +105,7 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="container mx-auto px-4 py-6 lg:hidden bg-white/90 backdrop-blur-xl border-t border-slate-100 shadow-xl animate-in slide-in-from-top-5 duration-300">
           <div className="flex flex-col space-y-6">
-            {navLinks.map((link: any) => {
+            {navLinks.map((link) => {
               if (link.external) {
                 return (
                   <a

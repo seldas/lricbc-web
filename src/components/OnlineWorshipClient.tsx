@@ -11,14 +11,22 @@ import { cn } from "@/lib/utils";
 interface OnlineWorshipClientProps {
   channelId: string;
   latestVideoId: string | null;
+  liveVideoId?: string | null;
   initialVideos?: YouTubeVideo[];
 }
 
-export default function OnlineWorshipClient({ channelId, latestVideoId, initialVideos = [] }: OnlineWorshipClientProps) {
+export default function OnlineWorshipClient({
+  channelId,
+  latestVideoId,
+  liveVideoId = null,
+  initialVideos = []
+}: OnlineWorshipClientProps) {
   const { t } = useTranslation('common');
-  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(latestVideoId);
+  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(liveVideoId ?? latestVideoId);
   
-  const embedUrl = `https://www.youtube.com/embed/${selectedVideoId}?autoplay=0`;
+  const embedUrl = selectedVideoId
+    ? `https://www.youtube.com/embed/${selectedVideoId}?autoplay=0`
+    : `https://www.youtube.com/embed/${channelId}`;
 
   const handleVideoSelect = (videoId: string) => {
     setSelectedVideoId(videoId);
@@ -27,6 +35,13 @@ export default function OnlineWorshipClient({ channelId, latestVideoId, initialV
   };
 
   const channelUrl = `https://www.youtube.com/channel/${channelId}`;
+  const liveWatchUrl = liveVideoId ? `https://www.youtube.com/watch?v=${liveVideoId}` : channelUrl;
+  const isPlayingLive = Boolean(liveVideoId && selectedVideoId === liveVideoId);
+  const infoMessage = liveVideoId && !isPlayingLive
+    ? t('onlineWorshipPage.watchRecording')
+    : selectedVideoId === latestVideoId
+      ? t('onlineWorshipPage.communityContent').split(',')[0]
+      : t('onlineWorshipPage.archiveSubtitle');
 
   return (
     <>
@@ -47,6 +62,26 @@ export default function OnlineWorshipClient({ channelId, latestVideoId, initialV
           
           {/* Video Player Container */}
           <div className="bg-black rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl overflow-hidden aspect-video relative group border-4 md:border-8 border-white">
+            {liveVideoId && (
+              <div className="absolute inset-x-6 top-6 z-20 flex flex-wrap items-center gap-3">
+                <span className={cn(
+                  "text-[10px] font-black tracking-widest uppercase rounded-full px-3 py-1 shadow-sm",
+                  isPlayingLive ? "bg-red-500 text-white" : "bg-white/80 text-slate-800"
+                )}>
+                  {t('onlineWorshipPage.liveStatus')}
+                </span>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="xs"
+                  className="rounded-full border border-white/60 bg-white/90 text-slate-800 shadow-sm"
+                >
+                  <a href={liveWatchUrl} target="_blank" rel="noopener noreferrer">
+                    {isPlayingLive ? t('onlineWorshipPage.liveStatus') : t('onlineWorshipPage.tryLive')}
+                  </a>
+                </Button>
+              </div>
+            )}
             <iframe
               src={embedUrl}
               title="YouTube worship stream"
@@ -59,9 +94,7 @@ export default function OnlineWorshipClient({ channelId, latestVideoId, initialV
           <div className="mt-6 flex items-center justify-center gap-2 text-sky-600 bg-sky-50 py-3 px-6 rounded-full w-fit mx-auto border border-sky-100 animate-in fade-in zoom-in-95">
             <Info className="h-5 w-5" />
             <span className="text-sm font-medium">
-              {selectedVideoId === latestVideoId 
-                ? t('onlineWorshipPage.communityContent').split(',')[0] // Fallback or logic
-                : t('onlineWorshipPage.archiveSubtitle')}
+              {infoMessage}
             </span>
           </div>
 
