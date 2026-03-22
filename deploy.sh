@@ -38,6 +38,7 @@ gcloud run deploy $SERVICE_NAME \
     --source . \
     --project $PROJECT_ID \
     --region $REGION \
+    --port 3000 \
     --allow-unauthenticated \
     --platform managed \
     --set-env-vars "ADMIN_POST_KEY=$ADMIN_POST_KEY,DATA_STORAGE_PATH=/app/storage" \

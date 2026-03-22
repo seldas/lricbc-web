@@ -49,6 +49,7 @@ Write-Host "Building and deploying to Cloud Run..." -ForegroundColor Yellow
     --source . `
     --project $PROJECT_ID `
     --region $REGION `
+    --port 3000 `
     --allow-unauthenticated `
     --platform managed `
     --set-env-vars "ADMIN_POST_KEY=$ADMIN_POST_KEY,DATA_STORAGE_PATH=/app/storage" `

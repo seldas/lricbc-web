@@ -22,6 +22,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Install compatibility libraries if needed
+RUN apt-get update && apt-get install -y libc6 && rm -rf /var/lib/apt/lists/*
+
 RUN groupadd --system --gid 1001 nodejs
 RUN useradd --system --uid 1001 nextjs
 
