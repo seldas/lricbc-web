@@ -46,47 +46,90 @@ export async function getLatestVideoId(channelId: string): Promise<string | null
 }
 
 export async function getLatestVideos(channelId: string, limit: number = 20): Promise<YouTubeVideo[]> {
+  const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  const browserHeader = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+  };
+
   try {
-    const response = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, {
-      cache: 'no-store', // Disable cache for now to troubleshoot prod issues
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-      }
+    // Strategy 1: Attempt RSS Feed
+    const response = await fetch(rssUrl, {
+      cache: 'no-store',
+      headers: browserHeader
     });
     
-    if (!response.ok) {
-      console.error(`YouTube RSS fetch failed with status: ${response.status}`);
-      return [];
+    if (response.ok) {
+      const text = await response.text();
+      const entries = text.split('<entry>');
+      const videos: YouTubeVideo[] = [];
+      
+      for (let i = 1; i < entries.length && videos.length < limit; i++) {
+        const entry = entries[i];
+        const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+        const titleMatch = entry.match(/<title>([^<]+)<\/title>/);
+        const publishedMatch = entry.match(/<published>([^<]+)<\/published>/);
+        
+        if (idMatch && titleMatch) {
+          videos.push({
+            id: idMatch[1],
+            title: titleMatch[1],
+            published: publishedMatch ? publishedMatch[1] : '',
+            thumbnail: `https://i.ytimg.com/vi/${idMatch[1]}/hqdefault.jpg`
+          });
+        }
+      }
+      
+      if (videos.length > 0) return videos;
+    }
+    
+    console.warn(`YouTube RSS failed or empty for ${channelId}, trying Strategy 2 (HTML Scraping)...`);
+
+    // Strategy 2: Fallback to scraping the Channel Videos page
+    const channelUrl = `https://www.youtube.com/channel/${channelId}/videos`;
+    const htmlResponse = await fetch(channelUrl, {
+      cache: 'no-store',
+      headers: browserHeader
+    });
+
+    if (htmlResponse.ok) {
+      const html = await htmlResponse.text();
+      const videos: YouTubeVideo[] = [];
+      
+      // Look for the JSON object containing video data in the HTML
+      const jsonMatch = html.match(/var ytInitialData = (\{.*?\});/);
+      if (jsonMatch) {
+        try {
+          const data = JSON.parse(jsonMatch[1]);
+          // Path: contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.richGridRenderer.contents
+          const contents = data.contents?.twoColumnBrowseResultsRenderer?.tabs?.[1]?.tabRenderer?.content?.richGridRenderer?.contents;
+          
+          if (contents && Array.isArray(contents)) {
+            for (const item of contents) {
+              const videoData = item.richItemRenderer?.content?.videoRenderer;
+              if (videoData && videoData.videoId) {
+                videos.push({
+                  id: videoData.videoId,
+                  title: videoData.title?.runs?.[0]?.text || 'Untitled',
+                  published: videoData.publishedTimeText?.simpleText || '',
+                  thumbnail: `https://i.ytimg.com/vi/${videoData.videoId}/hqdefault.jpg`
+                });
+                if (videos.length >= limit) break;
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Failed to parse ytInitialData for fallback scraping", e);
+        }
+      }
+      
+      if (videos.length > 0) return videos;
     }
 
-    const text = await response.text();
-    
-    // Improved parsing for multiple videos
-    const entries = text.split('<entry>');
-    const videos: YouTubeVideo[] = [];
-    
-    // Skip the first part which is channel info
-    for (let i = 1; i < entries.length && videos.length < limit; i++) {
-      const entry = entries[i];
-      
-      const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
-      const titleMatch = entry.match(/<title>([^<]+)<\/title>/);
-      const publishedMatch = entry.match(/<published>([^<]+)<\/published>/);
-      const thumbnailMatch = entry.match(/url="([^"]+)"/); // Simplification for media:thumbnail
-      
-      if (idMatch && titleMatch) {
-        videos.push({
-          id: idMatch[1],
-          title: titleMatch[1],
-          published: publishedMatch ? publishedMatch[1] : '',
-          thumbnail: thumbnailMatch ? thumbnailMatch[1] : `https://i.ytimg.com/vi/${idMatch[1]}/hqdefault.jpg`
-        });
-      }
-    }
-    
-    return videos;
+    return [];
   } catch (error) {
-    console.error("Error fetching YouTube videos:", error);
+    console.error("All YouTube fetch strategies failed:", error);
     return [];
   }
 }

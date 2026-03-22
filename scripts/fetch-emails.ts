@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import process from 'process';
 import { authenticate } from '@google-cloud/local-auth';
-import { google, gmail_v1, Auth } from 'googleapis';
+import { google, Auth, gmail_v1 } from 'googleapis';
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
@@ -66,10 +66,11 @@ async function authorize(): Promise<Auth.OAuth2Client> {
 
   // If no valid client from saved credentials, start authentication flow
   if (!client) {
-    client = (await authenticate({
+    const authenticatedClient = await authenticate({
       scopes: SCOPES,
       keyfilePath: CREDENTIALS_PATH,
-    })) as unknown as Auth.OAuth2Client;
+    });
+    client = authenticatedClient as unknown as Auth.OAuth2Client;
     if (client.credentials) {
       await saveCredentials(client);
     }

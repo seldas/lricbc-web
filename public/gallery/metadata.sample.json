@@ -1,0 +1,82 @@
+[
+  {
+    "id": "NewYear_2026",
+    "title_en": "2026 Lunar New Year Event",
+    "title_zh": "2026 農曆新年活動",
+    "date": "2026-02-22",
+    "category": "holiday",
+    "googlePhotosUrl": "https://photos.app.goo.gl/p5CA41eETi4wVkBd8"
+  },
+  {
+    "id": "HoldJesus_2026_02",
+    "title_en": "2026 Hold Jesus Event",
+    "title_zh": "2026 為耶穌舉牌事工",
+    "date": "2026-02-21",
+    "category": "fellowship",
+    "googlePhotosUrl": "https://photos.app.goo.gl/inAmJt7BfyYDbQk78"
+  },
+  {
+    "id": "Christmas_2025",
+    "title_en": "2025 Christmas Event",
+    "title_zh": "2025 聖誕節活動",
+    "date": "2026-02-15",
+    "category": "holiday",
+    "googlePhotosUrl": "https://photos.app.goo.gl/xwMN3RUtQeBuogVHA"
+  },
+  {
+    "id": "ElderFellowship_2025",
+    "title_en": "2025 Older Members Fellowship Event",
+    "title_zh": "2025 長者團契活動",
+    "date": "2025-09-01",
+    "category": "fellowship",
+    "googlePhotosUrl": "https://photos.app.goo.gl/GLAKYvPQhpLNFiSdA"
+  },
+  {
+    "id": "CampSiloam_2025",
+    "title_en": "2025 Camp Siloam Event",
+    "title_zh": "2025 西羅亞營活動",
+    "date": "2025-09-01",
+    "category": "fellowship",
+    "googlePhotosUrl": "https://photos.app.goo.gl/tZmt8vBknFM1tXxE6"
+  },
+  {
+    "id": "VBS_2025",
+    "title_en": "2025 VBS Event",
+    "title_zh": "2025 暑期主日學活動",
+    "date": "2025-07-01",
+    "category": "fellowship",
+    "googlePhotosUrl": "https://photos.app.goo.gl/HbWM37ehLmSnfo9q8"
+  },
+  {
+    "id": "MothersDay_2025",
+    "title_en": "2025 Mother's Day Event",
+    "title_zh": "2025 母親節活動",
+    "date": "2025-05-10",
+    "category": "fellowship",
+    "googlePhotosUrl": "https://photos.app.goo.gl/dt1TEH1Xp6PCG35B7"
+  },
+  {
+    "id": "CampSiloam_2024",
+    "title_en": "2024 Camp Siloam Event",
+    "title_zh": "2024 西羅亞營活動",
+    "date": "2024-07-01",
+    "category": "fellowship",
+    "googlePhotosUrl": "https://photos.app.goo.gl/dxsi1RKBKCH7J4TF7"
+  },
+  {
+    "id": "Mothersday_2024",
+    "title_en": "2024 Mother's Day Event",
+    "title_zh": "2024 母親節活動",
+    "date": "2024-05-10",
+    "category": "fellowship",
+    "googlePhotosUrl": "https://photos.app.goo.gl/9QM82KNDWev4eCTNA"
+  },
+  {
+    "id": "Easter_2023",
+    "title_en": "2023 Easter Event",
+    "title_zh": "2023 復活節活動",
+    "date": "2023-04-01",
+    "category": "holiday",
+    "googlePhotosUrl": "https://photos.app.goo.gl/ihU9kor5r5UC7GSt5"
+  }
+]

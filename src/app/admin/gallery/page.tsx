@@ -61,7 +61,11 @@ export default function AdminGalleryPage() {
             
             {/* Form Section */}
             <div className="lg:col-span-3 space-y-8">
-              <form action={handleSubmit}>
+              <form onSubmit={async (event) => {
+                event.preventDefault();
+                const formData = new FormData(event.currentTarget);
+                await handleSubmit(formData);
+              }}>
                 <Card className="rounded-[3.5rem] shadow-2xl border-none overflow-hidden bg-white p-8 md:p-12 space-y-10">
                   <div className="flex items-center gap-4 mb-2">
                     <div className="p-3 bg-sky-100 rounded-2xl">
