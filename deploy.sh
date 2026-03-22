@@ -50,7 +50,8 @@ if [ $? -eq 0 ]; then
     # but here it ensures the destination matches the source.
     gcloud storage rsync ./content gs://lricbc-web-storage/content --recursive --project $PROJECT_ID
     gcloud storage rsync ./fetch_raw gs://lricbc-web-storage/fetch_raw --recursive --project $PROJECT_ID
-    gcloud storage rsync ./public gs://lricbc-web-storage/public --recursive --project $PROJECT_ID
+    # Exclude gallery and announcements from syncing to prevent overwriting cloud-managed content
+    gcloud storage rsync ./public gs://lricbc-web-storage/public --recursive --exclude="^gallery/.*|^announcements/.*" --project $PROJECT_ID
     echo -e "\033[0;32mDeployment and sync successful!\033[0m"
 else
     echo -e "\033[0;31mDeployment failed.\033[0m"
