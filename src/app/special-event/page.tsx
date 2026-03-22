@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
+import Link from 'next/link';
 import { TestimonyData } from '@/types/testimony';
 import { SpecialEvent } from '@/types/special-event';
 
@@ -194,12 +195,12 @@ export default function SpecialEventPage() {
                   <div className="px-6 py-6 text-sm text-slate-600 leading-relaxed border-t border-sky-50">
                     <p>{event.detail}</p>
                     <div className="mt-6 flex justify-end">
-                      <a
-                        href="#testimonies"
+                      <Link
+                        href={`/special-event/${event.slug}`}
                         className="inline-flex items-center text-sm font-bold text-sky-600 hover:text-sky-800 transition-colors"
                       >
                         {t('specialEvent.archivedMore')} →
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </details>

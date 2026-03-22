@@ -111,6 +111,12 @@ export async function getLatestVideos(channelId: string, limit: number = 20): Pr
             for (const item of contents) {
               const videoData = item.richItemRenderer?.content?.videoRenderer;
               if (videoData && videoData.videoId) {
+                const ownerBrowseId = videoData.ownerText?.runs?.[0]?.navigationEndpoint?.browseEndpoint?.browseId
+                  || videoData.longBylineText?.runs?.[0]?.navigationEndpoint?.browseEndpoint?.browseId;
+                if (ownerBrowseId && ownerBrowseId !== channelId) {
+                  continue;
+                }
+
                 videos.push({
                   id: videoData.videoId,
                   title: videoData.title?.runs?.[0]?.text || 'Untitled',
