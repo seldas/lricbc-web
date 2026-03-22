@@ -10,22 +10,31 @@ import { TestimonyData } from '@/types/testimony';
 const TESTIMONY_STORAGE_BASE = process.env.NEXT_PUBLIC_TESTIMONY_STORAGE_BASE || '/cloud-storage/testimonies';
 
 const schedule = [
-  { date: '3/9 (Mon)', leader: '许杭军' },
-  { date: '3/10 (Tue)', leader: 'George 牧师' },
-  { date: '3/11 (Wed)', leader: '张琨' },
-  { date: '3/12 (Thu)', leader: '多牧师' },
-  { date: '3/13 (Fri)', leader: '曾华军' },
-  { date: '3/14 (Sat)', leader: '罗春花' },
-  { date: '3/16 (Mon)', leader: '雁玲' },
-  { date: '3/17 (Tue)', leader: '魏牧师' },
-  { date: '3/18 (Wed)', leader: '喻牧师' },
-  { date: '3/19 (Thu)', leader: '田萍芳' },
-  { date: '3/20 (Fri)', leader: '王海红' },
-  { date: '3/21 (Sat)', leader: '应岚' },
   { date: '3/23 (Mon)', leader: '许杭军' },
+  { date: '3/24 (Tue)', leader: 'George 牧师' },
+  { date: '3/25 (Wed)', leader: '张琨' },
+  { date: '3/26 (Thu)', leader: '多牧师' },
+  { date: '3/27 (Fri)', leader: '曾华军' },
+  { date: '3/28 (Sat)', leader: '罗春花' },
+  { date: '3/30 (Mon)', leader: '雁玲' },
+  { date: '3/31 (Tue)', leader: '魏师母' },
+  { date: '4/1 (Wed)', leader: '喻牧师' },
+  { date: '4/2 (Thu)', leader: '田萍芳' },
+  { date: '4/3 (Fri)', leader: '王海红 (烛光默想)' },
+  { date: '4/4 (Sat)', leader: '应岚 (为耶稣举牌)' },
+  { date: '4/6 (Mon)', leader: '许杭军' },
 ];
 
 const archivedEvents = [
+  {
+    id: 'prayer-acts-2026',
+    title_en: 'United in Prayer (Acts 1:14)',
+    title_zh: '同心合意地恒切祷告',
+    dateRange: 'March 9 - 21, 2026',
+    highlight: 'A season of morning and evening prayers following the Acts model.',
+    detail:
+      'The church gathered daily on Zoom for two weeks, seeking revival through united prayer. Leaders from across the community took turns sharing and leading intercession, strengthening our spiritual foundation for the new year.',
+  },
   {
     id: 'longlife-2026',
     title_en: 'Longlife Fellowship Gathering',
@@ -33,7 +42,7 @@ const archivedEvents = [
     dateRange: 'March 9, 2026',
     highlight: 'Hope gathered around Acts 1:14',
     detail:
-      'A single evening celebration that reflected on Acts 1:14 and Acts 2:1, blessing the church with testimonies of renewal and a charge to keep praying in one accord. Pastor Chunhai Li and the pastoral team welcomed everyone with reminders to keep courage and the Zoom community standing ready for future gatherings.',
+      'A single evening celebration that reflected on Acts 1:14 and Acts 2:1, blessing the church with testimonies of renewal and a charge to keep praying in one accord. Pastor Chunhai Li and the pastoral team welcomed everyone with reminders to keep courage and the Zoom community standing ready for future gatherings.',
   },
 ];
 
