@@ -6,58 +6,41 @@ import Footer from '@/components/Footer';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { TestimonyData } from '@/types/testimony';
+import { SpecialEvent } from '@/types/special-event';
 
 const TESTIMONY_STORAGE_BASE = process.env.NEXT_PUBLIC_TESTIMONY_STORAGE_BASE || '/cloud-storage/testimonies';
-
-const schedule = [
-  { date: '3/23 (Mon)', leader: '许杭军' },
-  { date: '3/24 (Tue)', leader: 'George 牧师' },
-  { date: '3/25 (Wed)', leader: '张琨' },
-  { date: '3/26 (Thu)', leader: '多牧师' },
-  { date: '3/27 (Fri)', leader: '曾华军' },
-  { date: '3/28 (Sat)', leader: '罗春花' },
-  { date: '3/30 (Mon)', leader: '雁玲' },
-  { date: '3/31 (Tue)', leader: '魏师母' },
-  { date: '4/1 (Wed)', leader: '喻牧师' },
-  { date: '4/2 (Thu)', leader: '田萍芳' },
-  { date: '4/3 (Fri)', leader: '王海红 (烛光默想)' },
-  { date: '4/4 (Sat)', leader: '应岚 (为耶稣举牌)' },
-  { date: '4/6 (Mon)', leader: '许杭军' },
-];
-
-const archivedEvents = [
-  {
-    id: 'prayer-acts-2026',
-    title_en: 'United in Prayer (Acts 1:14)',
-    title_zh: '同心合意地恒切祷告',
-    dateRange: 'March 9 - 21, 2026',
-    highlight: 'A season of morning and evening prayers following the Acts model.',
-    detail:
-      'The church gathered daily on Zoom for two weeks, seeking revival through united prayer. Leaders from across the community took turns sharing and leading intercession, strengthening our spiritual foundation for the new year.',
-  },
-  {
-    id: 'longlife-2026',
-    title_en: 'Longlife Fellowship Gathering',
-    title_zh: '長青團契聚會',
-    dateRange: 'March 9, 2026',
-    highlight: 'Hope gathered around Acts 1:14',
-    detail:
-      'A single evening celebration that reflected on Acts 1:14 and Acts 2:1, blessing the church with testimonies of renewal and a charge to keep praying in one accord. Pastor Chunhai Li and the pastoral team welcomed everyone with reminders to keep courage and the Zoom community standing ready for future gatherings.',
-  },
-];
 
 export default function SpecialEventPage() {
   const { t } = useTranslation('common');
   const [testimonies, setTestimonies] = useState<TestimonyData[]>([]);
+  const [events, setEvents] = useState<SpecialEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/testimonies')
-      .then((res) => res.json())
-      .then((data) => setTestimonies(data))
-      .catch(() => setTestimonies([]))
-      .finally(() => setIsLoading(false));
+    const fetchData = async () => {
+      try {
+        const [testimoniesRes, eventsRes] = await Promise.all([
+          fetch('/api/testimonies'),
+          fetch('/api/special-events')
+        ]);
+        
+        const testimoniesData = await testimoniesRes.json();
+        const eventsData = await eventsRes.json();
+        
+        setTestimonies(testimoniesData);
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchData();
   }, []);
+
+  const activeEvent = events.find(e => e.is_active) || events[0];
+  const archivedEvents = events.filter(e => e.id !== activeEvent?.id);
 
   return (
     <main className="min-h-screen flex flex-col bg-white">
@@ -72,10 +55,10 @@ export default function SpecialEventPage() {
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-light tracking-tight text-sky-900 leading-tight">
-            {t('specialEvent.subtitle')}
+            {activeEvent?.title_en || t('specialEvent.subtitle')}
           </h1>
           <p className="mt-4 text-lg sm:text-xl font-light text-sky-600/70 italic max-w-2xl mx-auto leading-relaxed px-4">
-            {t('specialEvent.theme')}
+            {activeEvent?.theme_en || t('specialEvent.theme')}
           </p>
           <div className="mt-6 flex items-center justify-center gap-4">
             <a
@@ -98,84 +81,100 @@ export default function SpecialEventPage() {
       </section>
 
       <section className="container mx-auto px-6 py-8 sm:py-12 flex-grow">
-        <div className="max-w-4xl mx-auto mb-12 sm:mb-16 text-center">
-          <p className="text-lg sm:text-2xl font-light text-sky-900/70 leading-relaxed italic bg-white/30 backdrop-blur-md p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-sky-100/50 shadow-sm">
-            {t('specialEvent.description')}
-          </p>
-        </div>
-
-        <div className="max-w-4xl mx-auto mb-10">
-          <Card className="border-sky-100 bg-white shadow-xl shadow-sky-900/5 rounded-[2rem]">
-            <CardContent className="p-8 space-y-6 text-slate-700">
-              <div>
-                <p className="text-sm uppercase tracking-[0.4em] text-sky-500 font-bold">{t('specialEvent.renewalTitle')}</p>
-                <h3 className="text-3xl font-light tracking-tight text-sky-900 mt-2">{t('specialEvent.renewalTheme')}</h3>
-              </div>
-              <p className="text-lg text-slate-600 leading-relaxed italic">
-                {t('specialEvent.renewalIntro')}
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <p className="text-slate-400">Loading special events...</p>
+          </div>
+        ) : activeEvent ? (
+          <>
+            <div className="max-w-4xl mx-auto mb-12 sm:mb-16 text-center">
+              <p className="text-lg sm:text-2xl font-light text-sky-900/70 leading-relaxed italic bg-white/30 backdrop-blur-md p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-sky-100/50 shadow-sm">
+                {activeEvent.detail || activeEvent.highlight}
               </p>
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2 p-4 rounded-2xl bg-sky-50/50 border border-sky-100">
-                  <p className="text-xs uppercase tracking-[0.4em] text-sky-600 font-black">{t('specialEvent.usPrayer')}</p>
-                  <p className="text-slate-700 font-medium">{t('specialEvent.usTiming')}</p>
-                </div>
-                <div className="space-y-2 p-4 rounded-2xl bg-sky-50/50 border border-sky-100">
-                  <p className="text-xs uppercase tracking-[0.4em] text-sky-600 font-black">{t('specialEvent.cnPrayer')}</p>
-                  <p className="text-slate-700 font-medium">{t('specialEvent.cnTiming')}</p>
-                </div>
-              </div>
-              <div className="rounded-2xl border border-sky-100 bg-white p-6 text-sm">
-                <p className="font-bold text-sky-900 uppercase tracking-widest text-xs mb-4">{t('specialEvent.scheduleLabel')}</p>
-                <div className="mt-3 grid gap-3">
-                  {schedule.map((item) => (
-                    <div key={item.date} className="flex items-center justify-between border-b border-sky-50 pb-2">
-                      <span className="text-slate-500">{item.date}</span>
-                      <span className="text-sky-700 font-bold">{item.leader}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-6 text-xs text-slate-400 font-medium italic">{t('specialEvent.zoomNote')}</p>
-                <p className="text-xs text-sky-600 font-bold mt-1 tracking-wide">{t('specialEvent.zoomDetail')}</p>
-              </div>
-              <p className="text-sm text-sky-500 italic font-medium text-center">{t('specialEvent.renewalFooter')}</p>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
 
-        <section className="max-w-4xl mx-auto mb-12">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
-            <h3 className="text-2xl font-light tracking-tight text-sky-900">{t('specialEvent.archivedTitle')}</h3>
-            <p className="text-sm text-slate-500 italic">{t('specialEvent.archivedLead')}</p>
+            {activeEvent.schedule && (
+              <div className="max-w-4xl mx-auto mb-10">
+                <Card className="border-sky-100 bg-white shadow-xl shadow-sky-900/5 rounded-[2rem]">
+                  <CardContent className="p-8 space-y-6 text-slate-700">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.4em] text-sky-500 font-bold">{activeEvent.renewalTitle || t('specialEvent.renewalTitle')}</p>
+                      <h3 className="text-3xl font-light tracking-tight text-sky-900 mt-2">{activeEvent.renewalTheme || t('specialEvent.renewalTheme')}</h3>
+                    </div>
+                    <p className="text-lg text-slate-600 leading-relaxed italic">
+                      {activeEvent.renewalIntro || t('specialEvent.renewalIntro')}
+                    </p>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div className="space-y-2 p-4 rounded-2xl bg-sky-50/50 border border-sky-100">
+                        <p className="text-xs uppercase tracking-[0.4em] text-sky-600 font-black">{activeEvent.usPrayer || t('specialEvent.usPrayer')}</p>
+                        <p className="text-slate-700 font-medium">{activeEvent.usTiming || t('specialEvent.usTiming')}</p>
+                      </div>
+                      <div className="space-y-2 p-4 rounded-2xl bg-sky-50/50 border border-sky-100">
+                        <p className="text-xs uppercase tracking-[0.4em] text-sky-600 font-black">{activeEvent.cnPrayer || t('specialEvent.cnPrayer')}</p>
+                        <p className="text-slate-700 font-medium">{activeEvent.cnTiming || t('specialEvent.cnTiming')}</p>
+                      </div>
+                    </div>
+                    <div className="rounded-2xl border border-sky-100 bg-white p-6 text-sm">
+                      <p className="font-bold text-sky-900 uppercase tracking-widest text-xs mb-4">{t('specialEvent.scheduleLabel')}</p>
+                      <div className="mt-3 grid gap-3">
+                        {activeEvent.schedule.map((item, idx) => (
+                          <div key={idx} className="flex items-center justify-between border-b border-sky-50 pb-2">
+                            <span className="text-slate-500">{item.date}</span>
+                            <span className="text-sky-700 font-bold">{item.leader}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="mt-6 text-xs text-slate-400 font-medium italic">{activeEvent.zoomNote || t('specialEvent.zoomNote')}</p>
+                      <p className="text-xs text-sky-600 font-bold mt-1 tracking-wide">{activeEvent.zoomDetail || t('specialEvent.zoomDetail')}</p>
+                    </div>
+                    <p className="text-sm text-sky-500 italic font-medium text-center">{activeEvent.renewalFooter || t('specialEvent.renewalFooter')}</p>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="max-w-4xl mx-auto mb-12 text-center">
+            <p className="text-slate-500">No active special events at this time.</p>
           </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {archivedEvents.map((event) => (
-              <details
-                key={event.id}
-                className="group rounded-[2rem] border border-sky-100 bg-white shadow-lg transition-all hover:border-sky-300 hover:shadow-xl"
-              >
-                <summary className="cursor-pointer list-none">
-                  <div className="rounded-[1.8rem] bg-sky-50/50 p-6 text-sky-900 transition-all group-open:bg-sky-100/50">
-                    <p className="text-[10px] uppercase tracking-[0.4em] text-sky-600 font-black">{event.dateRange}</p>
-                    <h3 className="text-xl font-light tracking-tight mt-3 text-sky-900">{event.title_en}</h3>
-                    <p className="text-sm text-sky-700/70 font-medium">{event.title_zh}</p>
-                    <p className="mt-4 text-sm text-slate-600 italic leading-relaxed">{event.highlight}</p>
+        )}
+
+        {archivedEvents.length > 0 && (
+          <section className="max-w-4xl mx-auto mb-12">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+              <h3 className="text-2xl font-light tracking-tight text-sky-900">{t('specialEvent.archivedTitle')}</h3>
+              <p className="text-sm text-slate-500 italic">{t('specialEvent.archivedLead')}</p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {archivedEvents.map((event) => (
+                <details
+                  key={event.id}
+                  className="group rounded-[2rem] border border-sky-100 bg-white shadow-lg transition-all hover:border-sky-300 hover:shadow-xl"
+                >
+                  <summary className="cursor-pointer list-none">
+                    <div className="rounded-[1.8rem] bg-sky-50/50 p-6 text-sky-900 transition-all group-open:bg-sky-100/50">
+                      <p className="text-[10px] uppercase tracking-[0.4em] text-sky-600 font-black">{event.dateRange}</p>
+                      <h3 className="text-xl font-light tracking-tight mt-3 text-sky-900">{event.title_en}</h3>
+                      <p className="text-sm text-sky-700/70 font-medium">{event.title_zh}</p>
+                      <p className="mt-4 text-sm text-slate-600 italic leading-relaxed">{event.highlight}</p>
+                    </div>
+                  </summary>
+                  <div className="px-6 py-6 text-sm text-slate-600 leading-relaxed border-t border-sky-50">
+                    <p>{event.detail}</p>
+                    <div className="mt-6 flex justify-end">
+                      <a
+                        href="#testimonies"
+                        className="inline-flex items-center text-sm font-bold text-sky-600 hover:text-sky-800 transition-colors"
+                      >
+                        {t('specialEvent.archivedMore')} →
+                      </a>
+                    </div>
                   </div>
-                </summary>
-                <div className="px-6 py-6 text-sm text-slate-600 leading-relaxed border-t border-sky-50">
-                  <p>{event.detail}</p>
-                  <div className="mt-6 flex justify-end">
-                    <a
-                      href="#testimonies"
-                      className="inline-flex items-center text-sm font-bold text-sky-600 hover:text-sky-800 transition-colors"
-                    >
-                      {t('specialEvent.archivedMore')} →
-                    </a>
-                  </div>
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
       </section>
 
       <section id="testimonies" className="bg-gradient-to-b from-white to-sky-50 py-16">

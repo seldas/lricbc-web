@@ -45,13 +45,9 @@ gcloud run deploy $SERVICE_NAME \
     --add-volume-mount "volume=storage,mount-path=/app/storage"
 
 if [ $? -eq 0 ]; then
-    echo -e "\033[0;33mSyncing content, fetch data, and public assets to Cloud Storage bucket...\033[0m"
-    # rsync will append and skip existing ones by default in many contexts, 
-    # but here it ensures the destination matches the source.
-    gcloud storage rsync ./content gs://lricbc-web-storage/content --recursive --project $PROJECT_ID
-    gcloud storage rsync ./fetch_raw gs://lricbc-web-storage/fetch_raw --recursive --project $PROJECT_ID
-    gcloud storage rsync ./public gs://lricbc-web-storage/public --recursive --project $PROJECT_ID --exclude "public/gallery/**" --exclude "public/gallery/metadata.sample.json"
-    echo -e "\033[0;32mDeployment and sync successful!\033[0m"
+    echo -e "\033[0;32mDeployment successful! Running content sync...\033[0m"
+    chmod +x ./sync-content.sh
+    ./sync-content.sh
 else
     echo -e "\033[0;31mDeployment failed.\033[0m"
     exit 1
