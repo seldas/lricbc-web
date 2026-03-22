@@ -49,20 +49,30 @@ npm run dev
 No further steps are needed once the Markdown files are generated; Next.js will pick them up.
 
 ### GCP Platform (Production)
-Since this project uses a Dockerized deployment (as seen in `Dockerfile` and `deploy.ps1`), follow these steps to push updates:
+Since this project uses a mounted Google Cloud Storage bucket for content, you can update the live website **without rebuilding the application**. This is much faster for weekly updates.
 
-1. **Commit the new content:**
+1. **Commit your changes (Optional but recommended):**
    ```bash
-   git add src/content/updates/*.md
+   git add .
    git commit -m "docs: add weekly updates for [Date]"
    ```
 
-2. **Deploy:**
-   If using the provided PowerShell script:
-   ```powershell
-   ./deploy.ps1
+2. **Sync content to the cloud:**
+   This will upload all Markdown content (`updates`, `testimonies`, `special-events`), gallery images, and announcements directly to the production storage.
+
+   **For Linux / macOS:**
+   ```bash
+   chmod +x sync-content.sh
+   ./sync-content.sh
    ```
-   *Note: Ensure your GCP SDK is authenticated and the project is set correctly.*
+
+   **For Windows (PowerShell):**
+   ```powershell
+   ./sync-content.ps1
+   ```
+
+3. **When to use full Deployment?**
+   Only use `./deploy.sh` or `./deploy.ps1` if you have changed the **application code** (e.g., changed the UI layout, fixed a bug in the TypeScript code, or updated `package.json`). For 99% of weekly content updates, the `sync-content` scripts are sufficient.
 
 ---
 

@@ -72,17 +72,25 @@ chmod +x deploy.sh
 ./deploy.ps1
 ```
 
-*Note: These scripts also synchronize your local content, fetch data, and public assets to the Cloud Storage bucket after a successful deployment.*
+*Note: These deployment scripts also automatically trigger a full content sync after a successful deployment.*
 
+### 4. Fast Content Updates (Weekly)
+If you only need to update Markdown content (weekly updates, testimonies, special events) or public assets (gallery, announcements), you don't need to rebuild and redeploy the entire application. Use the synchronization scripts instead:
 
-### Gallery metadata storage
-Gallery metadata is now treated as runtime data. The live `metadata.json` lives inside the mounted `/app/storage/public/gallery` volume (synchronized with `gs://lricbc-web-storage/public/gallery`), and we keep the example in `metadata.sample.json` so you always have something to seed. Before the first deployment, upload the sample file once:
+**For Linux / macOS:**
 ```bash
-gcloud storage cp public/gallery/metadata.sample.json gs://lricbc-web-storage/public/gallery/metadata.json --project lricbc-web
+chmod +x sync-content.sh
+./sync-content.sh
 ```
-The Bash/PowerShell deploy scripts already exclude the sample file from the bucket sync so future deployments won't overwrite your live metadata.
 
-### 4. Manual Deployment (Optional)
+**For Windows (PowerShell):**
+```powershell
+./sync-content.ps1
+```
+
+This is much faster and more efficient for weekly maintenance.
+
+### 5. Manual Deployment (Optional)
 If you prefer to run commands manually, follow these steps from the `lricbc-web` directory.
 
 **For Linux / macOS (Bash/Zsh):**

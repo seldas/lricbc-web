@@ -132,6 +132,38 @@ export default function SpecialEventPage() {
                 </Card>
               </div>
             )}
+
+            {activeEvent.contentHtml && (
+              <div className="max-w-4xl mx-auto mb-16">
+                <article 
+                  className="prose prose-slate prose-sky max-w-none bg-white p-8 md:p-12 rounded-[2rem] border border-sky-100 shadow-sm"
+                  dangerouslySetInnerHTML={{ __html: activeEvent.contentHtml }}
+                />
+              </div>
+            )}
+
+            {activeEvent.attachments && activeEvent.attachments.length > 0 && (
+              <div className="max-w-4xl mx-auto mb-16">
+                <div className="bg-sky-50/50 rounded-[2rem] border border-sky-100 p-8">
+                  <h4 className="text-xs uppercase tracking-[0.3em] text-sky-600 font-black mb-6">Downloadable Resources</h4>
+                  <div className="flex flex-wrap gap-4">
+                    {activeEvent.attachments.map((file, idx) => (
+                      <a
+                        key={idx}
+                        href={`/api/special-events/attachments/${file.filename}`}
+                        className="inline-flex items-center gap-2 bg-white border border-sky-200 px-6 py-3 rounded-full text-sky-700 font-bold hover:bg-sky-700 hover:text-white hover:border-sky-700 transition-all shadow-sm"
+                        download
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="浸4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        {file.label_zh} / {file.label_en}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <div className="max-w-4xl mx-auto mb-12 text-center">

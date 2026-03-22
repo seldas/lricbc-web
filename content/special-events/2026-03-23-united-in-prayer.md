@@ -5,7 +5,7 @@ dateRange: "March 23 - April 6, 2026"
 highlight: "A season of morning and evening prayers following the Acts model."
 detail: "The church gathered daily on Zoom for two weeks, seeking revival through united prayer. Leaders from across the community took turns sharing and leading intercession, strengthening our spiritual foundation for the new year."
 published_at: "2026-03-23"
-is_active: true
+is_active: false
 renewalTitle: "2026 REVALUATION & RENEWAL"
 renewalTheme: "THROUGH UNITED PRAYER"
 renewalIntro: "Join us as we gather in one accord, seeking God's guidance and strength for our community and mission."

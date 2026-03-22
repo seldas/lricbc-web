@@ -1,11 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { remark } from 'remark';
+import html from 'remark-html';
 import { getStoragePath } from './storage-paths';
 import { SpecialEvent } from '@/types/special-event';
 
 function getDirectory() {
   return getStoragePath('content/special-events');
+}
+
+async function toHtml(markdown: string) {
+  const processed = await remark().use(html).process(markdown);
+  return processed.toString();
 }
 
 export async function getSpecialEventsData(): Promise<SpecialEvent[]> {
@@ -15,11 +22,12 @@ export async function getSpecialEventsData(): Promise<SpecialEvent[]> {
   }
 
   const fileNames = fs.readdirSync(dir).filter((name) => name.endsWith('.md'));
-  const events: SpecialEvent[] = fileNames.map((fileName) => {
+  const events: SpecialEvent[] = await Promise.all(fileNames.map(async (fileName) => {
     const fullPath = path.join(dir, fileName);
     const id = fileName.replace(/\.md$/, '');
     const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data } = matter(fileContents);
+    const { data, content } = matter(fileContents);
+    const contentHtml = await toHtml(content);
 
     return {
       id,
@@ -46,8 +54,10 @@ export async function getSpecialEventsData(): Promise<SpecialEvent[]> {
       zoomNote: data.zoomNote,
       zoomDetail: data.zoomDetail,
       renewalFooter: data.renewalFooter,
+      attachments: data.attachments,
+      contentHtml,
     } as SpecialEvent;
-  });
+  }));
 
   // Sort by published_at descending
   return events.sort((a, b) => {

@@ -30,4 +30,6 @@ export interface SpecialEvent {
   zoomNote?: string;
   zoomDetail?: string;
   renewalFooter?: string;
+  contentHtml?: string;
+  attachments?: { label_en: string; label_zh: string; filename: string }[];
 }
