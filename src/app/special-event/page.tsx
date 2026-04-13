@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { TestimonyData } from '@/types/testimony';
 import { SpecialEvent } from '@/types/special-event';
+import { OutreachReport } from '@/types/outreach-report';
 
 const TESTIMONY_STORAGE_BASE = process.env.NEXT_PUBLIC_TESTIMONY_STORAGE_BASE || '/cloud-storage/testimonies';
 
@@ -16,6 +17,8 @@ export default function SpecialEventPage() {
   const [testimonies, setTestimonies] = useState<TestimonyData[]>([]);
   const [events, setEvents] = useState<SpecialEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [outreachReports, setOutreachReports] = useState<OutreachReport[]>([]);
+  const [isOutreachLoading, setIsOutreachLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,8 +43,54 @@ export default function SpecialEventPage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchOutreach = async () => {
+      try {
+        const outreachRes = await fetch('/api/outreach');
+        if (!outreachRes.ok) {
+          throw new Error('Unable to load outreach reports');
+        }
+        const outreachData: OutreachReport[] = await outreachRes.json();
+        if (isMounted) {
+          setOutreachReports(outreachData);
+        }
+      } catch (error) {
+        console.error('Error fetching outreach reports:', error);
+      } finally {
+        if (isMounted) {
+          setIsOutreachLoading(false);
+        }
+      }
+    };
+
+    fetchOutreach();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const activeEvent = events.find(e => e.is_active) || events[0];
-  const archivedEvents = events.filter(e => e.id !== activeEvent?.id);
+  const archivedEvents = events.filter(e => e.id !== activeEvent?.id && e.id !== 'stay-tuned');
+  const outreachArchiveLink = process.env.NEXT_PUBLIC_OUTREACH_ARCHIVE_LINK || '/outreach';
+  const featuredReport = outreachReports.find((report) => report.featured) || outreachReports[0];
+  const remainingReports = outreachReports.filter((report) => report.id !== featuredReport?.id);
+  const listReports = remainingReports.slice(0, 5);
+  const hasMoreReports = outreachReports.length > (featuredReport ? 1 : 0) + listReports.length;
+  const getReportSummary = (report: OutreachReport) => report.summary_en ?? report.summary_zh ?? report.summary ?? '';
+  const buildReportLink = (report: OutreachReport) => report.external_link || `/outreach/${report.slug}`;
+  const formatPublishedDate = (value: string) => {
+    if (!value) {
+      return '';
+    }
+    try {
+      return new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(value));
+    } catch {
+      return value;
+    }
+  };
 
   return (
     <main className="min-h-screen flex flex-col bg-white">
@@ -192,22 +241,178 @@ export default function SpecialEventPage() {
                       <p className="mt-4 text-sm text-slate-600 italic leading-relaxed">{event.highlight}</p>
                     </div>
                   </summary>
-                  <div className="px-6 py-6 text-sm text-slate-600 leading-relaxed border-t border-sky-50">
-                    <p>{event.detail}</p>
-                    <div className="mt-6 flex justify-end">
-                      <Link
-                        href={`/special-event/${event.slug}`}
-                        className="inline-flex items-center text-sm font-bold text-sky-600 hover:text-sky-800 transition-colors"
-                      >
-                        {t('specialEvent.archivedMore')} →
-                      </Link>
+                  <div className="px-6 py-6 text-sm text-slate-600 leading-relaxed border-t border-sky-50 space-y-6">
+                    <div className="space-y-3">
+                      <p className="text-slate-600 leading-relaxed">{event.detail}</p>
+                      {event.theme_en && <p className="text-sm font-semibold text-sky-700">{event.theme_en}</p>}
                     </div>
+                    {event.schedule && event.schedule.length > 0 && (
+                      <div className="rounded-2xl border border-sky-100 bg-sky-50/50 p-4">
+                        <p className="text-xs uppercase tracking-[0.3em] text-sky-500 font-bold mb-3">{t('specialEvent.scheduleLabel')}</p>
+                        <div className="grid gap-3">
+                          {event.schedule.map((item, idx) => (
+                            <div key={idx} className="flex items-center justify-between text-slate-700">
+                              <span className="font-semibold">{item.date}</span>
+                              <span className="text-sm text-sky-700">{item.leader}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {event.contentHtml && (
+                      <article
+                        className="prose prose-slate prose-sky max-w-none bg-white p-6 rounded-2xl border border-slate-100 shadow-sm"
+                        dangerouslySetInnerHTML={{ __html: event.contentHtml }}
+                      />
+                    )}
+                    {event.attachments && event.attachments.length > 0 && (
+                      <div className="space-y-3">
+                        <p className="text-xs uppercase tracking-[0.3em] text-sky-500 font-bold">Attachments</p>
+                        <div className="flex flex-wrap gap-3">
+                          {event.attachments.map((file) => (
+                            <Link
+                              key={file.filename}
+                              href={`/api/special-events/attachments/${file.filename}`}
+                              className="inline-flex items-center rounded-full border border-sky-100 bg-white px-4 py-2 text-xs font-medium text-sky-700 shadow-sm hover:border-sky-600 hover:text-sky-900 transition"
+                            >
+                              {file.label_en} / {file.label_zh}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </details>
               ))}
             </div>
           </section>
         )}
+      </section>
+
+      <section className="bg-slate-50 py-12">
+        <div className="container mx-auto px-6">
+          <div className="max-w-5xl mx-auto mb-10 text-center">
+            <p className="text-[10px] uppercase tracking-[0.6em] text-sky-600 font-black">{t('specialEvent.outreachTitle')}</p>
+            <h2 className="mt-3 text-3xl md:text-4xl font-light text-sky-900">{t('specialEvent.outreachSubtitle')}</h2>
+          </div>
+          {isOutreachLoading ? (
+            <div className="flex justify-center py-12">
+              <p className="text-slate-400">{t('specialEvent.outreachLoading')}</p>
+            </div>
+          ) : outreachReports.length === 0 ? (
+            <div className="rounded-[2rem] border border-slate-100 bg-white p-10 text-center shadow-sm">
+              <p className="text-lg font-semibold text-slate-700">{t('specialEvent.outreachEmpty')}</p>
+              <p className="mt-2 text-sm text-slate-500">{t('specialEvent.outreachEmptySub')}</p>
+            </div>
+          ) : (
+            <>
+              {featuredReport && (
+                <article className="group relative overflow-hidden rounded-[2.5rem] border border-sky-100 bg-gradient-to-br from-white to-slate-50 p-8 shadow-xl">
+                  {featuredReport.cover_image && (
+                    <div
+                      className="pointer-events-none absolute inset-0 opacity-20"
+                      style={{
+                        backgroundImage: `url(${featuredReport.cover_image})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    />
+                  )}
+                  <div className="relative space-y-6">
+                    <p className="text-[10px] uppercase tracking-[0.6em] text-sky-600 font-black">
+                      {t('specialEvent.outreachFeatured')}
+                    </p>
+                    <h3 className="text-3xl font-light text-sky-900">
+                      {featuredReport.title_en || featuredReport.title_zh}
+                    </h3>
+                    <p className="text-base text-slate-600 max-w-3xl">
+                      {getReportSummary(featuredReport)}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-slate-500">
+                      <span>{formatPublishedDate(featuredReport.published_at)}</span>
+                      <div className="flex flex-wrap gap-2">
+                        {featuredReport.tags?.map((tag) => (
+                          <span
+                            key={tag}
+                            className="rounded-full border border-sky-100 bg-white/70 px-3 py-1 text-[10px] font-semibold text-sky-600"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <a
+                        href={buildReportLink(featuredReport)}
+                        className="inline-flex items-center justify-center rounded-full border border-sky-600/60 bg-sky-600/10 px-6 py-3 text-sm font-semibold text-sky-700 transition hover:bg-sky-600 hover:text-white"
+                        target={featuredReport.external_link ? '_blank' : '_self'}
+                        rel={featuredReport.external_link ? 'noreferrer' : undefined}
+                      >
+                        {t('specialEvent.outreachReadMore')}
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              )}
+
+              {listReports.length > 0 && (
+                <div className="mt-10 grid gap-6 md:grid-cols-2">
+                  {listReports.map((report) => {
+                    const href = buildReportLink(report);
+                    const isExternal = Boolean(report.external_link);
+                    return (
+                      <article
+                        key={report.id}
+                        className="rounded-[1.8rem] border border-slate-100 bg-white p-6 shadow-sm transition hover:border-sky-200 hover:shadow-lg"
+                      >
+                        <div className="mb-3 flex items-center justify-between text-xs uppercase tracking-[0.3em] text-slate-500">
+                          <span>{formatPublishedDate(report.published_at)}</span>
+                          <div className="flex flex-wrap gap-2">
+                            {report.tags?.slice(0, 2).map((tag) => (
+                              <span
+                                key={tag}
+                                className="rounded-full border border-sky-100 px-3 py-1 text-[10px] font-semibold text-sky-600"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <h4 className="text-2xl font-semibold text-sky-900">
+                          {report.title_en || report.title_zh}
+                        </h4>
+                        <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+                          {getReportSummary(report)}
+                        </p>
+                        <div className="mt-5 text-right">
+                          <a
+                            href={href}
+                            className="text-sm font-semibold text-sky-600 transition hover:text-sky-800"
+                            target={isExternal ? '_blank' : '_self'}
+                            rel={isExternal ? 'noreferrer' : undefined}
+                          >
+                            {t('specialEvent.outreachReadMore')}
+                          </a>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+
+              {hasMoreReports && (
+                <div className="mt-10 text-center">
+                  <a
+                    href={outreachArchiveLink}
+                    className="text-sm font-semibold uppercase tracking-[0.4em] text-sky-600"
+                  >
+                    {t('specialEvent.outreachMore')}
+                  </a>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </section>
 
       <section id="testimonies" className="bg-gradient-to-b from-white to-sky-50 py-16">

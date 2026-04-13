@@ -229,39 +229,37 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
 
         {/* Remaining Posts Grid */}
         {currentPosts.length > 0 ? (
-          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3 mb-24">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-24">
             {currentPosts.map((update) => (
-              <Card key={update.id} className={`flex flex-col rounded-[3.5rem] shadow-xl hover:shadow-2xl transition-all group border-2 ${categoryStyles[update.category as keyof typeof categoryStyles]}`}>
-                <CardHeader className="p-10 pb-6">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest ${categoryBadgeStyles[update.category as keyof typeof categoryBadgeStyles]}`}>
-                      {t(`updates.categories.${update.category}`)}
-                    </div>
-                    <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-widest opacity-60">
-                      <Calendar className="h-4 w-4" />
-                      <span>{new Date(update.publishedAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <CardTitle className="line-clamp-2 text-3xl font-light leading-tight group-hover:text-primary transition-colors">
+              <article
+                key={update.id}
+                className="flex flex-col rounded-[2.5rem] border border-slate-100 bg-white/80 shadow-lg shadow-slate-200/50 transition hover:-translate-y-0.5 hover:shadow-2xl"
+              >
+                <header className="flex items-start justify-between gap-3 p-6">
+                  <span className={`inline-flex items-center gap-2 rounded-full px-4 py-1 text-[11px] font-black uppercase tracking-[0.3em] ${categoryBadgeStyles[update.category as keyof typeof categoryBadgeStyles]}`}>
+                    {t(`updates.categories.${update.category}`)}
+                  </span>
+                  <time className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-500">
+                    {new Date(update.publishedAt).toLocaleDateString()}
+                  </time>
+                </header>
+                <div className="px-6 pb-6 space-y-4">
+                  <h3 className="text-2xl sm:text-3xl font-semibold leading-snug tracking-tight text-slate-900">
                     {update[`title_${langSuffix}` as keyof Post]}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="px-10 flex-grow">
-                  <CardDescription className="text-lg font-light leading-relaxed line-clamp-4 italic text-sky-900/70">
+                  </h3>
+                  <p className="text-sm leading-relaxed text-slate-600 line-clamp-4">
                     {update[`excerpt_${langSuffix}` as keyof Post]}
-                  </CardDescription>
-                </CardContent>
-                <CardFooter className="p-10 pt-6 mt-auto">
-                  <Button asChild className={`w-full rounded-full py-8 text-xl font-bold transition-all hover:scale-105 shadow-lg ${
-                    update.category === 'pastor' ? 'bg-amber-600 hover:bg-amber-700' : 
-                    update.category === 'sermon' ? 'bg-sky-600 hover:bg-sky-700' : 'bg-emerald-600 hover:bg-emerald-700'
-                  }`}>
-                    <Link href={`/updates/${update.id}`}>
-                      {t('updates.readMore')} →
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
+                  </p>
+                </div>
+                <div className="mt-auto px-6 pb-6">
+                  <Link
+                    href={`/updates/${update.id}`}
+                    className="text-sm font-bold tracking-widest uppercase text-sky-600 hover:text-sky-700"
+                  >
+                    {t('updates.readMore')} →
+                  </Link>
+                </div>
+              </article>
             ))}
           </div>
         ) : (

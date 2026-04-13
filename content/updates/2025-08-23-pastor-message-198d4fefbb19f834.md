@@ -1,0 +1,116 @@
+---
+publishedAt: "2025-08-23"
+category: "pastor"
+title_en: "**In Honor of Memorizing Pastor Zhao Zhengye**"
+title_zh: "回忆赵证耶老牧师"
+subtitle_en: "Pastor's Message - 2025-08-23"
+subtitle_zh: "牧者之言 - 2025-08-23"
+excerpt_en: "Weekly message for 2025-08-23."
+excerpt_zh: "2025-08-23 的牧者心聲。"
+---
+
+---
+**8/24/25 Pastor’s Word**
+
+---
+**In Honor of Memorizing Pastor Zhao Zhengye**
+
+---
+**Testimony by Mrs. Shen, the Pastor’s Wife**
+
+---
+**A good pastor can have a tremendous impact on a person’s life. While recalling the blind Christian elder Sister Liu Ruiying,[1] I was also reminded of another elder—Pastor Zhao Zhengye. His name carries deep meaning: “Zheng” means testimony, and “Ye” stands for Jesus—together, “a testimony for Jesus.” He once served time in prison together with Elder Li Wenguang (who is mentioned in the history of the church in China). Both of them were imprisoned in the 1950s for the sake of the Lord, in the same prison. Many elders from my hometown, including my father-in-law, were also imprisoned during those years. My father-in-law was a lay believer, sentenced only to one year before being released.**
+
+---
+**Pastor Zhao was born in 1914 and was called home by the Lord on September 30, 2006, at the age of 92. On April 19, 1979, he came to our home, and that was when I first had close contact with him and asked him to share his testimony of faith. I cannot remember his words in full, but the outline was this: when he was about 14 years old, he first encountered the gospel on the streets of Changchun. At that time, some people were preaching in the streets in a lively manner [2] —playing musical instruments, with accordions, and singing hymns with children. Zhao, who loved music, was drawn to it. He was noticed by a grandfather of Su Lian’en (who later taught at Nanjing Union Theological Seminary), who warmly invited him: “Come in, come in!” So, Zhao joined the children’s gathering. It was then that he was touched by the gospel and came to believe in the Lord.**
+
+---
+**Zhao’s family was poor, and his devotion to worship often led him to neglect household chores. His grandmother, unhappy with him, sometimes denied him food and even blocked the door with a smoking pipe (a traditional Northeastern Chinese long-stemmed pipe that some ladies would use to smoke) to keep him from leaving the house. Yet he still found ways to sneak out to attend worship. His testimony deeply moved me. Pastor Zhao himself thought I was an honest, straightforward person, and he invested much effort in guiding me and caring for my growth in faith. For many years, we kept close contact with him and his family.**
+In early 1979, during Deng Xiaoping’s historic visit to the United States, President Jimmy Carter privately discussed with him the matter of religious freedom in China. Carter made three requests:
+
+Guarantee freedom of religious belief, allowing citizens to openly practice their faith.
+
+Permit the printing and distribution of the Bible.
+
+Reopen churches that had been closed during the Cultural Revolution.
+
+Deng replied: “Your three requests are very difficult. Allow me to think it over tonight.” The next day, he promised Carter that he would agree to the first two: “We will reopen churches in China, and we will print Bibles in China.” But he declined the third—allowing foreign missionaries back into China—explaining that the Chinese church must be led by its own people. However, he welcomed foreigners to come teach English or engage in medical exchanges.[3] The very first batch of Bibles printed in post–Cultural Revolution China was directly supported by Deng Xiaoping, who allocated funds from his Military Commission budget.[4] This exchange marked a historic turning point in the development of Christianity in China, and was a clear answer to the persistent prayers of countless believers, both within China and abroad, who had long sought freedom for the church.
+
+---
+**Pastor Zhao had studied theology. On April 19, 1979—the very day churches were officially allowed to reopen—he was the first in our county to receive the notice titled “A Letter to All Brothers and Sisters in the Lord Nationwide.” He came to our home with his daughter, son-in-law, and several other believers to share the news. From that day, worship gatherings resumed at our home. At first, most of the believers were elderly, though two young men joined as well: Pastor Zhang Xing, who in 1982 enrolled in Northeast Theological Seminary as one of its very first students, and Pastor Shen, who entered Nanjing Union Theological Seminary in 1981.**
+The elders I knew would often go to our hometown Guchengpu to visit Sister Liu Ruiying. If they stayed overnight, they would bring her to our house, where we would fellowship together. That generation of believers displayed genuine love for one another in Christ, and through their example, my own spiritual life grew as well.
+
+---
+**After Pastor Shen graduated from Nanjing Seminary in 1985, our family returned to Shenyang in 1986. Our rural home had three rooms; the east room was always set aside for church gatherings until the autumn of 1987, when a new church building was constructed. Pastor Shen’s brother from his uncle disclosed that the government granted land for it, which, interestingly enough, turned out to be the burial cemetery of our family. When the church first applied for land, the authorities allocated that very plot. Today, the church still stands there—at first simple houses, later tiled rooms, and now, under the leadership of a younger brother, a well-built chapel with steel roofing.**
+When the church was being built, the elders would always gather at our home first for discussion and prayer. Because worship had begun in our home, everyone naturally continued to meet there. Even now, when I return to my hometown, people gather around me as if we were still family. In our rural setting, everyone is related in some way, which made evangelism easier—one relative believing, then another, and so on. The church became a family of both kinship and spiritual fellowship.
+
+---
+**Pastor Zhao used to come to our home every Thursday to play piano, while his daughter taught us hymns. My father-in-law had worked with Pastor Zhao before the 1950s, and before he passed away, he told me: “Never leave Uncle Zhao. Always seek his counsel.” Since then, I leaned on Pastor Zhao’s family as though it were my own. Even now, I visit his son’s home whenever I return. Sometimes I stay for meals—it feels just like being at home. That sense of love—different from the world’s kind of love—is what I always experienced in their family.**
+
+---
+**When Pastor Zhao went home to the Lord, I attended his funeral, as I did for many of the elders. Though his children did not go to seminary, they all served faithfully in the church. His children could all play the accordion, his daughters were gifted in music, and his daughter-in-law, a former “sent-down youth”- relocated to a rural village during China’s Cultural Revolution, where she worked in agriculture and learned from the local peasants, played especially well. His son, now 77 years old, still serves at small gathering points, preaching with great familiarity with Scripture, even though he never had formal theological training.**
+
+---
+**Pastor Zhao was filled with love. He never criticized people. I, on the other hand, often made mistakes, quick-tempered and outspoken. Elder Li Wenguang would sometimes rebuke me directly: “You cannot say that!”—hoping I would grow more quickly in faith. But Pastor Zhao was patient, always saying: “Take it slowly, don’t rush.” He left a deep impression on me. Even when I knew nothing of biblical truth, he gently and patiently taught me. He was truly a man worthy of respect.**
+
+---
+**Note: While recalling the blind Christian Sister Liu Ruiying, Madam Shen also remembered Pastor Zhao Zhengye. She shared this testimony on July 21, 2025, via WeChat. Between the lines, we can hear the authenticity and purity of faith in the older generation of Christians in Northeast China during the 20th century—their sincere love for the Lord and for others. We give thanks that, as Chinese Christians overseas, we share the same spiritual bloodline as these elders of faith. We worship the same Triune God: Father, Son, and Holy Spirit. These elders bore witness to Christ through self-denial, imprisonment, humility, and the passing on of life through life as they walked the way of the cross. Their stories are like a great cloud of witnesses surrounding us, encouraging us to follow in their steps of humility and discipleship, so that in the 21st century we too may continue pressing forward in Christ, bearing ever new and more beautiful testimonies to His glory.    (Chunhai Li)**
+
+---
+**1. “Sister Liu Ruiying – The Blind Prayer Warrior,” Testimony by Mrs. Shen, the Pastor’s Wife, https://lricbc.org/?p=1680, access August 18, 2025.**
+2. “In a lively manner.” This description may sound simple, but behind it lies a profound principle of evangelism and mission: sharing the gospel of the Lord in a natural and flexible way that people can easily accept. As Paul said: “We proclaim him, admonishing and teaching everyone with all wisdom, so that we may present everyone fully mature in Christ” (Colossians 1:28).
+
+3.This section regarding President Jimmy Carter’s exchange with Chairman Deng Xiaoping is referenced in: Michelle A. Vu, “Transcript of Jimmy Carter’s Opening Speech for the China Bible Ministry Exhibition in Atlanta,” Christian Post Reporter, Friday, June 9, 2006, https://www.christianpost.com/news/transcript-of-jimmy-carter-s-opening-speech-for-the-china-bible-ministry-exhibition-in-atlanta.html?utm_source=chatgpt.com, access August 18, 2025.
+
+4.  I (Chunhai Li) personally heard this account from my teacher, Dr. Faye Pearson. She once served as the Executive Director for the Asia Region of the International Mission Board of the Southern Baptist Convention. See: https://www.imb.org/2019/02/21/faye-pearson/
+
+, accessed August 18, 2025. She said that at the time she had been hosted by President Jimmy Carter and personally heard him recount this event. See: Chunhai Li, “Remembering a Special Mother: Dr. Faye Pearson”, https://lricbc.org/?p=1023, access August 18, 2025.
+
+---zh---
+
+8/24/25 牧者之言
+
+回忆赵证耶老牧师
+
+沈师母的见证
+
+一位好的牧者会对人的生命产生巨大影响。在回忆盲人基督徒刘瑞英老人[1]的同时，我又想起了另一位老人，他叫赵证耶牧师。“证”是见证的“证”，“耶”是耶稣的“耶”，他的名字合在一起就是“为耶稣作见证”的意思。他曾经和一位叫李文光的长老（他在中国教会历史上曾有记载）一起服过刑。他们都是那年为了主的缘故，在同一个监狱里服刑。好像是在上个世纪1950年代，我们家乡那边有好多老人都进过监狱，包括我公公沈牧师的父亲，但他是平信徒，只判了一年就回来了。
+
+赵老牧师1914年出生，2006年9月30日被主接走，享年92岁。自从79年4月19日他来到我们家，我接触到他，让他做一个信主的见证。他当时怎么讲的，记得不太清楚了，但大概的情形是这样的：他大约14岁的时候，在长春的街头第一次接触福音。当时有人在街上传福音，场面有点儿像玩儿式的[2]，有人弹琴，有人拉手风琴，带着孩子们唱歌。赵牧师自己很喜欢音乐，就被吸引过去了。那时他被苏联恩（曾在金陵协和神学院任教）的爷爷看见了，就亲切地招呼他说：“进来吧！进来吧！”于是他便跟着小孩子们一起参加了聚会。也就是在那时，他开始接受福音，心里被触动，信了主。他家境比较困难。他常常跑去参加聚会、唱诗歌，家里的一些事就顾不上做了。他奶奶对他很不满，不给他饭吃，还拿“烟袋锅子”（东北方言，指的是一种传统的长烟管，用来抽烟，形状像一个小烟袋，通常是木头或竹子做的）拦着他，不让他出去。但他依然偷偷地往外跑，坚持去聚会敬拜主。他的见证感动了我。赵牧师觉得我这个人挺实在的，心直口快。他在我身上下了很大的功夫，对我在信仰上的成长关怀备至。这么多年我们和他及他的家人一直保持着联系。
+
+1979年初，在邓小平历史性访美期间，美国总统吉米·卡特（Jimmy Carter）与这位中国领导人就中国的宗教自由进行了私下交谈。卡特提出了三个具体请求：
+
+### 保障宗教信仰自由：卡特强调，应允许中国公民公开实践自己的信仰。
+
+### 允许圣经发行：他建议中国政府允许在国内印刷和分发圣经。
+
+### 重新开放教会：卡特提议中国重新开放在文化大革命期间关闭的基督教教会。
+
+邓小平回应说：“你的三个问题太难，请允许我今晚考虑一下”。第二天，邓小平则向卡特承诺对前两个请求表示肯定，他说：“我们会在中国重新开放教会”，“我们会在中国印刷圣经”。然而，他拒绝了允许外国传教士进入中国的提议，解释说中国的教会必须由中国自己的领袖来带领，但他欢迎外国人到中国教英文或进行医疗互访等。[3] 改革开放后在新中国印刷的第一批圣经是邓小平亲自用他军委主席的经费支持的[4]。这次交流决定和标志着中国基督教发展的历史性新阶段！这也是多年来上帝对海内外所有弟兄姐妹为中国教会能尽早获得自由坚持不懈祈祷的回应！
+
+赵证耶读过神学。在中国教会开门那年——1979年4月19日，他第一个在我们县里得到通知：《告全国主内弟兄姊妹书》。这个通知是关于允许教会开门的。他带他的女儿、女婿，还有其余的弟兄到我们家送这个通知。从那天开始，教会在我们家恢复聚会了。当时信主的人主要是老年人，也有两位年轻人，一位是张兴牧师，他于82年考入东北神学院，成为那里的第一届学生。另一位是沈牧师，他于81年入南京金陵协和神学院。
+
+我认识的这些老人，只要去我们古城堡，就都会去看望这位刘瑞英老姊妹。如果他们要住下，就把老姊妹带过来，在我们家住，在我们家交通。那个时候，那一代人，在他们身上看到了很多主内弟兄姊妹真正相爱的光景，我觉得我的生命也跟着他们同时成长起来了。
+
+在85年沈牧师南京神学院毕业后，86年我们全家就回沈阳了。我们家在农村的那个房子有三间屋，分东西屋。东屋一直是给教会用，直到87年秋教会盖了房子。他们到政府要一块地盖教堂。我们不知道那个地方。沈牧师有个叔辈哥回老家去看坟去了。他说：“我们家那坟地怎么变成教堂了？”我说：“是吗？我也不知道啊。”当教会向政府申请地方要盖房子，政府就把那个坟地给教会，教会就盖了房子。现在还是那个地方。教会开始先盖了几间平房；后来又盖了瓦房。再后来有位年轻弟兄作教会负责人，现在就盖成很好的彩钢房子了。
+
+盖教堂的时候，家乡那些老人都到我们家来了。他们一起探讨一下、交通一下，我们也都参与了。因为最开始是在我家，大家习惯了。现在也是，有点儿什么事儿，我一回去大家都围着我。我就觉得还像在家里一样。我们农村就是那样儿，你跟她、她跟你都有点儿亲戚关系。福音也好传，一个亲戚信了，就传另一个亲戚。这样，接二连三亲戚们就都信主了。在教会里，亲戚多。等信主了，我们在主里都是弟兄姊妹，就更亲了。
+
+赵牧师每周四到我们家里来弹琴，他女儿教唱诗歌。沈牧师他父亲在解放前、五几年就和赵牧师在一起同工。沈牧师的父亲回天家之前和我说：“你到任何时候都不要离开赵叔，有啥事儿找赵叔商量。”自那以后，我一直就像依靠他家似的。他家女儿现在都八九十岁了。我上个月还回了一趟老家。每次回老家，我都要到这个赵牧师的儿子家坐一坐。有时候赶上吃饭时间，我就在他家吃点儿饭，就像和自己家一样。给我的感觉就是那种“爱”——与世人不同的那种爱。
+
+赵牧师回天家，包括所有老人回天家我都参与了。他走以后，他的儿女没有读神学，但都在教会里，他们家都会弹手风琴。他儿媳是下乡知青，弹琴弹得也特别好。女儿唱得好、弹得也好，都在教会服侍。现在他们年纪都大了，只剩他儿子，77岁了，比沈牧师大一岁。他有时服侍一些小聚会点儿，讲道非常好。虽然没读过神学，可能是他父亲带领的吧，他对圣经非常熟悉。
+
+赵牧师特别有爱心。他从来不批评人。我这个人总是犯错误，性子急，好说话。有时候李文光长老直接批评我：“你不能那么说……。” 李长老性情急，希望我的灵命能快点儿成长，而赵牧师却非常有耐心，他总是和我说：“慢慢来，别着急。”他给我留下了很深的印象。我对圣经里的真理什么都不懂，他就很有耐心地给我讲。我觉得这个老人是值得人敬佩的。
+
+注：当沈师母回忆盲人基督徒赵瑞英老人时，同时也想起这位赵证耶老牧师。沈师母于2025年7月21日以微信的形式讲述了赵牧师的见证。字里行间，我们听出了二十世纪时在中国东北老一代基督徒信仰的真与纯，以及他们对主对人的那份无伪而真诚的爱心。令我们感恩的是，作为在美国的华人教会，我们和这些属灵长辈流淌着同样的属灵血液，我们敬拜同一位圣父、圣子圣灵三位一体的真神。这些长辈是为基督舍己、作监、谦卑、以生命传递生命，走十字架道路的见证人。他们的故事如同云彩一样围绕着我们，激励后辈效法先贤谦卑随主，使我们在21世纪的今天继续靠主砥砺前行，为主作出更多更新更美的见证。
+
+---
+**（李春海）**
+[1] 沈师母的见证，“盲人姊妹刘瑞英”，https://lricbc.org/?p=1680，浏览于2025年8月18日。
+
+[1]“场面有点儿像玩儿式的”这句话听起来简单，但背后却隐藏着很深的传福音或宣教理念，那就是以人们容易接受的、较为灵活的方式把主的福音自然地分享出去，如保罗所说：“我们传扬他，是用诸般的智慧，劝戒各人，教导各人，要把各人在基督里完完全全地引到神面前。”（西 1:28）
+
+[1]此段关于卡特总统与邓小平主席的交流请参Michelle A. Vu, “Transcript of Jimmy Carter’s Opening Speech for the China Bible Ministry Exhibition in Atlanta,”  Christian Post Reporter, Friday, June 09, 2006, https://www.christianpost.com/news/transcript-of-jimmy-carter-s-opening-speech-for-the-china-bible-ministry-exhibition-in-atlanta.html?utm_source=chatgpt.com，浏览于2025年8月18日。
+
+---
+**[1]我（李春海）曾听我的老师Dr. Faye Pearson 亲口讲过这件事。她曾担任美南浸信会海外宣教部驻亚洲区的总干事。参https://www.imb.org/2019/02/21/faye-pearson/，浏览于2025年8月18日。她说，当时她曾受到卡特总统的接见，并听总统亲口讲到这件事。参李春海：“缅怀一位特别的母亲裴斐老师”，https://lricbc.org/?p=1023，浏览于2025年8月18日。**

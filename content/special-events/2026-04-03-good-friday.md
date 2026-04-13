@@ -3,7 +3,7 @@ title_en: "Good Friday Candle Meditation"
 title_zh: "受难节烛光默想"
 dateRange: "April 3, 2026"
 published_at: "2026-04-03"
-is_active: true
+is_active: false
 highlight: "受难节烛光默想 Good Friday Candle Meditation"
 detail: "马可福音 (Mark) 14:1-15:47. A bilingual journey through the passion of Christ through scripture, song, and meditation."
 attachments:

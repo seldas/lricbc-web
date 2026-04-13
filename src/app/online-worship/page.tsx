@@ -11,7 +11,7 @@ export default async function OnlineWorshipPage() {
   
   // Fetch latest videos and live status
   const [videos, liveVideoId] = await Promise.all([
-    getLatestVideos(channelId, 10),
+    getLatestVideos(channelId, 10, 'streams'),
     getLiveStreamId(channelId)
   ]);
   

@@ -5,7 +5,7 @@ import path from 'path';
 import nodemailer from 'nodemailer';
 
 const MAX_MESSAGE_LENGTH = 4000;
-const CONTACT_RECIPIENTS = (process.env.CONTACT_EMAIL_RECIPIENTS ?? 'chinesechurch.lr@gmail.com')
+const CONTACT_RECIPIENTS = (process.env.CONTACT_EMAIL_RECIPIENTS ?? 'chinesechurch.lr@gmail.com,pastorchunhai@gmail.com')
   .split(',')
   .map((value) => value.trim())
   .filter((value) => value);

@@ -146,7 +146,9 @@ export default function OnlineWorshipClient({
                       </h4>
                       <div className="flex items-center gap-2 text-[10px] md:text-xs text-slate-400 font-medium mt-1">
                         <Clock className="h-3 w-3" />
-                        <span>{new Date(video.published).toLocaleDateString()}</span>
+                        <span>{video.published && !isNaN(new Date(video.published).getTime()) 
+                          ? new Date(video.published).toLocaleDateString() 
+                          : video.published}</span>
                       </div>
                     </div>
                     {selectedVideoId === video.id && (

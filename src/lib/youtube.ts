@@ -47,7 +47,7 @@ export async function getLatestVideoId(channelId: string): Promise<string | null
   return videos.length > 0 ? videos[0].id : null;
 }
 
-export async function getLatestVideos(channelId: string, limit: number = 20): Promise<YouTubeVideo[]> {
+export async function getLatestVideos(channelId: string, limit: number = 20, type: 'videos' | 'streams' = 'videos'): Promise<YouTubeVideo[]> {
   const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
   const browserHeader = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -56,40 +56,41 @@ export async function getLatestVideos(channelId: string, limit: number = 20): Pr
   };
 
   try {
-    // Strategy 1: Attempt RSS Feed
-    const response = await fetch(rssUrl, {
-      cache: 'no-store',
-      headers: browserHeader
-    });
-    
-    if (response.ok) {
-      const text = await response.text();
-      const entries = text.split('<entry>');
-      const videos: YouTubeVideo[] = [];
+    // Strategy 1: Attempt RSS Feed (Only for 'videos' type)
+    if (type === 'videos') {
+      const response = await fetch(rssUrl, {
+        cache: 'no-store',
+        headers: browserHeader
+      });
       
-      for (let i = 1; i < entries.length && videos.length < limit; i++) {
-        const entry = entries[i];
-        const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
-        const titleMatch = entry.match(/<title>([^<]+)<\/title>/);
-        const publishedMatch = entry.match(/<published>([^<]+)<\/published>/);
+      if (response.ok) {
+        const text = await response.text();
+        const entries = text.split('<entry>');
+        const videos: YouTubeVideo[] = [];
         
-        if (idMatch && titleMatch) {
-          videos.push({
-            id: idMatch[1],
-            title: titleMatch[1],
-            published: publishedMatch ? publishedMatch[1] : '',
-            thumbnail: `https://i.ytimg.com/vi/${idMatch[1]}/hqdefault.jpg`
-          });
+        for (let i = 1; i < entries.length && videos.length < limit; i++) {
+          const entry = entries[i];
+          const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+          const titleMatch = entry.match(/<title>([^<]+)<\/title>/);
+          const publishedMatch = entry.match(/<published>([^<]+)<\/published>/);
+          
+          if (idMatch && titleMatch) {
+            videos.push({
+              id: idMatch[1],
+              title: titleMatch[1],
+              published: publishedMatch ? publishedMatch[1] : '',
+              thumbnail: `https://i.ytimg.com/vi/${idMatch[1]}/hqdefault.jpg`
+            });
+          }
         }
+        
+        if (videos.length > 0) return videos;
       }
-      
-      if (videos.length > 0) return videos;
+      console.warn(`YouTube RSS failed or empty for ${channelId}, trying Strategy 2 (HTML Scraping)...`);
     }
-    
-    console.warn(`YouTube RSS failed or empty for ${channelId}, trying Strategy 2 (HTML Scraping)...`);
 
-    // Strategy 2: Fallback to scraping the Channel Videos page
-    const channelUrl = `https://www.youtube.com/channel/${channelId}/videos`;
+    // Strategy 2: Fallback to scraping the Channel page (videos or streams)
+    const channelUrl = `https://www.youtube.com/channel/${channelId}/${type}`;
     const htmlResponse = await fetch(channelUrl, {
       cache: 'no-store',
       headers: browserHeader
@@ -104,13 +105,26 @@ export async function getLatestVideos(channelId: string, limit: number = 20): Pr
       if (jsonMatch) {
         try {
           const data = JSON.parse(jsonMatch[1]);
-          // Path: contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.richGridRenderer.contents
-          const contents = data.contents?.twoColumnBrowseResultsRenderer?.tabs?.[1]?.tabRenderer?.content?.richGridRenderer?.contents;
+          // Find the tab content. The index might change, so we look for it.
+          const tabs = data.contents?.twoColumnBrowseResultsRenderer?.tabs;
+          let contents = null;
+
+          if (tabs && Array.isArray(tabs)) {
+            // Try to find the tab that has richGridRenderer
+            for (const tab of tabs) {
+              const tabContents = tab.tabRenderer?.content?.richGridRenderer?.contents;
+              if (tabContents) {
+                contents = tabContents;
+                break;
+              }
+            }
+          }
           
           if (contents && Array.isArray(contents)) {
             for (const item of contents) {
               const videoData = item.richItemRenderer?.content?.videoRenderer;
               if (videoData && videoData.videoId) {
+                // Filter out videos that aren't from the correct channel
                 const ownerBrowseId = videoData.ownerText?.runs?.[0]?.navigationEndpoint?.browseEndpoint?.browseId
                   || videoData.longBylineText?.runs?.[0]?.navigationEndpoint?.browseEndpoint?.browseId;
                 if (ownerBrowseId && ownerBrowseId !== channelId) {
@@ -141,3 +155,4 @@ export async function getLatestVideos(channelId: string, limit: number = 20): Pr
     return [];
   }
 }
+

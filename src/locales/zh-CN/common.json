@@ -233,7 +233,15 @@
     "archivedTitle": "归档特别活动",
     "archivedLead": "以缩略图形式检视以往聚会，点击展开观赏详情。",
     "archivedMore": "查看详情",
-    "archivedCTA": "查看归档资料"
+    "archivedCTA": "查看归档资料",
+    "outreachTitle": "外展與福音廣傳",
+    "outreachSubtitle": "記錄主在外展事工中動工的最新故事。",
+    "outreachLoading": "正在取得最新外展報導…",
+    "outreachEmpty": "外展消息正在準備中。",
+    "outreachEmptySub": "敬請期待我們的福音團隊分享更多動態。",
+    "outreachFeatured": "焦點報導",
+    "outreachReadMore": "閱讀完整報導",
+    "outreachMore": "查看更多外展新聞"
   },
   "contact": {
     "title": "聯繫我們",

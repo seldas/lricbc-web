@@ -233,7 +233,15 @@
     "archivedTitle": "Archived Special Events",
     "archivedLead": "Browse thumbnails of previous gatherings. Click to open more details.",
     "archivedMore": "View details",
-    "archivedCTA": "See archived event resources"
+    "archivedCTA": "See archived event resources",
+    "outreachTitle": "Outreach & Gospel Sharing",
+    "outreachSubtitle": "Fresh stories of how God is moving through our outreach efforts.",
+    "outreachLoading": "Fetching the latest outreach updates…",
+    "outreachEmpty": "Outreach updates are being prepared.",
+    "outreachEmptySub": "Check back soon for new stories from our mission teams.",
+    "outreachFeatured": "Featured Report",
+    "outreachReadMore": "Read full report",
+    "outreachMore": "See more outreach news"
   },
   "contact": {
     "title": "Contact Us",

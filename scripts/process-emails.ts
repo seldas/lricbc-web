@@ -183,29 +183,43 @@ async function processFile(fileName: string) {
   const content = await fs.readFile(filePath, 'utf8');
   const msg: SavedMessage = JSON.parse(content);
 
+  const messageId = path.basename(fileName, '.json');
   const subject = msg.payload.headers?.find((h) => h.name === 'Subject')?.value || '';
+  const dateHeader = msg.payload.headers?.find((h) => h.name === 'Date')?.value || '';
   
   const htmlPart = getPart(msg.payload.parts ?? [], 'text/html');
   const htmlData = htmlPart?.body?.data || msg.payload.body?.data;
   if (!htmlData) return;
 
   const htmlRaw = decodeBase64(htmlData);
-  if (!htmlRaw.includes("主日崇拜程序 Program")) {
+  if (!htmlRaw.includes("主日崇拜程序 Program") && !htmlRaw.includes("主日崇拜程序")) {
     return;
   }
 
   console.log(`Processing: ${subject}`);
 
-  const dateMatch = subject.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}|\d{1,2}[\/\.]\d{1,2}[\/\.]\d{2,4}/i);
+  // Try to find date in subject first
+  const dateMatch = subject.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}|\d{1,2}[\/\.-]\d{1,2}[\/\.-]\d{2,4}/i);
   
   let dateFormatted: string;
   let displayDate: string;
-  try {
-    displayDate = dateMatch ? dateMatch[0].replace(/,/g, '') : new Date().toISOString().split('T')[0];
-    dateFormatted = new Date(displayDate).toISOString().split('T')[0];
-  } catch (error) {
-    console.warn('Failed to parse display date, defaulting to today.', error);
-    dateFormatted = new Date().toISOString().split('T')[0];
+
+  if (dateMatch) {
+    try {
+      displayDate = dateMatch[0].replace(/,/g, '');
+      const d = new Date(displayDate);
+      if (isNaN(d.getTime())) throw new Error('Invalid date');
+      dateFormatted = d.toISOString().split('T')[0];
+    } catch {
+      // Fallback to Date header
+      const d = new Date(dateHeader);
+      dateFormatted = d.toISOString().split('T')[0];
+      displayDate = dateFormatted;
+    }
+  } else {
+    // Fallback to Date header
+    const d = new Date(dateHeader);
+    dateFormatted = isNaN(d.getTime()) ? new Date().toISOString().split('T')[0] : d.toISOString().split('T')[0];
     displayDate = dateFormatted;
   }
 
@@ -278,7 +292,8 @@ async function processFile(fileName: string) {
         excerpt_en: split.en ? `Weekly message for ${displayDate}.` : `Weekly message (Chinese only) for ${displayDate}.`,
         excerpt_zh: `${displayDate} 的牧者心聲。`,
       },
-      split.en ? `${formattedEn}\n\n---zh---\n\n${formattedZh}` : formattedZh
+      split.en ? `${formattedEn}\n\n---zh---\n\n${formattedZh}` : formattedZh,
+      messageId
     );
     console.log(`  - Extracted Pastor's Message`);
   }
@@ -330,13 +345,18 @@ async function processFile(fileName: string) {
         excerpt_en: excerptEn,
         excerpt_zh: `${displayDate} 主日崇拜程序與信息摘要。`,
       },
-      formattedEn ? `${formattedEn}\n\n---zh---\n\n${formattedZh}` : formattedZh
+      formattedEn ? `${formattedEn}\n\n---zh---\n\n${formattedZh}` : formattedZh,
+      messageId
     );
     console.log(`  - Extracted Worship Program`);
   }
 }
 
-async function savePost(id: string, metadata: PostMetadata, content: string) {
+async function savePost(id: string, metadata: PostMetadata, content: string, sourceId?: string) {
+  const normalizedSourceId = sourceId
+    ? sourceId.replace(/[^a-zA-Z0-9-]/g, '-')
+    : '';
+  const fileId = normalizedSourceId ? `${id}-${normalizedSourceId}` : id;
   const frontmatter = `---
 publishedAt: "${metadata.publishedAt}"
 category: "${metadata.category}"
@@ -350,7 +370,7 @@ excerpt_zh: "${metadata.excerpt_zh.replace(/"/g, '\\"')}"
 
 ${content}
 `;
-  await fs.writeFile(path.join(CONTENT_DIR, `${id}.md`), frontmatter);
+  await fs.writeFile(path.join(CONTENT_DIR, `${fileId}.md`), frontmatter);
 }
 
 async function run() {
