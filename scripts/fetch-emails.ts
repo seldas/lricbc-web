@@ -105,7 +105,39 @@ async function getMessage(gmail: gmail_v1.Gmail, id: string) {
     id: id,
     format: 'full',
   });
-  return res.data;
+  const message = res.data;
+
+  // Recursively fetch attachment data
+  async function fetchAttachments(parts: gmail_v1.Schema$MessagePart[]) {
+    for (const part of parts) {
+      if (part.filename && part.body?.attachmentId) {
+        console.log(`  - Fetching attachment: ${part.filename}`);
+        const attachment = await gmail.users.messages.attachments.get({
+          userId: 'me',
+          messageId: id,
+          id: part.body.attachmentId,
+        });
+        part.body.data = attachment.data.data;
+      }
+      if (part.parts) {
+        await fetchAttachments(part.parts);
+      }
+    }
+  }
+
+  if (message.payload?.parts) {
+    await fetchAttachments(message.payload.parts);
+  } else if (message.payload?.body?.attachmentId) {
+    // Single part message with attachment
+    const attachment = await gmail.users.messages.attachments.get({
+      userId: 'me',
+      messageId: id,
+      id: message.payload.body.attachmentId,
+    });
+    message.payload.body.data = attachment.data.data;
+  }
+
+  return message;
 }
 
 async function run() {
@@ -131,16 +163,16 @@ async function run() {
     await fs.mkdir(PENDING_DIR, { recursive: true });
     await fs.mkdir(PROCESSED_DIR, { recursive: true });
 
-    let query = 'subject:("主日祟拜" OR "主日崇拜") "主日崇拜程序 Program"';
+    let query = 'subject:"Sunday bulletin"';
     
     if (useDateFilter) {
       const afterDate = new Date();
       afterDate.setDate(afterDate.getDate() - days);
       const afterStr = `${afterDate.getFullYear()}/${String(afterDate.getMonth() + 1).padStart(2, '0')}/${String(afterDate.getDate()).padStart(2, '0')}`;
       query += ` after:${afterStr}`;
-      console.log(`Searching for worship emails since ${afterStr} (${days} days)...`);
+      console.log(`Searching for bulletin emails since ${afterStr} (${days} days)...`);
     } else {
-      console.log('Searching for all worship emails (no date filter)...');
+      console.log('Searching for all bulletin emails (no date filter)...');
     }
 
     const messages = await listMessages(gmail, query);

@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { JSDOM } from 'jsdom';
+import mammoth from 'mammoth';
 
 const PENDING_DIR = path.join(process.cwd(), 'fetch_raw', 'pending');
 const PROCESSED_DIR = path.join(process.cwd(), 'fetch_raw', 'processed');
@@ -10,6 +11,7 @@ const CONTENT_DIR = process.env.DATA_STORAGE_PATH
 
 interface MessagePart {
   mimeType?: string;
+  filename?: string;
   body?: { data?: string };
   parts?: MessagePart[];
 }
@@ -37,6 +39,10 @@ function decodeBase64(data: string) {
   return Buffer.from(data, 'base64').toString('utf8');
 }
 
+function decodeBase64ToBuffer(data: string) {
+  return Buffer.from(data, 'base64');
+}
+
 function getPart(parts: MessagePart[] = [], mimeType: string): MessagePart | null {
   for (const part of parts) {
     if (part.mimeType === mimeType) {
@@ -48,6 +54,17 @@ function getPart(parts: MessagePart[] = [], mimeType: string): MessagePart | nul
     }
   }
   return null;
+}
+
+function getAllParts(parts: MessagePart[] = []): MessagePart[] {
+  let all: MessagePart[] = [];
+  for (const part of parts) {
+    all.push(part);
+    if (part.parts) {
+      all = all.concat(getAllParts(part.parts));
+    }
+  }
+  return all;
 }
 
 /**
@@ -186,7 +203,102 @@ async function processFile(fileName: string) {
   const messageId = path.basename(fileName, '.json');
   const subject = msg.payload.headers?.find((h) => h.name === 'Subject')?.value || '';
   const dateHeader = msg.payload.headers?.find((h) => h.name === 'Date')?.value || '';
+  console.log(`Processing: ${subject}`);
+
+  const isSundayBulletin = subject.includes("Sunday bulletin");
+  const dateMatch = subject.match(/(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?/);
   
+  let dateFormatted: string;
+  let displayDate: string;
+
+  if (dateMatch) {
+    const month = parseInt(dateMatch[1]);
+    const day = parseInt(dateMatch[2]);
+    let year = dateMatch[3] ? parseInt(dateMatch[3]) : new Date().getFullYear();
+    if (year < 100) year += 2000;
+    
+    try {
+      const d = new Date(year, month - 1, day);
+      dateFormatted = d.toISOString().split('T')[0];
+      displayDate = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    } catch {
+      const d = new Date(dateHeader);
+      dateFormatted = isNaN(d.getTime()) ? new Date().toISOString().split('T')[0] : d.toISOString().split('T')[0];
+      displayDate = dateFormatted;
+    }
+  } else {
+    const backupDateMatch = subject.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/i);
+    try {
+      displayDate = backupDateMatch ? backupDateMatch[0].replace(/,/g, '') : new Date().toISOString().split('T')[0];
+      dateFormatted = new Date(displayDate).toISOString().split('T')[0];
+    } catch (error) {
+      const d = new Date(dateHeader);
+      dateFormatted = isNaN(d.getTime()) ? new Date().toISOString().split('T')[0] : d.toISOString().split('T')[0];
+      displayDate = dateFormatted;
+    }
+  }
+
+  const allParts = getAllParts(msg.payload.parts ?? []);
+
+  if (isSundayBulletin) {
+    // Process attachments for Sunday Bulletin
+    for (const part of allParts) {
+      if (part.filename && part.filename.endsWith('.docx') && part.body?.data) {
+        const buffer = decodeBase64ToBuffer(part.body.data);
+        const result = await mammoth.convertToHtml({ buffer });
+        const text = cleanText(result.value);
+
+        if (part.filename.includes('牧者之言')) {
+          const split = splitBilingual(text);
+          const formattedEn = formatNarrativeText(split.en);
+          const formattedZh = formatNarrativeText(split.zh);
+          
+          const mainTitleZh = split.zh.split('\n')[0] || `牧者之言`;
+          const mainTitleEn = split.en.split('\n')[0] || `Pastor's Message`;
+
+          await savePost(
+            `${dateFormatted}-pastor-message`,
+            {
+              publishedAt: dateFormatted,
+              category: 'pastor',
+              title_en: mainTitleEn,
+              title_zh: mainTitleZh,
+              subtitle_en: `Pastor's Message - ${displayDate}`,
+              subtitle_zh: `牧者之言 - ${displayDate}`,
+              excerpt_en: `Weekly message for ${displayDate}.`,
+              excerpt_zh: `${displayDate} 的牧者心聲。`,
+            },
+            split.en ? `${formattedEn}\n\n---zh---\n\n${formattedZh}` : formattedZh,
+            messageId
+          );
+          console.log(`  - Extracted Pastor's Message from attachment: ${part.filename}`);
+        } 
+        else if (part.filename.includes('bulletin') && part.filename.includes('简体')) {
+          const split = splitBilingual(text);
+          const formattedEn = formatSermonSummary(split.en);
+          const formattedZh = formatSermonSummary(split.zh);
+
+          await savePost(
+            `${dateFormatted}-worship-program`,
+            {
+              publishedAt: dateFormatted,
+              category: 'sermon',
+              title_en: `Worship Program - ${displayDate}`,
+              title_zh: `主日崇拜程序 - ${displayDate}`,
+              excerpt_en: `Order of service and sermon notes for ${displayDate}.`,
+              excerpt_zh: `${displayDate} 主日崇拜程序與信息摘要。`,
+            },
+            formattedEn ? `${formattedEn}\n\n---zh---\n\n${formattedZh}` : formattedZh,
+            messageId
+          );
+          console.log(`  - Extracted Worship Program from attachment: ${part.filename}`);
+        }
+      }
+    }
+    return;
+  }
+
+  // Fallback to old HTML extraction if not a Sunday bulletin email or no attachments handled it
   const htmlPart = getPart(msg.payload.parts ?? [], 'text/html');
   const htmlData = htmlPart?.body?.data || msg.payload.body?.data;
   if (!htmlData) return;
@@ -194,33 +306,6 @@ async function processFile(fileName: string) {
   const htmlRaw = decodeBase64(htmlData);
   if (!htmlRaw.includes("主日崇拜程序 Program") && !htmlRaw.includes("主日崇拜程序")) {
     return;
-  }
-
-  console.log(`Processing: ${subject}`);
-
-  // Try to find date in subject first
-  const dateMatch = subject.match(/(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}|\d{1,2}[\/\.-]\d{1,2}[\/\.-]\d{2,4}/i);
-  
-  let dateFormatted: string;
-  let displayDate: string;
-
-  if (dateMatch) {
-    try {
-      displayDate = dateMatch[0].replace(/,/g, '');
-      const d = new Date(displayDate);
-      if (isNaN(d.getTime())) throw new Error('Invalid date');
-      dateFormatted = d.toISOString().split('T')[0];
-    } catch {
-      // Fallback to Date header
-      const d = new Date(dateHeader);
-      dateFormatted = d.toISOString().split('T')[0];
-      displayDate = dateFormatted;
-    }
-  } else {
-    // Fallback to Date header
-    const d = new Date(dateHeader);
-    dateFormatted = isNaN(d.getTime()) ? new Date().toISOString().split('T')[0] : d.toISOString().split('T')[0];
-    displayDate = dateFormatted;
   }
 
   // 1. Pastor's Message Extraction (using HTML to preserve breaks)
