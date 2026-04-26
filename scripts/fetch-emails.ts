@@ -147,7 +147,7 @@ async function run() {
 
     // Parse command line arguments
     const args = process.argv.slice(2);
-    let days = 30;
+    let days = 7;
     let useDateFilter = true;
 
     if (args.includes('--all')) {
@@ -163,16 +163,16 @@ async function run() {
     await fs.mkdir(PENDING_DIR, { recursive: true });
     await fs.mkdir(PROCESSED_DIR, { recursive: true });
 
-    let query = 'subject:"Sunday bulletin"';
+    let query = 'subject:("Sunday bulletin" OR "Sunday Newsletter")';
     
     if (useDateFilter) {
       const afterDate = new Date();
       afterDate.setDate(afterDate.getDate() - days);
       const afterStr = `${afterDate.getFullYear()}/${String(afterDate.getMonth() + 1).padStart(2, '0')}/${String(afterDate.getDate()).padStart(2, '0')}`;
       query += ` after:${afterStr}`;
-      console.log(`Searching for bulletin emails since ${afterStr} (${days} days)...`);
+      console.log(`Searching for update emails since ${afterStr} (${days} days)...`);
     } else {
-      console.log('Searching for all bulletin emails (no date filter)...');
+      console.log('Searching for all update emails (no date filter)...');
     }
 
     const messages = await listMessages(gmail, query);

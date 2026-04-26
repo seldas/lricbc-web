@@ -205,7 +205,7 @@ async function processFile(fileName: string) {
   const dateHeader = msg.payload.headers?.find((h) => h.name === 'Date')?.value || '';
   console.log(`Processing: ${subject}`);
 
-  const isSundayBulletin = subject.includes("Sunday bulletin");
+  const isSundayBulletin = subject.includes("Sunday bulletin") || subject.includes("Sunday Newsletter");
   const dateMatch = subject.match(/(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?/);
   
   let dateFormatted: string;
@@ -273,7 +273,7 @@ async function processFile(fileName: string) {
           );
           console.log(`  - Extracted Pastor's Message from attachment: ${part.filename}`);
         } 
-        else if (part.filename.includes('bulletin') && part.filename.includes('简体')) {
+        else if ((part.filename.toLowerCase().includes('bulletin') || part.filename.toLowerCase().includes('newsletter')) && part.filename.includes('简体')) {
           const split = splitBilingual(text);
           const formattedEn = formatSermonSummary(split.en);
           const formattedZh = formatSermonSummary(split.zh);
