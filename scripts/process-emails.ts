@@ -93,12 +93,18 @@ function formatNarrativeText(text: string): string {
   let formatted = "";
   
   for (const line of lines) {
-    // Identify potential headers (short lines with specific symbols)
-    if (line.length < 40 && (line.startsWith('•') || line.includes('：') || line.includes(':'))) {
-      formatted += `\n### ${line}\n\n`;
+    // Identify list items
+    if (line.startsWith('•') || line.startsWith('-')) {
+      formatted += `* ${line.substring(1).trim()}\n`;
     } 
-    // Identify signature
-    else if (line.includes('牧師') || line.includes('Pastor') || line.includes('Li Chunhai') || line.includes('李春海')) {
+    // Identify potential headers: must be short and end with a colon
+    else if (line.length < 60 && line.endsWith(':')) {
+      formatted += `\n### ${line.slice(0, -1)}\n\n`;
+    }
+    // Identify signature: must be short and contain name keywords, but not be a title
+    else if (line.length < 60 && 
+            (line.includes('牧師') || line.includes('Pastor') || line.includes('Li Chunhai') || line.includes('李春海')) &&
+            !line.includes('Message') && !line.includes('Word') && !line.includes('之言') && !line.includes('牧者')) {
       formatted += `\n\n---\n**${line}**\n`;
     }
     else {
@@ -163,7 +169,8 @@ function formatSermonSummary(text: string): string {
   
   const mainPointRegex = /^(I|II|III|IV|V|VI|VII|VIII|IX|X)\.?\s+(.*)/i;
   const subPointRegex = /^([A-G]|\d+)\.?\s+(.*)/i;
-  const scriptureRegex = /([12]?\s*[\u4e00-\u9fa5]{1,10}|[12]?\s*[a-z]+)\s+\d+:\s*\d+(-\d+)?/i;
+  // Improved scripture regex to handle parentheses and Chinese characters
+  const scriptureRegex = /([12]?\s*[\u4e00-\u9fa5]{1,10}|[12]?\s*[a-zA-Z\s()]+)\s+\d+:\s*\d+(-\d+)?/i;
 
   for (const line of lines) {
     const mainMatch = line.match(mainPointRegex);
@@ -185,7 +192,7 @@ function formatSermonSummary(text: string): string {
 
     if (line.includes('信息:') || line.includes('Preacher:')) {
       formatted += `**Preacher:** ${line.replace(/信息:|Preacher:/g, '').trim()}\n`;
-    } else if (line.length < 60 && (line.includes(' - ') || /[\u4e00-\u9fa5]/.test(line))) {
+    } else if (line.length < 40 && (line.includes('Family Report') || line.includes('家事報告') || line.includes('Church Slogan') || line.includes('教會標語'))) {
       formatted += `### ${line}\n`;
     } else {
       formatted += `${line}  \n`; 
