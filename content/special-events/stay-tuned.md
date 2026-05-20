@@ -2,7 +2,7 @@
 title_en: "Stay Tuned for Upcoming Events"
 title_zh: "敬請期待更多特別活動"
 published_at: "2026-04-06"
-is_active: true
+is_active: false
 highlight: "We are currently planning our next special gathering. Check back soon for updates on our community events and celebrations!"
 detail: "我们正在筹划下一次特别聚会。请密切关注我们的更新，期待在下一次活动中与您相聚。以马内利！"
 theme_en: "Waiting on the Lord for our next season of fellowship and celebration."

@@ -123,6 +123,8 @@ export async function getLatestVideos(channelId: string, limit: number = 20, typ
           if (contents && Array.isArray(contents)) {
             for (const item of contents) {
               const videoData = item.richItemRenderer?.content?.videoRenderer;
+              const lockupData = item.richItemRenderer?.content?.lockupViewModel;
+
               if (videoData && videoData.videoId) {
                 // Filter out videos that aren't from the correct channel
                 const ownerBrowseId = videoData.ownerText?.runs?.[0]?.navigationEndpoint?.browseEndpoint?.browseId
@@ -136,6 +138,28 @@ export async function getLatestVideos(channelId: string, limit: number = 20, typ
                   title: videoData.title?.runs?.[0]?.text || 'Untitled',
                   published: videoData.publishedTimeText?.simpleText || '',
                   thumbnail: `https://i.ytimg.com/vi/${videoData.videoId}/hqdefault.jpg`
+                });
+                if (videos.length >= limit) break;
+              } else if (lockupData && lockupData.contentId) {
+                const videoId = lockupData.contentId;
+                const title = lockupData.metadata?.lockupMetadataViewModel?.title?.content || 'Untitled';
+                
+                let published = '';
+                const rows = lockupData.metadata?.lockupMetadataViewModel?.metadata?.contentMetadataViewModel?.metadataRows;
+                if (rows && rows[0]?.metadataParts) {
+                  const parts = rows[0].metadataParts;
+                  const timePart = parts.find((p: any) => {
+                    const text = p.text?.content || '';
+                    return text.includes('ago') || text.includes('Streamed') || text.includes('hours') || text.includes('days') || text.includes('weeks') || text.includes('months') || text.includes('years');
+                  }) || parts[1] || parts[0];
+                  published = timePart?.text?.content || '';
+                }
+
+                videos.push({
+                  id: videoId,
+                  title,
+                  published,
+                  thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
                 });
                 if (videos.length >= limit) break;
               }
