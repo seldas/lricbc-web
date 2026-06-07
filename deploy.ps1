@@ -54,7 +54,8 @@ Write-Host "Building and deploying to Cloud Run..." -ForegroundColor Yellow
     --platform managed `
     --set-env-vars "ADMIN_POST_KEY=$ADMIN_POST_KEY,DATA_STORAGE_PATH=/app/storage" `
     --add-volume "name=storage,type=cloud-storage,bucket=lricbc-web-storage" `
-    --add-volume-mount "volume=storage,mount-path=/app/storage"
+    --add-volume-mount "volume=storage,mount-path=/app/storage" `
+    --min-instances 1
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Deployment successful! Running content sync..." -ForegroundColor Green

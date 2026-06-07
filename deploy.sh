@@ -82,7 +82,8 @@ echo -e "\033[0;33mBuilding and deploying to Cloud Run...\033[0m"
     --platform managed \
     --set-env-vars "ADMIN_POST_KEY=$ADMIN_POST_KEY,DATA_STORAGE_PATH=/app/storage" \
     --add-volume "name=storage,type=cloud-storage,bucket=lricbc-web-storage" \
-    --add-volume-mount "volume=storage,mount-path=/app/storage"
+    --add-volume-mount "volume=storage,mount-path=/app/storage" \
+    --min-instances 1
 
 if [ $? -eq 0 ]; then
     echo -e "\033[0;32mDeployment successful! Running content sync...\033[0m"

@@ -163,7 +163,7 @@ async function run() {
     await fs.mkdir(PENDING_DIR, { recursive: true });
     await fs.mkdir(PROCESSED_DIR, { recursive: true });
 
-    let query = 'subject:("Sunday bulletin" OR "Sunday Newsletter")';
+    let query = 'subject:("Sunday bulletin" OR "Sunday Newsletter" OR "主日崇拜" OR "主日祟拜" OR "bulletin" OR "newsletter")';
     
     if (useDateFilter) {
       const afterDate = new Date();
