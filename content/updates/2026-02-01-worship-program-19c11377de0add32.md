@@ -1,50 +1,48 @@
 ---
 publishedAt: "2026-02-01"
 category: "sermon"
-title_en: "Worship Program - February 1 2026"
-title_zh: "主日崇拜程序 - February 1 2026"
-subtitle_en: ""
-subtitle_zh: ""
-excerpt_en: "Order of service and sermon notes for February 1 2026."
-excerpt_zh: "February 1 2026 主日崇拜程序與信息摘要。"
+title_en: "The Lord's Supper Series (Part 2): \"Take Bread\""
+title_zh: "主餐系列信息之二：“拿起饼来”"
+subtitle_en: "Worship Program - February 1, 2026"
+subtitle_zh: "主日崇拜程序 - 2026年2月1日"
+excerpt_en: "Second message in the Lord's Supper series, meditating on Luke 22:14-20 — the Lord willingly took the bread and cup for us, so we faithfully take up the cross for Him."
+excerpt_zh: "主餐系列信息之二，默想路加福音22:14-20——主甘愿为我们拿起饼杯，我们也当忠心为主背起十字架。"
 ---
 
-### 默想场景 Meditating the Scene
+## Order of Worship — February 1, 2026
 
-> **Scripture:** 路Luke 9:16; 22:17; 24:30-31
+## Message 信息
 
-> **Scripture:** 背诵经文 Scripture Memory: 太Matt 10:38
-And anyone who does not take his cross and follow me is  
-not worthy of me.
+### Meditating the Scene 默想场景
 
----zh---
+**Scripture:** Luke 9:16; 22:17; 24:30–31
 
-### 信息摘要
-### 主餐系列信息之二
-The Lord’s Supper Series (Part 2)  
-### “拿起饼来” “Take Bread”
+### The Lord's Supper Series (Part 2) 主餐系列信息之二
 
-> **Scripture:** 路Luke 22: 14-20
-### 主旨 Thesis
-### 主甘愿为我拿起饼杯，我忠心为主背起十架！
-The Lord willingly took the bread and the cup for me, so I faithfully take up the cross for Him!  
+**"Take Bread" "拿起饼来"** — Luke 22:14–20
 
-> **Scripture:** • 甘愿 Eagerly ((路Luke 22: 15；约John 13: 1)
+**Thesis 主旨**
 
-> **Scripture:** • 主动 Initiatively (约John 10: 17-18)
+The Lord willingly took the bread and the cup for me, so I faithfully take up the cross for Him!
+主甘愿为我拿起饼杯，我忠心为主背起十架！
 
-> **Scripture:** • 舍己 Sacrificially (来Heb 10: 10, 12, 14 )
-### “饼”：象征主的身体 Bread-Represents Jesus’ Body
-### • 反思三项真理 Reflecting on three truths
+* Eagerly 甘愿 (Luke 22:15; John 13:1)
+* Initiatively 主动 (John 10:17–18)
+* Sacrificially 舍己 (Heb. 10:10, 12, 14)
 
-> **Scripture:** • 基本的需要 A Basic Need (太Matt 6: 11)
+**"Bread" — Represents Jesus' Body "饼"：象征主的身体**
 
-> **Scripture:** • 无酵之饼 An Unleavened Bread (出Exo 12: 19-20;
+Reflecting on three truths 反思三项真理:
 
-> **Scripture:** 林前1 Cor 5: 6-8)
+* A Basic Need 基本的需要 (Matt. 6:11)
+* An Unleavened Bread 无酵之饼 (Exo. 12:19–20; 1 Cor. 5:6–8)
+* A United Symbol 合一的象征 (1 Cor. 10:16–17)
 
-> **Scripture:** • 合一的象征 A United Symbol  (林前1 Cor 10: 16-17)
-### 挑战 Challenge
-### 我甘愿背起十字架跟随祂吗?
-Am I willing to take my cross and follow Him?  
-### 不背着他的十字架跟从我的，也不配作我的门徒。
+**Challenge 挑战**
+
+Am I willing to take my cross and follow Him? 我甘愿背起十字架跟随祂吗？
+
+> "And anyone who does not take his cross and follow me is not worthy of me." — Matthew 10:38
+> "不背着他的十字架跟从我的，也不配作我的门徒。"
+
+**Scripture Memory 背诵经文: Matthew 10:38 / 太10:38**
