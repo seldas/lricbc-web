@@ -1,85 +1,93 @@
 # Weekly Content Update Guide
 
-This document outlines the steps required to update the LRICBC website with the latest worship programs and pastor's messages from Gmail.
+This document outlines the steps to update the LRICBC website with the latest worship programs and pastor's messages.
 
-## 1. Fetch Latest Emails
+## Authentication Setup (One-time)
 
-By default, the script now only searches the last **30 days** of emails to ensure fast weekly updates.
+The fetch script reads `church@lricbc.org` Gmail using OAuth credentials stored as environment variables — no browser login required on subsequent runs.
 
-### Local Environment
-Run the following command in the `lricbc-web` directory:
-```bash
-npm run fetch-updates
+### Step 1: Create OAuth credentials in Google Cloud Console
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) → **APIs & Services → Credentials**
+2. Click **Create Credentials → OAuth client ID**
+   - Application type: **Web application**
+   - Authorized redirect URIs: add `http://localhost:3001/oauth2callback`
+3. Copy the **Client ID** and **Client Secret** into `.env`:
+   ```
+   GMAIL_CLIENT_ID=your-client-id
+   GMAIL_CLIENT_SECRET=your-client-secret
+   ```
+4. Make sure the **Gmail API** is enabled: [Enable it here](https://console.cloud.google.com/apis/library/gmail.googleapis.com)
+
+### Step 2: Obtain the refresh token (once only)
+
+```powershell
+npm run gmail-auth
 ```
 
-**Options:**
-- To search a specific number of days: `npm run fetch-updates -- --days 7`
-- To search all history: `npm run fetch-updates -- --all`
-
-### GCP / Production
-If running inside the container or via a CI/CD pipeline, ensure `credentials.json` and `token.json` are present in the root. The command is the same:
-```bash
-npm run fetch-updates
+Sign in as `church@lricbc.org`, approve access, then copy the printed token into `.env`:
 ```
+GMAIL_REFRESH_TOKEN=your-refresh-token
+```
+
+### For Production (Cloud Run)
+
+Set `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, and `GMAIL_REFRESH_TOKEN` as environment variables in the Cloud Run service config.
 
 ---
 
-## 2. Process Emails into Content
+## Weekly Update Workflow
 
-This step parses the downloaded JSON files in the `pending/` directory and generates Markdown files in `src/content/updates/`.
+### Step 1 — Fetch emails
 
-```bash
-npm run process-updates
+Pulls new bulletin emails from `church@lricbc.org` into `fetch_raw/pending/`.
+
+```powershell
+npm run fetch-updates
 ```
 
----
+Options:
+- `npm run fetch-updates -- --days 14` — extend the lookback window
+- `npm run fetch-updates -- --all` — fetch entire history
 
-## 3. Verify Changes
+### Step 2 — Process with Claude (Cowork)
 
-Check the `src/content/updates/` directory for new `.md` files. You can run the development server to see how they look:
-```bash
+Open the **Church-Website** project in Claude Cowork and say:
+
+> "Process the pending emails"
+
+Claude will read the files in `fetch_raw/pending/`, extract the pastor's message and worship program, and write formatted bilingual markdown to `content/updates/`. Processed files are moved to `fetch_raw/processed/`.
+
+### Step 3 — Verify
+
+Review the new `.md` files in `content/updates/`, or run the dev server to preview:
+
+```powershell
 npm run dev
 ```
 
----
+### Step 4 — Sync to production
 
-## 4. Deployment
+```powershell
+# Windows
+./sync-content.ps1
 
-### Local Version (Testing/Dev)
-No further steps are needed once the Markdown files are generated; Next.js will pick them up.
+# macOS / Linux
+./sync-content.sh
+```
 
-### GCP Platform (Production)
-Since this project uses a mounted Google Cloud Storage bucket for content, you can update the live website **without rebuilding the application**. This is much faster for weekly updates.
+This pushes content to GCS and the live site updates immediately — no rebuild needed.
 
-1. **Commit your changes (Optional but recommended):**
-   ```bash
-   git add .
-   git commit -m "docs: add weekly updates for [Date]"
-   ```
-
-2. **Sync content to the cloud:**
-   This will upload all Markdown content (`updates`, `testimonies`, `special-events`), gallery images, and announcements directly to the production storage.
-
-   **For Linux / macOS:**
-   ```bash
-   chmod +x sync-content.sh
-   ./sync-content.sh
-   ```
-
-   **For Windows (PowerShell):**
-   ```powershell
-   ./sync-content.ps1
-   ```
-
-3. **When to use full Deployment?**
-   Only use `./deploy.sh` or `./deploy.ps1` if you have changed the **application code** (e.g., changed the UI layout, fixed a bug in the TypeScript code, or updated `package.json`). For 99% of weekly content updates, the `sync-content` scripts are sufficient.
+Only run `./deploy.ps1` (full rebuild) if application code changed.
 
 ---
 
 ## Troubleshooting
 
-- **No emails found:** Verify the lookback period using `--days 60` or `--all`.
-- **Authentication Error:** If `token.json` is expired or invalid, delete it and run `npm run fetch-updates` locally to trigger a new browser-based OAuth flow.
-- **Parsing Issues:** If a specific email fails to process, check `scripts/process-emails.ts` for updated markers (e.g., if the email subject or structure changed).
+- **No emails found:** Try `--days 60` or `--all`.
+- **Auth error:** Check `.env` has all three Gmail vars. If refresh token was revoked (e.g. after a password change), re-run `npm run gmail-auth`.
+- **Processing issues:** Open Cowork and describe the problem — Claude can inspect the raw JSON in `fetch_raw/pending/` directly.
 
-## For any questions, please reach out to chinesechurch@icbc.org
+---
+
+For questions contact: church@lricbc.org

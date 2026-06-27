@@ -148,7 +148,7 @@ export async function getLatestVideos(channelId: string, limit: number = 20, typ
                 const rows = lockupData.metadata?.lockupMetadataViewModel?.metadata?.contentMetadataViewModel?.metadataRows;
                 if (rows && rows[0]?.metadataParts) {
                   const parts = rows[0].metadataParts;
-                  const timePart = parts.find((p: any) => {
+                  const timePart = parts.find((p: { text?: { content?: string } }) => {
                     const text = p.text?.content || '';
                     return text.includes('ago') || text.includes('Streamed') || text.includes('hours') || text.includes('days') || text.includes('weeks') || text.includes('months') || text.includes('years');
                   }) || parts[1] || parts[0];

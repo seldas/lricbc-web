@@ -1,80 +1,37 @@
 import fs from 'fs/promises';
 import path from 'path';
 import process from 'process';
-import { authenticate } from '@google-cloud/local-auth';
+import { config as loadEnv } from 'dotenv';
 import { google, Auth, gmail_v1 } from 'googleapis';
 
-// If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
-const TOKEN_PATH = path.join(process.cwd(), 'token.json');
-const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
+// Load .env file for local development (no-op in production where env vars are set directly)
+loadEnv();
+
+// Auth uses church@lricbc.org OAuth credentials stored as env vars.
+// Required env vars:
+//   GMAIL_CLIENT_ID      - OAuth client ID
+//   GMAIL_CLIENT_SECRET  - OAuth client secret
+//   GMAIL_REFRESH_TOKEN  - refresh token obtained from one-time browser login
+//
+// Locally: put these in a .env file (gitignored).
+// Production (Cloud Run): set them in the service's environment variables.
 const PENDING_DIR = path.join(process.cwd(), 'fetch_raw', 'pending');
 const PROCESSED_DIR = path.join(process.cwd(), 'fetch_raw', 'processed');
 
-/**
- * Reads previously authorized credentials from the save file.
- */
-async function loadSavedCredentialsIfExist(): Promise<Auth.OAuth2Client | null> {
-  try {
-    const content = await fs.readFile(TOKEN_PATH, 'utf8');
-    const credentials = JSON.parse(content);
-    return google.auth.fromJSON(credentials) as Auth.OAuth2Client;
-  } catch {
-    return null;
-  }
-}
+function authorize(): Auth.OAuth2Client {
+  const clientId = process.env.GMAIL_CLIENT_ID;
+  const clientSecret = process.env.GMAIL_CLIENT_SECRET;
+  const refreshToken = process.env.GMAIL_REFRESH_TOKEN;
 
-/**
- * Serializes credentials to a file compatible with GoogleAuth.fromJSON.
- */
-async function saveCredentials(client: Auth.OAuth2Client) {
-  const content = await fs.readFile(CREDENTIALS_PATH, 'utf8');
-  const keys = JSON.parse(content);
-  const key = keys.installed || keys.web;
-  const payload = JSON.stringify({
-    type: 'authorized_user',
-    client_id: key.client_id,
-    client_secret: key.client_secret,
-    refresh_token: client.credentials.refresh_token,
-  });
-  await fs.writeFile(TOKEN_PATH, payload);
-}
-
-async function authorize(): Promise<Auth.OAuth2Client> {
-  let client = await loadSavedCredentialsIfExist();
-  if (client) {
-    try {
-      // Force a token refresh to check if the credentials are still valid
-      await client.getAccessToken();
-      return client;
-    } catch (error) {
-      const err = error as { message?: string; response?: { data?: { error?: string } } };
-      // If we get an invalid_grant error, the refresh token is no longer valid
-      if (err.message?.includes('invalid_grant') || err.response?.data?.error === 'invalid_grant') {
-        console.warn('Saved token is invalid or expired. Starting new authentication flow...');
-        try {
-          await fs.unlink(TOKEN_PATH);
-        } catch {
-          // Ignore error if file doesn't exist
-        }
-        client = null;
-      } else {
-        throw error;
-      }
-    }
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error(
+      'Missing required env vars: GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN\n' +
+      'Add them to your .env file locally, or to the Cloud Run environment variables in production.'
+    );
   }
 
-  // If no valid client from saved credentials, start authentication flow
-  if (!client) {
-    const authenticatedClient = await authenticate({
-      scopes: SCOPES,
-      keyfilePath: CREDENTIALS_PATH,
-    });
-    client = authenticatedClient as unknown as Auth.OAuth2Client;
-    if (client.credentials) {
-      await saveCredentials(client);
-    }
-  }
+  const client = new google.auth.OAuth2(clientId, clientSecret);
+  client.setCredentials({ refresh_token: refreshToken });
   return client;
 }
 
@@ -142,7 +99,7 @@ async function getMessage(gmail: gmail_v1.Gmail, id: string) {
 
 async function run() {
   try {
-    const auth = await authorize();
+    const auth = authorize();
     const gmail = google.gmail({ version: 'v1', auth });
 
     // Parse command line arguments

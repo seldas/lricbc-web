@@ -15,9 +15,9 @@ async function toHtml(markdown: string) {
   return processed.toString();
 }
 
-function guessSummary(data: Record<string, any>, content: string) {
-  const summaryCandidate = data.summary || data.summary_en || data.summary_zh;
-  if (summaryCandidate) {
+function guessSummary(data: Record<string, unknown>, content: string) {
+  const summaryCandidate = data['summary'] || data['summary_en'] || data['summary_zh'];
+  if (typeof summaryCandidate === 'string' && summaryCandidate) {
     return summaryCandidate;
   }
 
