@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
+import { parseLocalDate } from "@/lib/utils";
 
 interface Post {
   id: string;
@@ -32,19 +33,28 @@ const categoryDotStyles: Record<string, string> = {
   news: "bg-emerald-500",
 };
 
+// Weeks run Sunday-Saturday. Week 1 of a month is whatever partial
+// Sun-Sat span contains the 1st, even if it's just a day or two.
+function firstWeekdayOfMonth(year: number, monthIndex: number) {
+  return new Date(year, monthIndex, 1).getDay(); // 0 = Sunday
+}
+
 function weekOfMonth(date: Date) {
-  return Math.ceil(date.getDate() / 7);
+  const firstWeekday = firstWeekdayOfMonth(date.getFullYear(), date.getMonth());
+  return Math.floor((date.getDate() - 1 + firstWeekday) / 7) + 1;
 }
 
 function weeksInMonth(year: number, monthIndex: number) {
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-  return Math.ceil(daysInMonth / 7);
+  const firstWeekday = firstWeekdayOfMonth(year, monthIndex);
+  return Math.floor((daysInMonth - 1 + firstWeekday) / 7) + 1;
 }
 
 function weekDateRange(year: number, monthIndex: number, week: number) {
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-  const start = (week - 1) * 7 + 1;
-  const end = Math.min(week * 7, daysInMonth);
+  const firstWeekday = firstWeekdayOfMonth(year, monthIndex);
+  const start = Math.max(1, (week - 1) * 7 - firstWeekday + 1);
+  const end = Math.min(daysInMonth, week * 7 - firstWeekday);
   return { start, end };
 }
 
@@ -55,7 +65,7 @@ export default function UpdatesCalendar({ posts }: { posts: Post[] }) {
 
   const latestDate = useMemo(() => {
     for (const post of posts) {
-      const d = new Date(post.publishedAt);
+      const d = parseLocalDate(post.publishedAt);
       if (!isNaN(d.getTime())) return d;
     }
     return new Date();
@@ -70,7 +80,7 @@ export default function UpdatesCalendar({ posts }: { posts: Post[] }) {
   const weeks = useMemo(() => {
     const map = new Map<number, Post[]>();
     for (const post of posts) {
-      const date = new Date(post.publishedAt);
+      const date = parseLocalDate(post.publishedAt);
       if (isNaN(date.getTime())) continue;
       if (date.getFullYear() !== viewYear || date.getMonth() !== viewMonth) continue;
       const week = weekOfMonth(date);

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Megaphone, X, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn, parseLocalDate } from '@/lib/utils';
 
 export default function LatestAnnouncement() {
   const { i18n } = useTranslation();
@@ -127,7 +127,7 @@ export default function LatestAnnouncement() {
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-sky-500">
                     {i18n.language === 'en' ? 'Latest Update' : '最新公告'}
                   </span>
-                  <span className="text-xs text-sky-400 font-bold">{new Date(post.publishedAt).toLocaleDateString()}</span>
+                  <span className="text-xs text-sky-400 font-bold">{parseLocalDate(post.publishedAt).toLocaleDateString()}</span>
                 </div>
               </div>
 

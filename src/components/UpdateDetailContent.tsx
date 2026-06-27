@@ -8,6 +8,7 @@ import { Calendar, ChevronLeft, Tag, ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import ReadingSettings from "@/components/ReadingSettings";
 import { PostData } from "@/lib/local-content";
+import { parseLocalDate } from "@/lib/utils";
 
 const DEFAULT_FONT_SIZE = 'prose-lg';
 const DEFAULT_THEME = 'light';
@@ -69,7 +70,7 @@ export default function UpdateDetailContent({ post, adjacent }: UpdateDetailCont
               <div className={`flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-sm font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-sky-400/70' : theme === 'sepia' ? 'text-[#8c6d4f]/70' : 'text-sky-500/70'}`}>
                 <div className="flex items-center space-x-2">
                   <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                  <span>{parseLocalDate(post.publishedAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Tag className="h-3 w-3 sm:h-4 sm:w-4" />

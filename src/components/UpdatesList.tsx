@@ -7,6 +7,7 @@ import Link from "next/link";
 import { CalendarDays, LayoutList, Search, X } from "lucide-react";
 import { useState, useMemo } from "react";
 import UpdatesCalendar from "@/components/UpdatesCalendar";
+import { parseLocalDate } from "@/lib/utils";
 
 interface Post {
   id: string;
@@ -206,7 +207,7 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
                     {update[`title_${langSuffix}` as keyof Post]}
                   </span>
                   <time className="text-xs font-bold uppercase tracking-widest text-slate-400 flex-shrink-0">
-                    {new Date(update.publishedAt).toLocaleDateString()}
+                    {parseLocalDate(update.publishedAt).toLocaleDateString()}
                   </time>
                 </Link>
               ))}
