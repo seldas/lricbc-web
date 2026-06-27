@@ -279,6 +279,17 @@
     "olderPost": "較早公告",
     "latestReached": "已是最新",
     "earliestReached": "已是最後",
+    "viewMode": {
+      "list": "列表",
+      "calendar": "日曆"
+    },
+    "calendar": {
+      "week": "第",
+      "update": "篇更新",
+      "updates": "篇更新",
+      "noUpdates": "本週暫無更新",
+      "empty": "暫無相關更新。"
+    },
     "readingSettings": {
       "title": "閱讀設置",
       "fontSize": "字體大小",

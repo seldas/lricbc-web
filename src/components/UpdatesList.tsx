@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Calendar, Search, X } from "lucide-react";
+import { Calendar, CalendarDays, LayoutList, Search, X } from "lucide-react";
 import { useState, useMemo } from "react";
+import UpdatesCalendar from "@/components/UpdatesCalendar";
 
 interface Post {
   id: string;
@@ -30,6 +31,7 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
   const [filter, setFilter] = useState<'all' | 'pastor' | 'sermon' | 'news'>('all');
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const postsPerPage = 9;
   
   const langSuffix = i18n.language === 'en' ? 'en' : 'zh';
@@ -149,8 +151,8 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
                   setCurrentPage(1);
                 }}
                 className={`rounded-full px-10 py-8 text-lg tracking-widest uppercase border-2 transition-all ${
-                  filter === cat && cat !== 'all' 
-                    ? `${categoryBadgeStyles[cat as keyof typeof categoryBadgeStyles]} border-transparent scale-105 shadow-lg` 
+                  filter === cat && cat !== 'all'
+                    ? `${categoryBadgeStyles[cat as keyof typeof categoryBadgeStyles]} border-transparent scale-105 shadow-lg`
                     : "border-sky-100 text-sky-900/60 hover:bg-white"
                 }`}
               >
@@ -158,10 +160,36 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
               </Button>
             ))}
           </div>
+
+          <div className="flex justify-center">
+            <div className="inline-flex rounded-full border border-sky-100 bg-white/60 p-1.5 backdrop-blur-md shadow-sm">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold uppercase tracking-widest transition-all ${
+                  viewMode === 'list' ? 'bg-sky-600 text-white shadow-md' : 'text-sky-900/50 hover:text-sky-700'
+                }`}
+              >
+                <LayoutList className="h-4 w-4" />
+                {t('updates.viewMode.list') || 'List'}
+              </button>
+              <button
+                onClick={() => setViewMode('calendar')}
+                className={`flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold uppercase tracking-widest transition-all ${
+                  viewMode === 'calendar' ? 'bg-sky-600 text-white shadow-md' : 'text-sky-900/50 hover:text-sky-700'
+                }`}
+              >
+                <CalendarDays className="h-4 w-4" />
+                {t('updates.viewMode.calendar') || 'Calendar'}
+              </button>
+            </div>
+          </div>
         </div>
 
+        {/* Calendar View */}
+        {viewMode === 'calendar' && <UpdatesCalendar posts={filteredUpdates} />}
+
         {/* Latest Highlights Section */}
-        {showHighlights && (
+        {viewMode === 'list' && showHighlights && (
           <div className="mb-32">
             <div className="flex items-center justify-center gap-4 mb-12">
               <div className="h-px w-12 bg-sky-200" />
@@ -228,7 +256,7 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
         )}
 
         {/* Remaining Posts Grid */}
-        {currentPosts.length > 0 ? (
+        {viewMode === 'list' && (currentPosts.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-24">
             {currentPosts.map((update) => (
               <article
@@ -276,10 +304,10 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
               Clear all filters
             </Button>
           </div>
-        )}
+        ))}
 
         {/* Pagination Controls */}
-        {totalPages > 1 && (
+        {viewMode === 'list' && totalPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-12">
             <Button
               variant="outline"
