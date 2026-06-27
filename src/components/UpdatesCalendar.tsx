@@ -3,7 +3,7 @@
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, CalendarDays } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 
 interface Post {
   id: string;
@@ -53,150 +53,199 @@ export default function UpdatesCalendar({ posts }: { posts: Post[] }) {
   const langSuffix = i18n.language === 'en' ? 'en' : 'zh';
   const locale = i18n.language === 'en' ? 'en-US' : 'zh-CN';
 
-  // Group posts by "YYYY-MM" -> week number -> posts[]
-  const monthGroups = useMemo(() => {
-    const map = new Map<string, { year: number; monthIndex: number; weeks: Map<number, Post[]> }>();
+  const latestDate = useMemo(() => {
+    for (const post of posts) {
+      const d = new Date(post.publishedAt);
+      if (!isNaN(d.getTime())) return d;
+    }
+    return new Date();
+  }, [posts]);
 
+  const [viewYear, setViewYear] = useState(latestDate.getFullYear());
+  const [viewMonth, setViewMonth] = useState(latestDate.getMonth());
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerYear, setPickerYear] = useState(latestDate.getFullYear());
+
+  // Group this month's posts by week number -> posts[]
+  const weeks = useMemo(() => {
+    const map = new Map<number, Post[]>();
     for (const post of posts) {
       const date = new Date(post.publishedAt);
       if (isNaN(date.getTime())) continue;
-      const year = date.getFullYear();
-      const monthIndex = date.getMonth();
-      const key = `${year}-${String(monthIndex).padStart(2, '0')}`;
+      if (date.getFullYear() !== viewYear || date.getMonth() !== viewMonth) continue;
       const week = weekOfMonth(date);
-
-      if (!map.has(key)) {
-        map.set(key, { year, monthIndex, weeks: new Map() });
-      }
-      const group = map.get(key)!;
-      if (!group.weeks.has(week)) group.weeks.set(week, []);
-      group.weeks.get(week)!.push(post);
+      if (!map.has(week)) map.set(week, []);
+      map.get(week)!.push(post);
     }
+    return map;
+  }, [posts, viewYear, viewMonth]);
 
-    return Array.from(map.entries())
-      .sort((a, b) => (a[0] < b[0] ? 1 : -1)) // latest month first
-      .map(([key, value]) => ({ key, ...value }));
-  }, [posts]);
+  const totalWeeks = weeksInMonth(viewYear, viewMonth);
+  const monthLabel = new Date(viewYear, viewMonth, 1).toLocaleDateString(locale, {
+    month: 'long',
+    year: 'numeric',
+  });
+  const monthShortLabel = new Date(viewYear, viewMonth, 1).toLocaleDateString(locale, {
+    month: 'short',
+  });
 
-  const [expandedMonths, setExpandedMonths] = useState<Set<string>>(
-    () => new Set(monthGroups.slice(0, 1).map(g => g.key))
-  );
-
-  const toggleMonth = (key: string) => {
-    setExpandedMonths(prev => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+  const goPrevMonth = () => {
+    if (viewMonth === 0) {
+      setViewYear(y => y - 1);
+      setViewMonth(11);
+    } else {
+      setViewMonth(m => m - 1);
+    }
   };
 
-  if (monthGroups.length === 0) {
-    return (
-      <div className="text-center py-32 space-y-6">
-        <CalendarDays className="h-20 w-20 text-sky-100 mx-auto" />
-        <p className="text-3xl font-light text-sky-900/40 italic">
-          {t('updates.calendar.empty') || "No updates found."}
-        </p>
-      </div>
-    );
-  }
+  const goNextMonth = () => {
+    if (viewMonth === 11) {
+      setViewYear(y => y + 1);
+      setViewMonth(0);
+    } else {
+      setViewMonth(m => m + 1);
+    }
+  };
+
+  const openPicker = () => {
+    setPickerYear(viewYear);
+    setPickerOpen(true);
+  };
+
+  const monthAbbrevs = Array.from({ length: 12 }, (_, i) =>
+    new Date(2000, i, 1).toLocaleDateString(locale, { month: 'short' })
+  );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 mb-24">
-      {monthGroups.map((group) => {
-        const isExpanded = expandedMonths.has(group.key);
-        const monthLabel = new Date(group.year, group.monthIndex, 1).toLocaleDateString(locale, {
-          month: 'long',
-          year: 'numeric',
-        });
-        const monthShortLabel = new Date(group.year, group.monthIndex, 1).toLocaleDateString(locale, {
-          month: 'short',
-        });
-        const totalWeeks = weeksInMonth(group.year, group.monthIndex);
-        const postCount = Array.from(group.weeks.values()).reduce((sum, arr) => sum + arr.length, 0);
+    <div className="max-w-3xl mx-auto mb-16">
+      {/* Month Navigator */}
+      <div className="relative flex items-center justify-center gap-6 mb-8">
+        <button
+          onClick={goPrevMonth}
+          aria-label="Previous month"
+          className="h-12 w-12 flex items-center justify-center rounded-full border border-sky-100 bg-white/70 hover:bg-sky-50 transition-colors shadow-sm"
+        >
+          <ChevronLeft className="h-5 w-5 text-sky-700" />
+        </button>
 
-        return (
-          <div
-            key={group.key}
-            className="rounded-[2.5rem] border border-slate-100 bg-white/80 backdrop-blur-md shadow-lg shadow-slate-200/50 overflow-hidden"
-          >
-            <button
-              onClick={() => toggleMonth(group.key)}
-              className="w-full flex items-center justify-between gap-4 px-8 py-6 hover:bg-sky-50/50 transition-colors"
-            >
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-sky-100 flex items-center justify-center">
-                  <CalendarDays className="h-5 w-5 text-sky-600" />
-                </div>
-                <div className="text-left">
-                  <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
-                    {monthLabel}
-                  </h2>
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                    {postCount} {postCount === 1 ? (t('updates.calendar.update') || 'update') : (t('updates.calendar.updates') || 'updates')}
-                  </p>
-                </div>
+        <button
+          onClick={openPicker}
+          className="flex items-center gap-3 px-6 py-3 rounded-full hover:bg-sky-50/70 transition-colors"
+        >
+          <CalendarDays className="h-5 w-5 text-sky-500" />
+          <span className="text-2xl font-semibold tracking-tight text-slate-900 min-w-[10ch] text-center">
+            {monthLabel}
+          </span>
+        </button>
+
+        <button
+          onClick={goNextMonth}
+          aria-label="Next month"
+          className="h-12 w-12 flex items-center justify-center rounded-full border border-sky-100 bg-white/70 hover:bg-sky-50 transition-colors shadow-sm"
+        >
+          <ChevronRight className="h-5 w-5 text-sky-700" />
+        </button>
+
+        {/* Year/Month Picker Popover */}
+        {pickerOpen && (
+          <>
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setPickerOpen(false)}
+            />
+            <div className="absolute top-full mt-3 z-50 w-80 rounded-3xl border border-sky-100 bg-white shadow-2xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <button
+                  onClick={() => setPickerYear(y => y - 1)}
+                  className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-sky-50 transition-colors"
+                  aria-label="Previous year"
+                >
+                  <ChevronLeft className="h-4 w-4 text-sky-700" />
+                </button>
+                <span className="text-lg font-bold text-slate-900">{pickerYear}</span>
+                <button
+                  onClick={() => setPickerYear(y => y + 1)}
+                  className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-sky-50 transition-colors"
+                  aria-label="Next year"
+                >
+                  <ChevronRight className="h-4 w-4 text-sky-700" />
+                </button>
               </div>
-              {isExpanded ? (
-                <ChevronUp className="h-6 w-6 text-slate-400 flex-shrink-0" />
-              ) : (
-                <ChevronDown className="h-6 w-6 text-slate-400 flex-shrink-0" />
-              )}
-            </button>
-
-            {isExpanded && (
-              <div className="border-t border-slate-100 divide-y divide-slate-100">
-                {Array.from({ length: totalWeeks }, (_, i) => i + 1).map((weekNum) => {
-                  const weekPosts = group.weeks.get(weekNum) ?? [];
-                  const { start, end } = weekDateRange(group.year, group.monthIndex, weekNum);
-
+              <div className="grid grid-cols-3 gap-2">
+                {monthAbbrevs.map((label, idx) => {
+                  const isSelected = pickerYear === viewYear && idx === viewMonth;
                   return (
-                    <div key={weekNum} className="flex flex-col sm:flex-row gap-4 px-8 py-6">
-                      <div className="flex-shrink-0 sm:w-40">
-                        <p className="text-sm font-black uppercase tracking-widest text-sky-700">
-                          {i18n.language === 'en'
-                            ? `${t('updates.calendar.week') || 'Week'} ${weekNum}`
-                            : `${t('updates.calendar.week') || '第'}${weekNum}週`}
-                        </p>
-                        <p className="text-xs text-slate-400 font-medium">
-                          {monthShortLabel} {start}–{end}
-                        </p>
-                      </div>
-
-                      <div className="flex-1">
-                        {weekPosts.length === 0 ? (
-                          <p className="text-sm text-slate-300 italic">
-                            {t('updates.calendar.noUpdates') || 'No updates'}
-                          </p>
-                        ) : (
-                          <div className="flex flex-wrap gap-3">
-                            {weekPosts.map((post) => (
-                              <Link
-                                key={post.id}
-                                href={`/updates/${post.id}`}
-                                className="group flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white hover:shadow-md transition-all px-4 py-3 max-w-full"
-                              >
-                                <span className={`h-2.5 w-2.5 rounded-full flex-shrink-0 ${categoryDotStyles[post.category] ?? 'bg-slate-400'}`} />
-                                <span className={`hidden sm:inline-flex items-center rounded-full px-3 py-0.5 text-[10px] font-black uppercase tracking-widest flex-shrink-0 ${categoryBadgeStyles[post.category] ?? 'bg-slate-500 text-white'}`}>
-                                  {t(`updates.categories.${post.category}`)}
-                                </span>
-                                <span className="text-sm font-semibold text-slate-700 group-hover:text-sky-700 truncate">
-                                  {post[`title_${langSuffix}` as keyof Post]}
-                                </span>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <button
+                      key={label}
+                      onClick={() => {
+                        setViewYear(pickerYear);
+                        setViewMonth(idx);
+                        setPickerOpen(false);
+                      }}
+                      className={`rounded-xl px-3 py-3 text-sm font-bold uppercase tracking-wide transition-all ${
+                        isSelected
+                          ? 'bg-sky-600 text-white shadow-md'
+                          : 'text-slate-600 hover:bg-sky-50'
+                      }`}
+                    >
+                      {label}
+                    </button>
                   );
                 })}
               </div>
-            )}
-          </div>
-        );
-      })}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Weeks */}
+      <div className="rounded-[2.5rem] border border-slate-100 bg-white/80 backdrop-blur-md shadow-lg shadow-slate-200/50 overflow-hidden divide-y divide-slate-100">
+        {Array.from({ length: totalWeeks }, (_, i) => i + 1).map((weekNum) => {
+          const weekPosts = weeks.get(weekNum) ?? [];
+          const { start, end } = weekDateRange(viewYear, viewMonth, weekNum);
+
+          return (
+            <div key={weekNum} className="flex flex-col sm:flex-row gap-4 px-8 py-6">
+              <div className="flex-shrink-0 sm:w-40">
+                <p className="text-sm font-black uppercase tracking-widest text-sky-700">
+                  {i18n.language === 'en'
+                    ? `${t('updates.calendar.week') || 'Week'} ${weekNum}`
+                    : `${t('updates.calendar.week') || '第'}${weekNum}週`}
+                </p>
+                <p className="text-xs text-slate-400 font-medium">
+                  {monthShortLabel} {start}–{end}
+                </p>
+              </div>
+
+              <div className="flex-1">
+                {weekPosts.length === 0 ? (
+                  <p className="text-sm text-slate-300 italic">
+                    {t('updates.calendar.noUpdates') || 'No updates'}
+                  </p>
+                ) : (
+                  <div className="flex flex-wrap gap-3">
+                    {weekPosts.map((post) => (
+                      <Link
+                        key={post.id}
+                        href={`/updates/${post.id}`}
+                        className="group flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white hover:shadow-md transition-all px-4 py-3 max-w-full"
+                      >
+                        <span className={`h-2.5 w-2.5 rounded-full flex-shrink-0 ${categoryDotStyles[post.category] ?? 'bg-slate-400'}`} />
+                        <span className={`hidden sm:inline-flex items-center rounded-full px-3 py-0.5 text-[10px] font-black uppercase tracking-widest flex-shrink-0 ${categoryBadgeStyles[post.category] ?? 'bg-slate-500 text-white'}`}>
+                          {t(`updates.categories.${post.category}`)}
+                        </span>
+                        <span className="text-sm font-semibold text-slate-700 group-hover:text-sky-700 truncate">
+                          {post[`title_${langSuffix}` as keyof Post]}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
