@@ -16,6 +16,7 @@ export interface GalleryEvent {
   thumbnail: string; // path to one random image
   images: string[];  // paths to all images in folder
   googlePhotosUrl?: string; // Link to external album
+  googlePhotosAlbumId?: string; // Stable Google Photos album id, for reconciliation only
 }
 
 interface MetadataItem {
@@ -25,6 +26,7 @@ interface MetadataItem {
   date: string;
   category: string;
   googlePhotosUrl?: string;
+  googlePhotosAlbumId?: string;
 }
 
 function getLocalImages(folderName: string): string[] {

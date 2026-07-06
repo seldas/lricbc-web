@@ -34,6 +34,7 @@ This document outlines the foundational mandates, architectural patterns, and en
 
 ## 4. Workflows
 - **Email Processing:** The church updates content via emails. The `scripts/fetch-emails.ts` and `scripts/process-emails.ts` are critical for content ingestion. Use `npm run fetch-updates` and `npm run process-updates`.
+- **Gallery Sync:** Run the `update-gallery` skill (`.claude/skills/update-gallery/SKILL.md`) to reconcile `public/gallery/metadata.json` with the church's actual Google Photos library and publish any newly found albums.
 - **Validation:** 
   - Use `npm run build` to verify types and build stability.
   - Use `npm run lint` for code quality checks.

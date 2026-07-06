@@ -23,6 +23,7 @@ interface MetadataItem {
   date: string;
   category: string;
   googlePhotosUrl?: string;
+  googlePhotosAlbumId?: string;
 }
 
 export async function addGalleryEvent(formData: FormData) {
