@@ -35,7 +35,8 @@ Psalm 86:8–12 — Chair (主席)
 ## Worship Hymns 崇拜诗歌
 
 1. 全然向祢 All For You
-2. 上帝的儿女何等有福 Children of God How Blessed You Are
+2. 成为我异象 Be Thou My Vision
+3. 上帝的儿女何等有福 Children of God How Blessed You Are
 
 ## Offertory 奉献
 
