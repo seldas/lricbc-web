@@ -197,13 +197,13 @@ export default function UpdatesList({ initialPosts }: { initialPosts: Post[] }) 
                 <Link
                   key={update.id}
                   href={`/updates/${update.id}`}
-                  className="flex items-center gap-4 px-6 py-5 hover:bg-sky-50/50 transition-colors group"
+                  className="flex items-start sm:items-center gap-4 px-6 py-5 hover:bg-sky-50/50 transition-colors group"
                 >
-                  <span className={`h-2.5 w-2.5 rounded-full flex-shrink-0 ${categoryDotStyles[update.category as keyof typeof categoryDotStyles]}`} />
+                  <span className={`mt-2 sm:mt-0 h-2.5 w-2.5 rounded-full flex-shrink-0 ${categoryDotStyles[update.category as keyof typeof categoryDotStyles]}`} />
                   <span className={`hidden sm:inline-flex items-center rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest flex-shrink-0 ${categoryBadgeStyles[update.category as keyof typeof categoryBadgeStyles]}`}>
                     {t(`updates.categories.${update.category}`)}
                   </span>
-                  <span className="flex-1 min-w-0 text-base sm:text-lg font-semibold text-slate-800 group-hover:text-sky-700 truncate">
+                  <span className="flex-1 min-w-0 text-base sm:text-lg font-semibold text-slate-800 group-hover:text-sky-700 break-words">
                     {update[`title_${langSuffix}` as keyof Post]}
                   </span>
                   <time className="text-xs font-bold uppercase tracking-widest text-slate-400 flex-shrink-0">

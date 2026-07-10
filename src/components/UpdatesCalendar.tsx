@@ -238,13 +238,13 @@ export default function UpdatesCalendar({ posts }: { posts: Post[] }) {
                       <Link
                         key={post.id}
                         href={`/updates/${post.id}`}
-                        className="group flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white hover:shadow-md transition-all px-4 py-3 max-w-full"
+                        className="group flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white hover:shadow-md transition-all px-4 py-3 w-full sm:w-auto sm:max-w-md"
                       >
-                        <span className={`h-2.5 w-2.5 rounded-full flex-shrink-0 ${categoryDotStyles[post.category] ?? 'bg-slate-400'}`} />
+                        <span className={`mt-1.5 h-2.5 w-2.5 rounded-full flex-shrink-0 ${categoryDotStyles[post.category] ?? 'bg-slate-400'}`} />
                         <span className={`hidden sm:inline-flex items-center rounded-full px-3 py-0.5 text-[10px] font-black uppercase tracking-widest flex-shrink-0 ${categoryBadgeStyles[post.category] ?? 'bg-slate-500 text-white'}`}>
                           {t(`updates.categories.${post.category}`)}
                         </span>
-                        <span className="text-sm font-semibold text-slate-700 group-hover:text-sky-700 truncate">
+                        <span className="text-sm font-semibold text-slate-700 group-hover:text-sky-700 break-words min-w-0">
                           {post[`title_${langSuffix}` as keyof Post]}
                         </span>
                       </Link>
