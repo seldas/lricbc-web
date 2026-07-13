@@ -2,11 +2,53 @@
 
 import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ExternalLink } from "lucide-react";
 import { parseLocalDate } from "@/lib/utils";
 import { getReadingsForDate, getWeekSunday } from "@/lib/rcl";
 import { buildBibleGatewayUrl } from "@/lib/bible-link";
 import { translateReference } from "@/lib/bible-book-names-zh";
+
+type VerseEntry = { verse: number; text: string };
+type ReadingText = { en: VerseEntry[][]; zh: VerseEntry[][] };
+type ReadingTextData = Record<string, ReadingText | null>;
+
+// Psalms read as poetry - one verse per line. Everything else reads as
+// prose - verses flow together within a paragraph, each marked with a
+// small superscript number. Either way, each block is a separate passage
+// (see parse-reference.ts) and gets its own paragraph spacing.
+function ReadingPassage({ blocks, isPsalm }: { blocks: VerseEntry[][]; isPsalm: boolean }) {
+  if (isPsalm) {
+    return (
+      <div className="space-y-4">
+        {blocks.map((block, i) => (
+          <div key={i} className="space-y-1">
+            {block.map((v, vi) => (
+              <p key={vi} className="flex gap-2 text-sm sm:text-base leading-relaxed text-slate-600">
+                <span className="w-5 flex-shrink-0 text-right text-[10px] font-bold text-sky-500 mt-1">{v.verse}</span>
+                <span>{v.text}</span>
+              </p>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, i) => (
+        <p key={i} className="text-sm sm:text-base leading-relaxed text-slate-600">
+          {block.map((v, vi) => (
+            <span key={vi}>
+              <sup className="mr-0.5 text-[10px] font-bold text-sky-500">{v.verse}</sup>
+              {v.text}{' '}
+            </span>
+          ))}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 export default function DevotionReadings({ initialDate }: { initialDate: string }) {
   const { t, i18n } = useTranslation('common');
@@ -14,6 +56,8 @@ export default function DevotionReadings({ initialDate }: { initialDate: string 
   const locale = i18n.language === 'en' ? 'en-US' : 'zh-CN';
 
   const [anchorDate, setAnchorDate] = useState(() => getWeekSunday(parseLocalDate(initialDate)));
+  const [expandedRefs, setExpandedRefs] = useState<Set<string>>(new Set());
+  const [textData, setTextData] = useState<ReadingTextData | null>(null);
 
   const result = useMemo(() => getReadingsForDate(anchorDate), [anchorDate]);
 
@@ -32,6 +76,19 @@ export default function DevotionReadings({ initialDate }: { initialDate: string 
       const d = new Date(prev);
       d.setDate(d.getDate() + 7);
       return d;
+    });
+  };
+
+  const toggleExpand = async (ref: string) => {
+    if (!textData) {
+      const mod = await import('@/data/rcl-readings-text.json');
+      setTextData(mod.default as ReadingTextData);
+    }
+    setExpandedRefs(prev => {
+      const next = new Set(prev);
+      if (next.has(ref)) next.delete(ref);
+      else next.add(ref);
+      return next;
     });
   };
 
@@ -75,7 +132,7 @@ export default function DevotionReadings({ initialDate }: { initialDate: string 
       <section className="container mx-auto px-4 py-16 flex-grow">
         <div className="max-w-2xl mx-auto">
           {/* Week Navigator */}
-          <div className="flex items-center justify-center gap-6 mb-10">
+          <div className="flex items-center justify-center gap-6 mb-6">
             <button
               onClick={goPrevWeek}
               aria-label={t('devotion.prevWeek')}
@@ -98,6 +155,12 @@ export default function DevotionReadings({ initialDate }: { initialDate: string 
             </button>
           </div>
 
+          {result && (
+            <p className="text-center text-xs text-slate-400 mb-6">
+              {t('devotion.versionNote')}
+            </p>
+          )}
+
           {!result ? (
             <p className="text-center text-slate-400 italic">{t('devotion.noReadings')}</p>
           ) : (
@@ -108,21 +171,47 @@ export default function DevotionReadings({ initialDate }: { initialDate: string 
                 </span>
               </div>
               <div className="divide-y divide-slate-100">
-                {readingRows.map((row) => (
-                  <a
-                    key={row.label}
-                    href={buildBibleGatewayUrl(row.ref, lang)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-between gap-4 px-8 py-5 hover:bg-sky-50/60 transition-colors"
-                  >
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-sky-500">{row.label}</p>
-                      <p className="text-base font-semibold text-slate-800 group-hover:text-sky-700">{row.displayRef}</p>
+                {readingRows.map((row) => {
+                  const isExpanded = expandedRefs.has(row.ref);
+                  const text = textData?.[row.ref];
+                  const bibleGatewayUrl = buildBibleGatewayUrl(row.ref, lang);
+                  const isPsalm = /^Psalm\b/.test(row.ref);
+                  return (
+                    <div key={row.label} className="px-8 py-5">
+                      <button
+                        onClick={() => toggleExpand(row.ref)}
+                        className="group flex w-full items-center justify-between gap-4 text-left"
+                      >
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-sky-500">{row.label}</p>
+                          <p className="text-base font-semibold text-slate-800 group-hover:text-sky-700">{row.displayRef}</p>
+                        </div>
+                        <ChevronDown
+                          className={`h-5 w-5 text-slate-300 group-hover:text-sky-500 flex-shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+
+                      {isExpanded && (
+                        <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                          {text ? (
+                            <ReadingPassage blocks={text[lang]} isPsalm={isPsalm} />
+                          ) : (
+                            <p className="text-sm text-slate-400 italic">{t('devotion.textUnavailable')}</p>
+                          )}
+                          <a
+                            href={bibleGatewayUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-sky-600 hover:text-sky-800 transition-colors"
+                          >
+                            {t('devotion.viewOnBibleGateway')}
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        </div>
+                      )}
                     </div>
-                    <ExternalLink className="h-4 w-4 text-slate-300 group-hover:text-sky-500 flex-shrink-0" />
-                  </a>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

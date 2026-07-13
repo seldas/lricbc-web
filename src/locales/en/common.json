@@ -315,12 +315,14 @@
       "epistle": "Epistle",
       "gospel": "Gospel"
     },
-    "readOnBibleGateway": "Read on BibleGateway",
+    "viewOnBibleGateway": "View other translations on BibleGateway",
     "prevWeek": "Previous Week",
     "nextWeek": "Next Week",
     "thisWeek": "This Week",
     "noReadings": "Readings for this week are not available yet.",
-    "source": "Readings source: Revised Common Lectionary (RCL)"
+    "source": "Readings source: Revised Common Lectionary (RCL)",
+    "versionNote": "Scripture text shown here: World English Bible (WEB) / Chinese Union Version (CUV)",
+    "textUnavailable": "This passage isn't included in our translations. Please use the link below to read it on BibleGateway."
   },
   "gallery": {
     "title": "Media Gallery",

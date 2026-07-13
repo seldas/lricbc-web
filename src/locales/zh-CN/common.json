@@ -315,12 +315,14 @@
       "epistle": "使徒書信",
       "gospel": "福音書"
     },
-    "readOnBibleGateway": "在 BibleGateway 閱讀",
+    "viewOnBibleGateway": "點此在 BibleGateway 查看其他譯本",
     "prevWeek": "上一週",
     "nextWeek": "下一週",
     "thisWeek": "本週",
     "noReadings": "本週經文尚未收錄。",
-    "source": "經文出處：普世公用經課（Revised Common Lectionary, RCL）"
+    "source": "經文出處：普世公用經課（Revised Common Lectionary, RCL）",
+    "versionNote": "站內經文版本：英文 World English Bible (WEB) ／中文 和合本 (CUV)",
+    "textUnavailable": "此經卷不在本站譯本收錄範圍內，請點擊下方連結查看其他譯本。"
   },
   "gallery": {
     "title": "教會相簿",
