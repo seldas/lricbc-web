@@ -5,6 +5,7 @@
     "about": "關於我們",
     "onlineWorship": "網上崇拜",
     "updates": "每週更新",
+    "devotion": "每日靈修",
     "gallery": "教會相簿",
     "giving": "奉獻支持",
     "contact": "聯繫我們"
@@ -300,6 +301,26 @@
         "dark": "深色"
       }
     }
+  },
+  "devotion": {
+    "title": "每日靈修",
+    "subtitle": "本週的普世公用經課（RCL）讀經進度。",
+    "quote": "「你的話是我腳前的燈，是我路上的光。」",
+    "quoteVerse": "詩篇 119:105",
+    "weekOf": "所屬主日",
+    "yearLabel": "年度",
+    "labels": {
+      "ot": "舊約",
+      "psalm": "詩篇",
+      "epistle": "使徒書信",
+      "gospel": "福音書"
+    },
+    "readOnBibleGateway": "在 BibleGateway 閱讀",
+    "prevWeek": "上一週",
+    "nextWeek": "下一週",
+    "thisWeek": "本週",
+    "noReadings": "本週經文尚未收錄。",
+    "source": "經文出處：普世公用經課（Revised Common Lectionary, RCL）"
   },
   "gallery": {
     "title": "教會相簿",

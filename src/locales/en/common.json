@@ -5,6 +5,7 @@
     "about": "About Us",
     "onlineWorship": "Online Worship",
     "updates": "Weekly Updates",
+    "devotion": "Daily Devotion",
     "gallery": "Gallery",
     "giving": "Giving",
     "contact": "Contact"
@@ -300,6 +301,26 @@
         "dark": "Dark"
       }
     }
+  },
+  "devotion": {
+    "title": "Daily Devotion",
+    "subtitle": "This week's Revised Common Lectionary readings.",
+    "quote": "\"Your word is a lamp for my feet, a light on my path.\"",
+    "quoteVerse": "Psalm 119:105",
+    "weekOf": "Week of",
+    "yearLabel": "Year",
+    "labels": {
+      "ot": "Old Testament",
+      "psalm": "Psalm",
+      "epistle": "Epistle",
+      "gospel": "Gospel"
+    },
+    "readOnBibleGateway": "Read on BibleGateway",
+    "prevWeek": "Previous Week",
+    "nextWeek": "Next Week",
+    "thisWeek": "This Week",
+    "noReadings": "Readings for this week are not available yet.",
+    "source": "Readings source: Revised Common Lectionary (RCL)"
   },
   "gallery": {
     "title": "Media Gallery",

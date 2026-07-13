@@ -21,6 +21,7 @@ export default function Navbar() {
     { href: '/about', label: t('nav.about') },
     { href: '/online-worship', label: t('nav.onlineWorship') || 'Online Worship' },
     { href: '/updates', label: t('nav.updates') },
+    { href: '/devotion', label: t('nav.devotion') },
     { href: '/gallery', label: t('nav.gallery') },
     { href: '/giving', label: t('nav.giving') },
     { href: '/contact', label: t('nav.contact') },
