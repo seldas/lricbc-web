@@ -47,3 +47,6 @@ pending/
 fetch_raw/
 public/gallery/metadata.json
 content/
+
+# Claude Code local settings/session files
+.claude/
