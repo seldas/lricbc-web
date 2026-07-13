@@ -5,7 +5,7 @@
     "about": "About Us",
     "onlineWorship": "Online Worship",
     "updates": "Weekly Updates",
-    "devotion": "Daily Devotion",
+    "devotion": "Weekly Scripture",
     "gallery": "Gallery",
     "giving": "Giving",
     "contact": "Contact"
@@ -303,8 +303,8 @@
     }
   },
   "devotion": {
-    "title": "Daily Devotion",
-    "subtitle": "This week's Revised Common Lectionary readings.",
+    "title": "Weekly Scripture",
+    "subtitle": "This week's scripture readings.",
     "quote": "\"Your word is a lamp for my feet, a light on my path.\"",
     "quoteVerse": "Psalm 119:105",
     "weekOf": "Week of",

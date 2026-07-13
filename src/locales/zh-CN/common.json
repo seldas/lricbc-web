@@ -5,7 +5,7 @@
     "about": "關於我們",
     "onlineWorship": "網上崇拜",
     "updates": "每週更新",
-    "devotion": "每日靈修",
+    "devotion": "每週經文",
     "gallery": "教會相簿",
     "giving": "奉獻支持",
     "contact": "聯繫我們"
@@ -303,8 +303,8 @@
     }
   },
   "devotion": {
-    "title": "每日靈修",
-    "subtitle": "本週的普世公用經課（RCL）讀經進度。",
+    "title": "每週經文",
+    "subtitle": "本週的讀經進度。",
     "quote": "「你的話是我腳前的燈，是我路上的光。」",
     "quoteVerse": "詩篇 119:105",
     "weekOf": "所屬主日",
